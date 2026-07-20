@@ -1,0 +1,81 @@
+name: Build and Release Pyeduc
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install flet
+      - name: Build Windows Executable
+        run: |
+          flet build windows --project pyeduc
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyeduc-windows
+          path: build/windows/
+
+  build-linux-deb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+          pip install flet
+      - name: Build Linux Binary
+        run: |
+          flet build linux --project pyeduc
+      - name: Create DEB Package
+        run: |
+          chmod +x scripts/build_deb.sh
+          ./scripts/build_deb.sh
+      - name: Upload DEB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyeduc-linux-deb
+          path: pyeduc_amd64.deb
+
+  build-linux-flatpak:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev flatpak flatpak-builder elfutils
+          pip install flet
+      - name: Build Linux Binary
+        run: |
+          flet build linux --project pyeduc
+      - name: Build Flatpak
+        run: |
+          flatpak-builder --user --disable-rofiles-fuse build-dir flatpak/org.pyeduc.App.yml --force-clean
+          flatpak build-export repo build-dir
+          flatpak build-bundle repo pyeduc.flatpak org.pyeduc.App
+      - name: Upload Flatpak Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyeduc-linux-flatpak
+          path: pyeduc.flatpak

@@ -1,0 +1,1414 @@
+{
+  "lessons": [
+    {
+      "id": 0,
+      "type": "presentation",
+      "title": "Bem-vindo ao Pyeduc!",
+      "description": "Uma breve introdução sobre como aproveitar ao máximo este aplicativo.",
+      "content": "### Olá e Bem-vindo ao Pyeduc! 👋\n\nNós criamos este aplicativo para tornar sua jornada no aprendizado de Python o mais prática e prazerosa possível.\n\nAqui você terá o seu progresso salvo automaticamente. Cada aluno tem seu próprio ambiente isolado.\n\nComo o **Pyeduc** funciona?\n- **Aulas Teóricas**: Textos curtos e diretos, seguidos de um Quiz para testar seus conhecimentos.\n- **Aulas Práticas**: Você terá um **Console Python** real para digitar e rodar seus códigos.\n\nUse os botões de \"Próxima\" e \"Anterior\" no rodapé para navegar pelas aulas.\nNão tenha pressa, estude no seu ritmo. A programação é uma ferramenta incrível!",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "Use a barra divisória cinza entre a explicação e o quiz para redimensionar a tela a seu favor!",
+        "Não tenha medo de errar os quizzes. Você pode tentar quantas vezes quiser."
+      ],
+      "references": [],
+      "quiz": {}
+    },
+    {
+      "id": 1,
+      "type": "theory",
+      "title": "Aula 1: A História do Python",
+      "description": "Descubra quem criou o Python e por que ele é tão popular.",
+      "content": "A linguagem Python foi criada por **Guido van Rossum** e lançada oficialmente no ano de 1991.\n\nO desenvolvimento do projeto começou no final de 1989, mas a primeira versão pública (**Python 0.9.0**) foi disponibilizada em fevereiro de 1991 no fórum de discussão alt.sources.\n\n**A Origem do Nome:**\nAo contrário do que muitos pensam, o nome **Python** não tem nenhuma relação com o réptil (cobra píton). Na verdade, durante a criação da linguagem, Guido lia os roteiros publicados da famosa série de comédia britânica **\"Monty Python's Flying Circus\"**. Precisando de um nome que fosse curto, único e levemente misterioso para o seu projeto, ele decidiu batizá-lo de Python!",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "Python é uma linguagem interpretada, o que significa que não precisa ser compilada antes de executar.",
+        "A filosofia do Python (The Zen of Python) diz que 'A legibilidade conta'."
+      ],
+      "references": [
+        {
+          "label": "História do Python (Wikipedia)",
+          "url": "https://pt.wikipedia.org/wiki/Python"
+        }
+      ],
+      "quiz": {
+        "question": "Quem é o brilhante criador da linguagem Python?",
+        "options": [
+          "Bill Gates",
+          "Linus Torvalds",
+          "Guido van Rossum",
+          "Mark Zuckerberg"
+        ],
+        "answer": 2
+      }
+    },
+    {
+      "id": 2,
+      "type": "theory",
+      "title": "Aula 2: Por que o Python foi criado?",
+      "description": "Entenda as motivações de Guido van Rossum e a linguagem predecessora.",
+      "content": "Guido van Rossum worked at CWI (Centrum Wiskunde & Informatica in the Netherlands) on a project involving the **ABC** language.\n\nThe **ABC** language was very easy to teach to beginners but had severe limitations for more complex tasks. On the other hand, languages like C were very hard to read.\n\nGuido's goal in creating Python was to combine the best of both worlds: to create a language that was as **simple and readable as ABC**, but with the **power and features of C** to handle the operating system.",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "O principal alvo de Python sempre foi a clareza e a legibilidade do código.",
+        "Muitos conceitos que tornam o Python fácil vieram inspirados diretamente do ABC."
+      ],
+      "references": [
+        {
+          "label": "Inspirações do Python",
+          "url": "https://docs.python.org/3/faq/general.html#why-was-python-created-in-the-first-place"
+        }
+      ],
+      "quiz": {
+        "question": "Qual foi a linguagem que o Python sucedeu e se inspirou fortemente?",
+        "options": [
+          "Java",
+          "Linguagem C",
+          "ABC",
+          "Perl"
+        ],
+        "answer": 2
+      }
+    },
+    {
+      "id": 3,
+      "type": "theory",
+      "title": "Aula 3: O Ecossistema Python",
+      "description": "Descubra onde o Python é usado e conheça seu ecossistema gigante.",
+      "content": "Uma das maiores forças do Python é o seu **Ecossistema**. A linguagem possui a filosofia de vir com \"baterias inclusas\" (Batteries Included), ou seja, a sua **Biblioteca Padrão** é gigantesca e já traz ferramentas nativas para lidar com internet, arquivos, matemática avançada, bancos de dados (como o SQLite), e muito mais, sem precisar instalar nada extra.\n\nAlém disso, o Python suporta praticamente **todas as plataformas**: Windows, macOS, Linux, e até microcontroladores.\n\nGraças a essa versatilidade, a comunidade desenvolveu bibliotecas incríveis que fazem o Python dominar áreas como:\n- **Desenvolvimento Web** (Django, Flask, FastAPI)\n- **Análise de Dados e Big Data** (Pandas, NumPy)\n- **Inteligência Artificial e Machine Learning** (TensorFlow, PyTorch)\n- **Automação de Tarefas** (RPA, Scripts)",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "O repositório oficial de pacotes extras se chama PyPI (Python Package Index).",
+        "Você usa o comando 'pip install' para baixar essas bibliotecas extras criadas pela comunidade."
+      ],
+      "references": [
+        {
+          "label": "Ecossistema (Python.org)",
+          "url": "https://www.python.org/about/apps/"
+        }
+      ],
+      "quiz": {
+        "question": "Em quais destas áreas o Python é amplamente utilizado? (Selecione todas as opções corretas)",
+        "options": [
+          "Inteligência Artificial",
+          "Sistemas de Aviação Comercial",
+          "Desenvolvimento Web",
+          "Análise de Dados"
+        ],
+        "answer": [
+          0,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "theory",
+      "title": "Aula 4: Compilada vs Interpretada",
+      "description": "Descubra a diferença entre linguagens compiladas e interpretadas.",
+      "content": "Você já parou para pensar como o computador entende o código que escrevemos?\n\nExistem duas abordagens principais:\n\n**1. Linguagens Compiladas (Ex: C, C++)**\nO código inteiro é traduzido (compilado) de uma só vez para a linguagem de máquina (binário) antes de ser executado. É como traduzir um livro inteiro para outro idioma antes de publicá-lo. Isso as torna muito rápidas, mas você precisa compilar novamente sempre que fizer uma alteração.\n\n**2. Linguagens Interpretadas (Ex: Python, JavaScript)**\nO código é lido e executado linha por linha por um programa chamado **Interpretador**. É como ter um tradutor simultâneo ouvindo e traduzindo sua fala em tempo real. Isso torna o desenvolvimento muito mais ágil e fácil de testar, pois você não precisa compilar o programa inteiro a cada mudança.\n\nO Python é classificado como uma linguagem interpretada, o que explica sua incrível flexibilidade e velocidade de desenvolvimento!",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "Apesar de ser interpretado, o Python traduz o código secretamente para um formato intermediário chamado Bytecode para ganhar velocidade.",
+        "A natureza interpretada do Python é o que permite o funcionamento do nosso Console Interativo (REPL)."
+      ],
+      "references": [],
+      "quiz": {
+        "question": "De acordo com o texto, qual é a principal characteristic de uma linguagem interpretada como o Python?",
+        "options": [
+          "Ela é transformada em binário de uma vez só antes de rodar.",
+          "Ela é lida e executada linha por linha pelo Interpretador.",
+          "Ela só roda em computadores com Windows.",
+          "Ela não precisa de memória RAM para funcionar."
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 5,
+      "type": "theory",
+      "title": "Aula 5: Código Fonte e Arquivos .py",
+      "description": "Entenda o que é o código fonte e como salvamos nossos scripts em Python.",
+      "content": "Para o computador executar nossas instruções, nós precisamos escrevê-las em um arquivo. O conjunto de todas as instruções escritas por nós é chamado de **Código Fonte**.\n\nNo Python, os arquivos de código fonte usam a extensão **.py** no final do nome. Por exemplo: **meu_jogo.py** ou **calculadora.py**.\n\nQuando você escreve um código Python e o salva com a extensão **.py**, você está criando o que chamamos de um **Script Python**.\n\nVocê pode editar um arquivo **.py** em absolutamente qualquer editor de texto (até mesmo o Bloco de Notas!), mas a maioria dos programadores utiliza ambientes especializados chamados de **IDE** (como o VS Code ou PyCharm) que colorem as palavras e ajudam a encontrar erros facilmente.",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "A extensão .py é o que avisa ao seu sistema operacional que aquele arquivo deve ser aberto usando o interpretador Python.",
+        "Sempre use nomes sem espaços para seus arquivos Python. Exemplo: use 'meu_script.py' em vez de 'meu script.py'."
+      ],
+      "references": [],
+      "quiz": {
+        "question": "Qual é a extensão oficial utilizada para salvar arquivos contendo o código fonte de um programa em Python?",
+        "options": [
+          ".exe",
+          ".py",
+          ".txt",
+          ".python"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 6,
+      "type": "theory",
+      "title": "Aula 6: Versões do Python (2 vs 3)",
+      "description": "Descubra a diferença entre as versões do Python e por que manter-se atualizado é fundamental.",
+      "content": "Como qualquer tecnologia, o Python evolui com o tempo. A maior e mais famosa ruptura na história da linguagem ocorreu com a transição do **Python 2** para o **Python 3**.\n\nLançado em 2008, o Python 3 introduziu melhorias tão profundas na forma de processar textos e organizar a linguagem que quebrou a compatibilidade com códigos antigos do Python 2. Isso significava que um código escrito para Python 2 muitas vezes não funcionava no Python 3 sem ser reescrito.\n\n**Por que Migrar?**\nApesar de dolorosa, a migração foi essencial! O Python 3 trouxe melhorias dramáticas de performance, suporte nativo universal a caracteres de todos os idiomas (Unicode/UTF-8) e um ecossistema muito mais limpo. O Python 2 foi **oficialmente aposentado e morto** no ano de 2020. Usá-lo hoje é un risco grave de segurança.\n\nHoje já estamos em versões como Python 3.12+, onde a linguagem se torna cada vez mais robusta e rápida a cada atualização anual.",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "Sempre inicie novos projetos usando a versão mais recente do Python 3.",
+        "Se você encontrar tutoriais muito antigos na internet usando 'print ola' sem parênteses, saiba que é do defunto Python 2!"
+      ],
+      "references": [],
+      "quiz": {
+        "question": "Por que a comunidade de programadores decidiu abandonar definitivamente o Python 2?",
+        "options": [
+          "Porque ele passou a ser cobrado e deixou de ser gratuito.",
+          "Para forçar as empresas a comprarem computadores novos.",
+          "Porque ele foi oficialmente aposentado, tornando-se inseguro e obsoleto perante o Python 3.",
+          "Porque o seu criador perdeu o código fonte em 2020."
+        ],
+        "answer": 2
+      }
+    },
+    {
+      "id": 7,
+      "type": "theory",
+      "title": "Aula 7: Regras para Nomear Variáveis",
+      "description": "Aprenda o padrão snake_case e como batizar suas variáveis corretamente.",
+      "content": "Antes de começarmos a criar variáveis e escrever códigos reais, precisamos aprender as regras de batismo do Python!\n\nNa programação, existem regras estritas sobre o que pode ou não ser o nome de uma variável:\n1. **Sem espaços**: Você jamais pode usar espaços. **preço baixo** vai gerar um erro!\n2. **Sem acentuação ou cedilha**: Esqueça o português correto. Em vez de **Saudação**, escreva **saudacao**. Em vez de **preço**, use **preco**.\n3. **Não comece com números**: **1_lugar** dará erro, mas **lugar_1** é aceito.\n\n### O Padrão Snake Case 🐍\nNo Python, a comunidade adotou o padrão chamado **snake_case** (case de cobra). Nele, nós usamos letras minúsculas e substituímos os espaços por um _underline_ (**_**).\n\n- ❌ Errado: **preço baixo**, **PrecoBaixo** ou **preçobaixo**\n- ✅ Certo: **preco_baixo**\n\nAdotar esse padrão desde o primeiro dia deixará seu código profissional e legível para qualquer programador do mundo!",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "Lembre-se: O Python é 'Case Sensitive', ou seja, a variável 'Idade' (com I maiúsculo) é completamente diferente da variável 'idade' (com i minúsculo).",
+        "Tente sempre dar nomes que façam sentido. Variáveis como 'a' ou 'x' deixam o código confuso de ler."
+      ],
+      "references": [],
+      "quiz": {
+        "question": "De acordo com o padrão oficial do Python (snake_case) e as regras da linguagem, qual é a forma correta de nomear uma variável para guardar a 'pontuação máxima'?",
+        "options": [
+          "pontuação máxima",
+          "pontuacao_maxima",
+          "PontuacaoMaxima",
+          "pontuação_máxima"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 8,
+      "type": "coding",
+      "title": "Aula 8: Variáveis e Textos (Strings)",
+      "description": "Aprenda lo que é uma variável e como guardar textos nela.",
+      "content": "Pense em uma **Variável** como uma caixinha ou etiqueta onde você guarda um dado na memória do computador para usar depois. Para dar um nome a essa caixa, basta escrever o nome e usar o símbolo de igual **=**.\n\nUm dos tipos de dados mais comuns é o **Texto** (chamado na programação de **String**). Para que o Python saiba que você está escrevendo um texto livre e não um comando do sistema, você deve **obrigatoriamente envolver o texto em aspas** (simples ou duplas).\n\nPara mostrar o valor dessa variável na tela, usamos a função mágica **print()**.\n\n**Dissecando o código abaixo:**\n- **=** ➔ Sinal de atribuição (significa \"recebe o valor de\").\n- **nome** ➔ Variável que irá guardar o dado.\n- **\"Alice\"** ➔ Texto (String) que será armazenado. Obrigatoriamente com aspas!\n- **print** ➔ Comando que serve para mostrar algo na tela.\n- **(nome)** ➔ Entregamos a variável ao print para ele mostrar o que tem lá dentro.\n\n### Explorando Strings\nVocê pode usar caracteres de escape para formatar o texto:\n- **\\n**: Cria uma nova linha (quebra de linha).\n- **\\t**: Cria uma tabulação (espaço longo).\n\nSe não quiser que caracteres como \\ sejam interpretados (como em caminhos de arquivo), use **Strings brutas (raw strings)** adicionando um **r** antes das aspas iniciais.\n\nVocê também pode brincar com strings fazendo operações matemáticas! É possível usar **+** para juntar (concatenar) e **\\*** para repetir.\nDuas strings literais lado a lado são unidas automaticamente pelo Python. Isso é ótimo para quebrar strings longas em várias linhas de código usando parênteses.",
+      "example": "nome = \"Alice\"\nmensagem = 'Olá, seja bem-vindo!'\n\nprint(nome)\nprint(mensagem)\n\n# Nova linha e Tabulação\nprint('Primeira linha.\\nSegunda linha.')\nprint('Nome:\\tAlice')\n\n# Raw string (ignora os escapes)\nprint(r'C:\\alguma\\pasta')\n\n# Concatenação e Repetição\nprint(3 * 'un' + 'ium')\n\n# Juntando strings literais e quebra de texto longo\ntexto_longo = ('Isso é um texto muito grande ' \n               'que foi quebrado em duas linhas de código.')\nprint('Py' 'thon')\nprint(texto_longo)",
+      "tips": [
+        "Não pode haver espaços no nome da variável! Use underline '_' (snake_case) em vez disso.",
+        "Lembre-se: sem as aspas, o Python vai achar que o seu texto é o nome de uma variável que não existe!"
+      ],
+      "references": [],
+      "quiz": {
+        "question": "O que acontece se esquecermos de colocar as aspas ao redor de um texto?",
+        "options": [
+          "O texto fica invisível na tela.",
+          "O Python acha que é um nome de variável ou comando e dá erro.",
+          "Ele adiciona aspas sozinho magicamente.",
+          "O código roda, mas o texto fica de ponta cabeça."
+        ],
+        "answer": 1
+      },
+      "exercises": [
+        {
+          "description": "1. Crie uma variável **meu_nome** contendo exatamente a palavra 'Estudante' e exiba com **print()**.",
+          "expected_output": "Estudante"
+        },
+        {
+          "description": "2. Imprima exatamente a mensagem 'Estou aprendendo Python' (sem esquecer das aspas).",
+          "expected_output": "Estou aprendendo Python"
+        },
+        {
+          "description": "3. Para finalizar, imprima apenas a palavra 'Fim'.",
+          "expected_output": "Fim"
+        },
+        {
+          "description": "4. Imprima exatamente a palavra 'python' (tudo em minúsculo).",
+          "expected_output": "python"
+        },
+        {
+          "description": "5. Crie a variável **saudacao = \"Bom dia!\"** e imprima na tela.",
+          "expected_output": "Bom dia!"
+        },
+        {
+          "description": "6. Imprima a palavra 'Matrix' na tela usando aspas simples.",
+          "expected_output": "Matrix"
+        },
+        {
+          "description": "7. Use o caracter '\\n' para imprimir 'Olá' na primeira linha e 'Mundo' na segunda linha (com apenas um print).",
+          "expected_output": "Olá\nMundo"
+        },
+        {
+          "description": "8. Imprima o texto 'Item:\\tCaneta' usando '\\t' para tabular.",
+          "expected_output": "Item:\tCaneta"
+        },
+        {
+          "description": "9. Imprima a raw string: r'C:\\novo\\teste'",
+          "expected_output": "C:\\novo\\teste"
+        },
+        {
+          "description": "10. Imprima a expressão: 3 * 'un' + 'ium'",
+          "expected_output": "unununium"
+        },
+        {
+          "description": "11. Imprima a concatenação literal lado a lado: 'Py' 'thon'",
+          "expected_output": "Python"
+        },
+        {
+          "description": "### F-Strings (Textos Formatados)\nUma das formas mais modernas e fáceis de misturar textos com variáveis é utilizando **f-strings**. Basta colocar a letra **f** antes das aspas iniciais e envolver as variáveis em chaves **{}**. O Python vai automaticamente substituir as chaves pelo valor da variável na hora de imprimir!\n\n**Exemplo:**\n```python\nidade = 25\nfruta = \"maçã\"\nprint(f\"Eu tenho {idade} anos e gosto de {fruta}.\")\n```"
+        },
+        {
+          "description": "12. Crie uma variável **nome = 'João'** e use uma f-string para imprimir exatamente a frase: 'Meu nome é João'.",
+          "expected_output": "Meu nome é João"
+        },
+        {
+          "description": "13. Crie uma variável **idade = 30** e use f-string para imprimir exatamente: 'Tenho 30 anos'.",
+          "expected_output": "Tenho 30 anos"
+        },
+        {
+          "description": "14. Crie uma variável **animal = 'gato'** e imprima exatamente: 'Eu tenho um gato' usando f-string.",
+          "expected_output": "Eu tenho um gato"
+        },
+        {
+          "description": "15. Usando a variável **cor = 'azul'**, utilize uma f-string para imprimir exatamente: 'O céu é azul'.",
+          "expected_output": "O céu é azul"
+        },
+        {
+          "description": "16. Crie duas variáveis **a = 5** e **b = 10**. Use uma f-string para calcular a soma e imprimir exatamente: 'A soma é 15'. (Dica: você pode fazer matemática dentro das chaves!).",
+          "expected_output": "A soma é 15"
+        },
+        {
+          "description": "17. Crie uma variável **cidade = 'Paris'** e imprima exatamente: 'Viagem para Paris' usando f-string.",
+          "expected_output": "Viagem para Paris"
+        },
+        {
+          "description": "18. Crie uma variável **nota = 10** e imprima exatamente: 'Minha nota foi 10' usando f-string.",
+          "expected_output": "Minha nota foi 10"
+        },
+        {
+          "description": "19. Crie uma variável **comida = 'pizza'** e imprima exatamente: 'Adoro pizza' usando f-string.",
+          "expected_output": "Adoro pizza"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "coding",
+      "title": "Aula 9: Números Inteiros (Int)",
+      "description": "Veja como lidar com matemática exata e números inteiros.",
+      "content": "Além de textos, variáveis são incríveis para guardar números! O tipo numérico mais básico é o **Inteiro** (chamado de **int**).\n\nInteiros são números positivos ou negativos que **não possuem casa decimal**. \n\nA regra de ouro aqui é: **Não use aspas para números!** Se você colocar aspas ao redor de um número (ex: **\"10\"**), o Python vai tratá-lo como um texto e não vai conseguir fazer contas matemáticas com ele.\n\n**Dissecando o código abaixo:**\n- **idade** ➔ O nome da nossa variável.\n- **=** ➔ O sinal que guarda a informação na variável.\n- **25** ➔ O número em si, sem usar aspas! É esse valor numérico de verdade que ficará guardado na variável chamada idade.\n- **print(\"Idade:\", idade)** ➔ O print pode mostrar textos (com aspas) misturados com variáveis, basta separá-los por vírgula.",
+      "example": "idade = 25\nano_nascimento = 1998\ntemperatura = -5\n\nprint(\"Idade:\", idade)\nprint(\"Ano:\", ano_nascimento)\nprint(\"Frio:\", temperatura)",
+      "tips": [
+        "Você pode somar variáveis de números usando o sinal de '+' diretamente no print.",
+        "O Python não tem limite de tamanho para números inteiros. Eles podem ser gigantescos!"
+      ],
+      "references": [],
+      "quiz": {
+        "question": "Por que não devemos usar aspas ao atribuir um número inteiro a uma variável?",
+        "options": [
+          "Porque o número perde o valor e vira zero.",
+          "Porque ele será lido como Texto (String), impossibilitando operações matemáticas.",
+          "Porque aspas são proibidas em qualquer lugar no Python.",
+          "Porque aspas atraem bugs no computador."
+        ],
+        "answer": 1
+      },
+      "exercises": [
+        {
+          "description": "1. Crie a variável **idade** com o valor 25 (sem aspas!) e imprima-a.",
+          "expected_output": "25"
+        },
+        {
+          "description": "2. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a soma de 10 + 20 usando o sinal de '+' direto no **print()**.",
+          "expected_output": "30"
+        },
+        {
+          "description": "3. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a subtração de 10 - 5.",
+          "expected_output": "5"
+        },
+        {
+          "description": "4. Crie uma variável chamada **ano** valendo 2024 e imprima-a.",
+          "expected_output": "2024"
+        },
+        {
+          "description": "5. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a multiplicação de 5 * 4 no console.",
+          "expected_output": "20"
+        },
+        {
+          "description": "6. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a subtração de 100 - 50 no console.",
+          "expected_output": "50"
+        },
+        {
+          "description": "7. Crie uma variável **pontos** valendo 100 e imprima-a.",
+          "expected_output": "100"
+        },
+        {
+          "description": "8. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a soma de 5 + 5.",
+          "expected_output": "10"
+        },
+        {
+          "description": "9. Crie uma variável **fases_concluidas** valendo 3 e imprima-a.",
+          "expected_output": "3"
+        },
+        {
+          "description": "10. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a multiplicação de 10 * 10.",
+          "expected_output": "100"
+        },
+        {
+          "description": "11. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a soma de 200 + 200.",
+          "expected_output": "400"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "coding",
+      "title": "Aula 10: Números Decimais (Float)",
+      "description": "Aprenda a registrar pesos, alturas e moedas com números quebrados.",
+      "content": "Para números que não são exatos, como dinheiro, medidas ou peso, usamos o tipo **Decimal**, conhecido na programação como **Ponto Flutuante** (**float**).\n\nAtenção para uma regra crucial: O Python foi criado no padrão americano, então **sempre utilizamos PONTO (.) no lugar da vírgula** para separar as casas decimais!\n\nEscrever **1,75** (com vírgula) vai quebrar o seu código ou criar uma Tupla (veremos isso depois). O correto é sempre usar **1.75**.\n\n**Dissecando o código abaixo:**\n- **altura** ➔ O nome escolhido para a variável.\n- **=** ➔ Comando para atribuir o valor.\n- **1.75** ➔ Número Decimal (Float). Observe o uso do PONTO no lugar da vírgula!\n- **print(\"Altura:\", altura)** ➔ Mostra na tela o texto guia, seguido do número quebrado guardado na memória.",
+      "example": "altura = 1.75\npeso = 68.5\nsaldo_bancario = 150.99\n\nprint(\"Altura:\", altura)\nprint(\"Peso:\", peso)\nprint(\"Saldo: R$\", saldo_bancario)",
+      "tips": [
+        "Se você quiser somar dois decimais, basta fazer 'preco1 + preco2'.",
+        "É comum computadores terem minúsculas imprecisões ao somar muitos floats (como 0.1 + 0.2 dar 0.300000000004)."
+      ],
+      "references": [],
+      "quiz": {
+        "question": "Qual é a forma correta de escrever o número 'Três e meio' em Python?",
+        "options": [
+          "3,5",
+          "3;5",
+          "3.5",
+          "3-5"
+        ],
+        "answer": 2
+      },
+      "exercises": [
+        {
+          "description": "1. Crie a variável **preco** valendo 19.99 (lembre-se do ponto!) e imprima.",
+          "expected_output": "19.99"
+        },
+        {
+          "description": "2. **(Dica: Crie variáveis para armazenar os números primeiro)** Imprima o resultado da soma de 1.5 + 2.5.",
+          "expected_output": "4.0"
+        },
+        {
+          "description": "3. Imprima exatamente o número de Pi arredondado: 3.1415",
+          "expected_output": "3.1415"
+        },
+        {
+          "description": "4. Crie uma variável chamada **peso** com o valor 75.5 e imprima.",
+          "expected_output": "75.5"
+        },
+        {
+          "description": "5. **(Dica: Crie variáveis para armazenar os números primeiro)** Imprima o resultado da subtração matemática de 5.5 - 2.0 (O resultado deverá ser: 3.5).",
+          "expected_output": "3.5"
+        },
+        {
+          "description": "6. **(Dica: Crie variáveis para armazenar os números primeiro)** Imprima o resultado da divisão de 10.0 / 2.0 (O resultado deverá ser: 5.0).",
+          "expected_output": "5.0"
+        },
+        {
+          "description": "7. Crie uma variável **temperatura** valendo 36.5 e imprima.",
+          "expected_output": "36.5"
+        },
+        {
+          "description": "8. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a soma de 10.5 + 10.5.",
+          "expected_output": "21.0"
+        },
+        {
+          "description": "9. Crie uma variável **distancia** valendo 42.195 e imprima.",
+          "expected_output": "42.195"
+        },
+        {
+          "description": "10. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a subtração de 5.0 - 1.5.",
+          "expected_output": "3.5"
+        },
+        {
+          "description": "11. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule e imprima a divisão de 9.0 / 3.0.",
+          "expected_output": "3.0"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "coding",
+      "title": "Aula 11: Valores Booleanos (Bool)",
+      "description": "Descubra como o computador toma decisões lógicas (Sim ou Não).",
+      "content": "No mundo da computação, tudo se resume a falso ou verdadeiro. Usamos o tipo **Booleano** (**bool**) para representar essa dualidade.\n\nUma variável booleana armazena apenas dois valores absolutos:\n- **True** (Verdadeiro)\n- **False** (Falso)\n\n**Aviso:** Começam obrigatoriamente com letra MAIÚSCULA em Python!\n\nAlém de definir esses valores diretamente, o computador pode descobrir a verdade fazendo **comparações**! O resultado de uma comparação sempre será um Booleano (True ou False). Os símbolos mais comuns são:\n- **>** (Maior que)\n- **<** (Menor que)\n- **==** (Igual a. Atenção: usamos dois sinais de igual para testar igualdade, para não confundir com o sinal de criar variáveis!)\n\n**Dissecando o código abaixo:**\n- **jogo_pausado = False** ➔ Criamos a variável já com o valor lógico.\n- **10 > 5** ➔ O computador verifica e devolve **True** (verdade, 10 é maior que 5).\n- **1 == 2** ➔ O computador verifica e devolve **False** (mentira, 1 não é igual a 2).",
+      "example": "jogo_pausado = False\nusuario_logado = True\n\nprint(\"Pausado?\", jogo_pausado)\nprint(\"Logado?\", usuario_logado)\n\nprint(\"10 é maior que 5?\", 10 > 5)\nprint(\"1 é igual a 2?\", 1 == 2)",
+      "tips": [
+        "Você nunca usa aspas para True ou False. Se usar aspas, vira um mero texto!",
+        "Eles serão a fundação para quando aprendermos sobre a estrutura de condição (IF)."
+      ],
+      "references": [],
+      "quiz": {
+        "question": "Qual é a forma correta de declarar a palavra reservada Falso em Python?",
+        "options": [
+          "false",
+          "FALSE",
+          "Falso",
+          "False"
+        ],
+        "answer": 3
+      },
+      "exercises": [
+        {
+          "description": "1. Crie **estudando_python = True** (t minúsculo não existe em True, use T maiúsculo!) e imprima.",
+          "expected_output": "True"
+        },
+        {
+          "description": "2. Crie **desistindo = False** e imprima.",
+          "expected_output": "False"
+        },
+        {
+          "description": "3. Imprima a resposta do computador para: **print(10 > 5)**.",
+          "expected_output": "True"
+        },
+        {
+          "description": "4. O computador sabe identificar mentiras! Peça para ele analisar imprimindo: **print(5 < 1)**.",
+          "expected_output": "False"
+        },
+        {
+          "description": "5. Verifique igualdades usando dois sinais de igual. Tente imprimir: **print(10 == 10)**.",
+          "expected_output": "True"
+        },
+        {
+          "description": "6. Verifique outra igualdade. Tente imprimir: **print(1 == 2)**.",
+          "expected_output": "False"
+        },
+        {
+          "description": "7. Crie uma variável **conectado = True** e imprima-a.",
+          "expected_output": "True"
+        },
+        {
+          "description": "8. Crie uma variável **bloqueado = False** e imprima-a.",
+          "expected_output": "False"
+        },
+        {
+          "description": "9. O computador sabe que 10 é maior que 20? Peça para ele imprimir: **print(10 > 20)**.",
+          "expected_output": "False"
+        },
+        {
+          "description": "10. Verifique se 100 é igual a 100 usando dois sinais de igual. Imprima: **print(100 == 100)**.",
+          "expected_output": "True"
+        },
+        {
+          "description": "11. Verifique se 50 é menor que 100. Imprima: **print(50 < 100)**.",
+          "expected_output": "True"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "coding",
+      "title": "Aula 12: Operadores Aritméticos",
+      "description": "Operações matemáticas básicas em Python",
+      "content": "Operadores aritméticos permitem fazer cálculos matemáticos em Python.\n\nOperadores disponíveis:\n- **+** (adição)\n- **-** (subtração)\n- **\\*** (multiplicação)\n- **/** (divisão)\n- **//** (divisão inteira)\n- **%** (módulo - resto da divisão)\n- **\\*\\*** (exponenciação)",
+      "example": "anos = 10\ndias_no_ano = 365\na = 20\nb = 5\n\nprint(\"Adição:\", a + b)\nprint(\"Subtração:\", a - b)\nprint(\"Multiplicação:\", a * b)\nprint(\"Divisão:\", a / b)\nprint(\"Idade em dias:\", anos * dias_no_ano)",
+      "tips": [
+        "A divisão normal (/) sempre retorna um número decimal (float)",
+        "O operador de módulo (%) é muito útil para descobrir se um número é par ou ímpar"
+      ],
+      "references": [
+        {
+          "label": "Operadores Matemáticos",
+          "url": "https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex"
+        }
+      ],
+      "quiz": {
+        "question": "Qual o resultado da expressão '10 % 3'?",
+        "options": [
+          "3",
+          "1",
+          "0",
+          "3.33"
+        ],
+        "answer": 1
+      },
+      "exercises": [
+        {
+          "description": "1. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule a soma de 10 + 5.",
+          "expected_output": "15"
+        },
+        {
+          "description": "2. Calcule a idade de uma pessoa em dias. Use a variável `anos` valendo 10 e multiplique por 365.",
+          "expected_output": "3650"
+        },
+        {
+          "description": "3. Calcule a subtração de 20 - 8.",
+          "expected_output": "12"
+        },
+        {
+          "description": "4. Calcule a divisão real de 100 / 4.",
+          "expected_output": "25.0"
+        },
+        {
+          "description": "5. Use a divisão inteira (`//`) para dividir 10 por 3 e imprima o resultado.",
+          "expected_output": "3"
+        },
+        {
+          "description": "6. Use o operador de módulo (`%`) para encontrar o resto da divisão de 10 por 3.",
+          "expected_output": "1"
+        },
+        {
+          "description": "7. Use a multiplicação (`*`) para calcular a área de um quadrado de lado 5 (5 * 5) e imprima o resultado.",
+          "expected_output": "25"
+        },
+        {
+          "description": "8. Use a divisão inteira (`//`) para dividir 20 por 6 e imprima o resultado.",
+          "expected_output": "3"
+        },
+        {
+          "description": "9. Use a exponenciação (`**`) para calcular 2 elevado a 3 (2 ** 3) e imprima o resultado.",
+          "expected_output": "8"
+        },
+        {
+          "description": "10. Use o módulo (`%`) para encontrar o resto da divisão de 15 por 4.",
+          "expected_output": "3"
+        },
+        {
+          "description": "11. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule a expressão mista (10 + 5) * 2 e imprima o resultado.",
+          "expected_output": "30"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "coding",
+      "title": "Aula 13: Listas e Iteração",
+      "description": "Trabalhe com listas e loops em Python",
+      "content": "Pense numa lista em Python como uma caixa que guarda vários itens ao mesmo tempo.\n\n**Pra que serve?**\n- Guardar vários dados juntos na mesma variável (tipo uma lista de compras: pão, leite, ovos).\n- Acessar um item específico (o 1º, o 2º…).\n- Passar por todos os itens um por um para fazer alguma coisa (ex.: imprimir cada nome).\n\n**Como funciona na prática (bem simples)**\nEm Python, você cria uma lista assim:\n```python\ncompras = [\"pão\", \"leite\", \"ovos\"]\n```\nAgora `compras` é a “caixa” com 3 itens.\n\n**Como pegar um item**\nVocê pode pegar pelo “número” dele (índice). **Atenção:** em Python a contagem começa em 0.\n\n- `compras[0]` é o primeiro item (“pão”)\n- `compras[1]` é o segundo (“leite”)\n- `compras[2]` é o terceiro (“ovos”)\n\nExemplo:\n```python\nprint(compras[1])  # vai imprimir: leite\n```\n\n**Como trocar um item (Substituir)**\nVocê pode facilmente trocar o que está dentro de uma posição informando o índice e um novo valor.\n```python\ncompras[1] = \"achocolatado\" # O 'leite' foi trocado por achocolatado!\n```\n\n**Como percorrer (ver todos)**\nGeralmente você usa `for` para fazer algo com cada item:\n```python\nfor item in compras:\n    print(item)\n```\nIsso vai imprimir pão, depois leite, depois ovos.\n\n**Quer adicionar ou tirar coisas?**\nAdicionar no final:\n```python\ncompras.append(\"banana\")\n```\nRemover o último (o final):\n```python\ncompras.pop()\n```",
+      "example": "frutas = [\"maçã\", \"banana\", \"laranja\"]\n\nprint(\"Primeira fruta:\", frutas[0])\n# len() vem de 'length' (tamanho). Conta quantos itens tem na caixa.\nprint(\"Número de frutas:\", len(frutas))\n\nprint(\"\\nTodas as frutas:\")\n# for = 'para cada'. in = 'dentro de'. (Para cada fruta dentro de frutas:)\nfor fruta in frutas:\n    print(\"-\", fruta)\n\n# Você também pode substituir itens facilmente!\nfrutas[0] = \"morango\"\nprint(\"\\nSubstituímos a maçã pelo morango:\")\nprint(frutas)\n\n# append() significa anexar/adicionar no fim.\nfrutas.append(\"melancia\")\nprint(\"\\nApós adicionar melancia:\")\nprint(frutas)",
+      "tips": [
+        "Os índices de listas começam em 0 e terminam em tamanho - 1",
+        "Você pode usar índices negativos, onde -1 acessa o último elemento"
+      ],
+      "references": [
+        {
+          "label": "Tutorial de Listas em Python",
+          "url": "https://docs.python.org/3/tutorial/datastructures.html#more-on-lists"
+        }
+      ],
+      "quiz": {
+        "question": "Qual método usamos para adicionar um elemento ao final de uma lista?",
+        "options": [
+          "add()",
+          "push()",
+          "append()",
+          "insert()"
+        ],
+        "answer": 2
+      },
+      "exercises": [
+        {
+          "description": "1. Crie uma lista chamada `frutas` contendo exatamente as palavras 'maçã' e 'banana' e a imprima. (Dica: o print mostrará algo como `['maçã', 'banana']`).",
+          "expected_output": "['maçã', 'banana']"
+        },
+        {
+          "description": "2. Na linha seguinte, adicione 'uva' na lista usando `frutas.append('uva')` e imprima a lista completa.",
+          "expected_output": "['maçã', 'banana', 'uva']"
+        },
+        {
+          "description": "3. Imprima apenas o primeiro item da lista usando o índice zero: `print(frutas[0])`.",
+          "expected_output": "maçã"
+        },
+        {
+          "description": "4. Remova a 'banana' da lista usando `frutas.remove('banana')` e imprima a lista para ver como ficou.",
+          "expected_output": "['maçã', 'uva']"
+        },
+        {
+          "description": "5. Imprima o último item da lista. O Python tem um atalho secreto para isso: use `print(frutas[-1])`.",
+          "expected_output": "uva"
+        },
+        {
+          "description": "6. Substitua o primeiro item atribuindo 'pera' a `frutas[0] = 'pera'` e imprima a lista atualizada.",
+          "expected_output": "['pera', 'uva']"
+        },
+        {
+          "description": "7. Descubra quantos itens sobraram! Use `print(len(frutas))` para imprimir o tamanho atual da lista.",
+          "expected_output": "2"
+        },
+        {
+          "description": "8. Crie um laço `for fruta in frutas:` e mande imprimir cada `fruta` em uma linha separada.",
+          "expected_output": "pera\nuva"
+        },
+        {
+          "description": "9. Retire o último item da lista usando o comando `frutas.pop()` e, na linha seguinte, imprima a lista.",
+          "expected_output": "['pera']"
+        },
+        {
+          "description": "10. Adicione a palavra 'morango' usando `append()` e depois imprima o tamanho final da lista usando `len()`.",
+          "expected_output": "2"
+        }
+      ]
+    },
+    {
+      "id": 1001,
+      "type": "coding",
+      "title": "Prova Prática 1: Lógica da Calculadora",
+      "description": "Teste seus conhecimentos resolvendo lógicas de uma calculadora com if/else e loops.",
+      "sections": [
+        {
+          "content": "Chegou a hora de provar que você domina as ferramentas básicas! Nesta prova, vamos simular operações matemáticas de uma calculadora usando variáveis.",
+          "example": "# Simulação de valores\noperacao = 'soma'\na = 15\nb = 5\n\nif operacao == 'soma':\n    print(a + b)",
+          "exercises": [
+            {
+              "description": "1. Defina `op = 'sub'` e variáveis `x=20` e `y=8`. Crie um `if` que verifique se `op` é 'sub' e imprima a subtração.",
+              "expected_output": "12"
+            },
+            {
+              "description": "2. Defina `op = 'mult'`, `x=5`, `y=4`. Crie a condição correspondente e imprima a multiplicação.",
+              "expected_output": "20"
+            }
+          ]
+        },
+        {
+          "content": "### Aumentando a Dificuldade\nAgora, vamos usar os laços de repetição (`while` ou `for`) para simular cálculos em lote.",
+          "example": "# Exemplo de repetição\nfor i in range(3):\n    print('Calculando...')",
+          "exercises": [
+            {
+              "description": "3. Faça um loop `while` que imprima os múltiplos de 10 de 10 até 30 (10, 20, 30).",
+              "expected_output": "10\n20\n30"
+            },
+            {
+              "description": "4. Defina `x = 10`. Faça um `if` para imprimir 'Par' se `x % 2 == 0`, senão imprima 'Ímpar'.",
+              "expected_output": "Par"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "theory",
+      "title": "Aula 14: Abrindo seu Apetite",
+      "description": "Descubra por que o Python é a ferramenta perfeita para automatizar tarefas chatas.",
+      "content": "Sabe aquelas tarefas repetitivas no computador que dão preguiça só de pensar? O Python foi criado justamente para ser a sua 'varinha mágica' da automação! Com ele, você escreve pequenos roteiros (scripts) que fazem o trabalho pesado para você.\n\nE o melhor: o Python é uma **linguagem interpretada**. Isso significa que você não precisa passar por processos chatos e demorados de 'compilação' (traduzir tudo para a máquina) antes de testar. Você escreve o código e ele roda na mesma hora. Simples assim!",
+      "example": "",
+      "exercise": "",
+      "tips": [
+        "No Python, você pode salvar pedacinhos úteis de código (módulos) e reaproveitá-los em outros projetos.",
+        "A linguagem já vem com uma 'bateria inclusa': uma biblioteca gigantesca de ferramentas prontas para você usar."
+      ],
+      "references": [
+        {
+          "label": "Abrindo seu apetite",
+          "url": "https://docs.python.org/pt-br/3/tutorial/appetite.html"
+        }
+      ],
+      "quiz": {
+        "question": "Qual é a grande vantagem do Python ser uma 'linguagem interpretada' quando queremos automatizar algo?",
+        "options": [
+          "O computador lê mais devagar para não errar.",
+          "Você testa e roda o código na hora, sem perder tempo compilando (traduzindo tudo antes).",
+          "Ele só funciona se estiver conectado à internet.",
+          "Você é obrigado a usar blocos de montar coloridos."
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 15,
+      "type": "theory",
+      "title": "Aula 15: O Interpretador e o Modo Interativo",
+      "description": "Aprenda a bater um papo ao vivo com o Python através do terminal.",
+      "content": "Imagine que o **Modo Interativo** é como abrir um chat no WhatsApp diretamente com o cérebro do Python! Quando você abre o terminal e digita `python3`, você entra nessa sala de bate-papo.\n\nLá, o Python fica aguardando suas mensagens mostrando três setinhas: `>>>`. É só digitar um comando matemático ou de texto, apertar Enter, e ele responde na hora! Se você mandar uma mensagem que precisa de mais de uma linha (como uma condição), ele mostra três pontinhos `...` para dizer: 'Pode continuar, estou te ouvindo!'.",
+      "example": ">>> o_mundo_e_plano = True\n>>> if o_mundo_e_plano:\n...     print(\"Cuidado para não cair!\")\n...\nCuidado para não cair!",
+      "exercise": "",
+      "tips": [
+        "Para sair do modo interativo no Unix/Linux, você pode digitar Ctrl-D ou o comando quit().",
+        "No Windows, você pode sair pressionando Ctrl-Z seguido de Enter."
+      ],
+      "references": [
+        {
+          "label": "Utilizando o interpretador Python",
+          "url": "https://docs.python.org/pt-br/3/tutorial/interpreter.html"
+        }
+      ],
+      "quiz": {
+        "question": "Se você está no 'chat' com o Python e ele mostra três pontinhos (...), o que ele está querendo dizer?",
+        "options": [
+          "Que o seu computador travou.",
+          "Que ele está esperando você terminar de digitar as próximas linhas de um comando longo.",
+          "Que ele perdeu a conexão com a internet.",
+          "Que o programa foi fechado com sucesso."
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 16,
+      "type": "theory",
+      "title": "Aula 16: Passagem de Argumentos",
+      "description": "Entenda como enviar 'ingredientes extras' para o seu programa antes dele rodar.",
+      "content": "Às vezes, seu programa precisa de informações externas logo na hora de ser ligado. Imagine que seu script é uma receita de bolo, e você quer dizer o sabor antes de dar o 'Play' (ex: `python3 faz_bolo.py chocolate`).\n\nEsses ingredientes extras são chamados de **Argumentos**. O Python pega tudo que você digitou depois do nome do programa e guarda numa caixinha especial chamada `sys.argv`. O item número zero (`sys.argv[0]`) é sempre o nome do seu arquivo, e o item número um (`sys.argv[1]`) já é a palavra 'chocolate'!",
+      "example": "# Se rodarmos no terminal: python3 script.py argumento1\nimport sys\nprint(sys.argv[0])  # Exibe: 'script.py'\nprint(sys.argv[1])  # Exibe: 'argumento1'",
+      "exercise": "",
+      "tips": [
+        "Para acessar a lista sys.argv, você deve obrigatoriamente importar o módulo sys usando 'import sys'.",
+        "Se nenhum script for passado (modo interativo), sys.argv[0] será uma string vazia."
+      ],
+      "references": [
+        {
+          "label": "Passagem de argumentos",
+          "url": "https://docs.python.org/pt-br/3/tutorial/interpreter.html#argument-passing"
+        }
+      ],
+      "quiz": {
+        "question": "Onde o Python guarda os 'ingredientes extras' (argumentos) que digitamos ao lado do nome do programa no terminal?",
+        "options": [
+          "Dentro de um arquivo de texto escondido.",
+          "Na lista mágica chamada sys.argv.",
+          "Na pasta Downloads do sistema.",
+          "Direto na nuvem."
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 17,
+      "type": "theory",
+      "title": "Aula 17: Codificação de Arquivos de Código-Fonte",
+      "description": "Entenda como o Python lê acentos e caracteres especiais sem bugar.",
+      "content": "Já abriu um site e viu caracteres estranhos tipo 'Ã§Ã£o' no lugar de cedilhas e acentos? Isso acontece quando o computador erra o 'dicionário' de leitura.\n\nPara evitar isso, o Python usa como padrão um super dicionário chamado **UTF-8**. Ele é capaz de entender caracteres de praticamente todos os idiomas do mundo, inclusive emojis! Graças ao UTF-8, você pode escrever variáveis e comentários com acentos (ç, ã, é) sem medo de quebrar o programa.",
+      "example": "# -*- coding: cp1252 -*-\n# O exemplo acima define a codificação do arquivo como Windows-1252",
+      "exercise": "",
+      "tips": [
+        "Mantenha seus arquivos sempre em UTF-8 para evitar problemas se você enviar seu código para um amigo com outro sistema operacional.",
+        "Quase sempre você não precisa mexer nisso. O Python já é inteligente o suficiente!"
+      ],
+      "references": [
+        {
+          "label": "Codificação de código-fonte",
+          "url": "https://docs.python.org/pt-br/3/tutorial/interpreter.html#source-code-encoding"
+        }
+      ],
+      "quiz": {
+        "question": "Qual é o 'super dicionário' padrão do Python que permite usarmos acentos e cedilhas sem dar erro?",
+        "options": [
+          "Dicionário Aurélio",
+          "UTF-8",
+          "Código Morse",
+          "Inglês Básico"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 18,
+      "type": "coding",
+      "title": "Aula 18: Usando Python como Calculadora - Números",
+      "description": "Entenda como fazer continhas, dividir pizzas e elevar números à potência.",
+      "tips": [
+        "Use o sinal de igual '=' apenas para guardar resultados dentro de variáveis.",
+        "Se você estiver batendo papo no terminal (modo interativo), o símbolo '_' (underline) guarda o resultado da última continha feita."
+      ],
+      "references": [
+        {
+          "label": "Numbers no Tutorial Python",
+          "url": "https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers"
+        }
+      ],
+      "quiz": {
+        "question": "Qual símbolo nós usamos no Python para fazer uma divisão inteira (aquela que ignora os centavos/frações)?",
+        "options": [
+          "/",
+          "%",
+          "//",
+          "**"
+        ],
+        "answer": 2
+      },
+      "sections": [
+        {
+          "content": "O Python é uma calculadora excelente! Para somar, subtrair e multiplicar usamos os sinais que já conhecemos (`+`, `-`, `*`). Mas a divisão tem um truque: o operador `/` sempre devolve um número 'quebrado' (decimal com vírgula, que no Python usa ponto, chamado de **float**).\n\nSe você quiser dividir algo ignorando os pedaços menores (divisão inteira), use as duas barras `//`. Se quiser saber o que 'sobrou' da divisão (o resto da pizza), use o símbolo de porcentagem `%`. E para elevar um número ao quadrado ou ao cubo, não usamos o acento circunflexo, mas sim dois asteriscos `**`!",
+          "example": "# Divisão normal (retorna float)\nprint(17 / 3)   # 5.666666666666667\n\n# Divisão inteira (descarta a fração)\nprint(17 // 3)  # 5\n\n# Resto da divisão\nprint(17 % 3)   # 2\n\n# Exponenciação (2 elevado a 7)\nprint(2 ** 7)   # 128",
+          "exercises": [
+            {
+              "description": "1. Crie variáveis para calcular e imprimir o resultado da divisão inteira de 25 por 4 usando '//'.",
+              "expected_output": "6"
+            },
+            {
+              "description": "2. Calcule e imprima o resto da divisão de 25 por 4 usando o operador '%'.",
+              "expected_output": "1"
+            },
+            {
+              "description": "3. Calcule e imprima o valor de 5 elevado ao cubo (5 elevado a 3) usando o operador '**'.",
+              "expected_output": "125"
+            },
+            {
+              "description": "4. Calcule e imprima o resultado de 10 mais 5, multiplicado por 2.",
+              "expected_output": "20"
+            },
+            {
+              "description": "5. Imprima o resultado da divisão inteira de 100 por 3.",
+              "expected_output": "33"
+            }
+          ]
+        },
+        {
+          "content": "Além das operações básicas, o Python possui operadores poderosos como a divisão inteira (`//`), que descarta as casas decimais, o resto da divisão (`%`), muito útil para descobrir se um número é par ou ímpar, e a exponenciação (`**`), para elevar um número à potência de outro.",
+          "example": "# Divisão inteira\nprint(10 // 3)  # Imprime: 3\n\n# Resto da divisão (módulo)\nprint(10 % 3)   # Imprime: 1\n\n# Exponenciação (potência)\nprint(2 ** 3)   # Imprime: 8",
+          "exercises": [
+            {
+              "description": "6. Imprima o resto da divisão de 100 por 3.",
+              "expected_output": "1"
+            },
+            {
+              "description": "7. Imprima o resultado de 2 elevado à potência de 10.",
+              "expected_output": "1024"
+            },
+            {
+              "description": "8. Crie duas variáveis, a=15 e b=4. Imprima o resultado da divisão inteira de 'a' por 'b'.",
+              "expected_output": "3"
+            },
+            {
+              "description": "9. Crie duas variáveis, x=10 e y=2. Imprima x elevado a y.",
+              "expected_output": "100"
+            },
+            {
+              "description": "10. Qual o resto da divisão de 50 por 7? Imprima o resultado.",
+              "expected_output": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "type": "coding",
+      "title": "Aula 19: Strings Avançadas - Índices e Fatiamento",
+      "description": "Aprenda a fatiar textos e pegar apenas as letras que você quiser.",
+      "tips": [
+        "Textos (strings) são 'engessados' (imutáveis). Você não pode trocar uma letra de um texto que já foi criado, só pode criar um novo texto inteiro.",
+        "Se você tentar pegar um vagão que não existe (tipo a letra 100 de uma palavra pequena), o Python vai reclamar com um erro!"
+      ],
+      "references": [
+        {
+          "label": "Text no Tutorial Python",
+          "url": "https://docs.python.org/pt-br/3/tutorial/introduction.html#text"
+        }
+      ],
+      "quiz": {
+        "question": "O que acontece se a gente tentar trocar uma única letra de um texto usando seu índice (ex: texto[0] = 'a')?",
+        "options": [
+          "A letra é trocada sem problemas.",
+          "A letra vai parar no final do texto.",
+          "O Python dá bronca e acusa erro, porque textos não podem ser alterados depois de criados (são imutáveis).",
+          "A letra é apagada."
+        ],
+        "answer": 2
+      },
+      "sections": [
+        {
+          "content": "Imagine que uma palavra é como um trem, e cada letra viaja em um vagão numerado. No Python, a primeira letra fica no vagão zero (`0`)! Para pegar uma letra, colocamos o número do vagão entre colchetes (ex: `texto[0]`). Se quisermos contar de trás para frente, usamos números negativos (o `-1` é sempre o último vagão).\n\nVocê também pode pegar 'pedaços' inteiros do trem usando o **fatiamento**. Basta colocar `[inicio:fim]`. Ele vai pegar as letras a partir do início e parar logo antes do fim.",
+          "example": "palavra = 'Python'\nprint(palavra[0])   # 'P'\nprint(palavra[-1])  # 'n' (último)\n\n# Fatiamento (slicing)\nprint(palavra[0:2]) # 'Py'\nprint(palavra[2:5]) # 'tho'\nprint(palavra[:2])  # 'Py' (omite o início, assume 0)\nprint(palavra[4:])  # 'on' (omite o fim, assume o resto)",
+          "exercises": [
+            {
+              "description": "1. Dada a variável `texto = 'Programador'`, use fatiamento para imprimir apenas os 4 primeiros caracteres ('Prog').",
+              "expected_output": "Prog"
+            },
+            {
+              "description": "2. Usando a mesma variável `texto = 'Programador'`, use fatiamento omitindo o índice inicial para obter os 5 primeiros caracteres ('Progr').",
+              "expected_output": "Progr"
+            },
+            {
+              "description": "3. Imprima o último caractere de `texto = 'Programador'` usando um índice negativo.",
+              "expected_output": "r"
+            },
+            {
+              "description": "4. Dada a variável `texto = 'Python'`, imprima as letras 'th' usando fatiamento.",
+              "expected_output": "th"
+            },
+            {
+              "description": "5. Dada a variável `texto = 'Automacao'`, imprima as letras a partir do índice 4 até o final.",
+              "expected_output": "macao"
+            }
+          ]
+        },
+        {
+          "content": "O fatiamento de strings (slicing) pode ir ainda além usando um terceiro parâmetro chamado 'passo' (step). A sintaxe completa é `texto[inicio:fim:passo]`. Se você usar um passo negativo, por exemplo `-1`, o Python irá ler o texto de trás para frente, invertendo a palavra magicamente!",
+          "example": "texto = 'Python'\n\n# Pulando de 2 em 2 letras\nprint(texto[0:6:2])  # Imprime: Pto\n\n# Invertendo uma string rapidamente\nprint(texto[::-1])   # Imprime: nohtyP",
+          "exercises": [
+            {
+              "description": "6. Usando a palavra `texto = 'Desenvolvedor'`, imprima o penúltimo caractere usando índice negativo.",
+              "expected_output": "o"
+            },
+            {
+              "description": "7. Com a variável `texto = 'Computador'`, imprima apenas a palavra 'Computa' fatiando desde o início.",
+              "expected_output": "Computa"
+            },
+            {
+              "description": "8. Crie uma variável `palavra = 'Maravilhoso'` e imprima o caractere no índice 4.",
+              "expected_output": "i"
+            },
+            {
+              "description": "9. Dada a string `texto = 'Bolo de Chocolate'`, fatiar e imprimir apenas a palavra 'Chocolate'.",
+              "expected_output": "Chocolate"
+            },
+            {
+              "description": "10. Com a palavra `texto = 'Inteligencia'`, fatiar para pegar apenas 'gencia'.",
+              "expected_output": "gencia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1002,
+      "type": "coding",
+      "title": "Prova Prática 2: Gerador de Nicknames e Senhas",
+      "description": "Um sistema que cria apelidos ou senhas temporárias baseados no nome completo do usuário.",
+      "sections": [
+        {
+          "content": "Você foi contratado para criar um gerador de nicks e senhas!\n\n**O Desafio:** O usuário fornece um nome completo. O sistema deve gerar variações usando fatiamento.\n* Dica: use o método `.upper()` para deixar em maiúsculo e o fatiamento negativo para ler de trás para frente.",
+          "example": "# Dicas úteis\nteste = 'banana'\nprint(teste[0])       # Primeira letra: b\nprint(teste[:3])      # Três primeiras: ban\nprint(teste[::-1])    # Invertido: ananab",
+          "exercises": [
+            {
+              "description": "1. **Iniciais**: Dado `nome = 'Ana Silva'`, imprima a primeira letra do primeiro nome concatenada com a primeira do sobrenome (A dica é nome[0] + nome[4]).",
+              "expected_output": "AS"
+            },
+            {
+              "description": "2. **Apelido Curto**: Usando `nome = 'Ana Silva'`, use fatiamento para pegar os primeiros 4 caracteres e `.upper()` para maiúsculo (Deve sair 'ANA ').",
+              "expected_output": "ANA "
+            }
+          ]
+        },
+        {
+          "content": "### Segurança Máxima!\nPara a senha temporária, vamos brincar com a leitura invertida dos caracteres.",
+          "example": "ano = '2023'\npalavra = 'carro'\nprint(palavra[-2:] + ano) # ro2023",
+          "exercises": [
+            {
+              "description": "3. **Senha Temporária**: Dado `nome = 'Ana Silva'`, imprima as últimas 3 letras do nome INVERTIDAS, concatenadas com o ano '2023' (Saída: 'aviL2023'). Dica: fatie `nome[-3:]` e reverta com `[::-1]`.",
+              "expected_output": "aviL2023"
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "question": "Se usarmos fatiamento em uma palavra string[-1], qual caractere o Python irá nos devolver?",
+        "options": [
+          "O primeiro caractere.",
+          "O último caractere.",
+          "Vai dar erro (SyntaxError)."
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 20,
+      "type": "coding",
+      "title": "Aula 20: Listas e Fatiamento",
+      "description": "Descubra as listas, que são como sacolas de supermercado que você pode alterar.",
+      "tips": [
+        "Você pode esvaziar partes da sua lista trocando fatias inteiras por uma lista vazia `[]`.",
+        "A função mágica len() serve para contar quantos itens a sua lista tem no total."
+      ],
+      "references": [
+        {
+          "label": "Lists no Tutorial Python",
+          "url": "https://docs.python.org/pt-br/3/tutorial/introduction.html#lists"
+        }
+      ],
+      "quiz": {
+        "question": "Qual a grande diferença mágica entre Listas e Textos (Strings) no Python?",
+        "options": [
+          "Os Textos podem ser fatiados, mas as Listas não.",
+          "As Listas são flexíveis (você pode alterar/trocar itens dentro delas), mas os Textos são engessados (imutáveis).",
+          "Textos usam colchetes, Listas usam aspas.",
+          "As Listas não deixam você olhar de trás para frente (índice negativo)."
+        ],
+        "answer": 1
+      },
+      "sections": [
+        {
+          "content": "Lembra que dissemos que os textos são engessados? As **Listas**, por outro lado, são totalmente maleáveis (mutáveis)! Elas são criadas usando colchetes `[]` e separando os itens por vírgulas.\n\nVocê pode usar os mesmos truques dos 'vagões de trem' (índices e fatiamento) nas listas. A grande diferença é que, numa lista, você pode ir lá e trocar o conteúdo de uma posição, adicionar itens novos ou remover coisas à vontade, sem precisar criar a lista toda do zero de novo.",
+          "example": "quadrados = [1, 4, 9, 16, 25]\nprint(quadrados[0])    # 1\nprint(quadrados[-2:])  # [16, 25]\n\n# Modificando itens por serem mutáveis\ncubos = [1, 8, 27, 65, 125]  # 65 está errado\ncubos[3] = 64                # corrigindo\nprint(cubos)                 # [1, 8, 27, 64, 125]",
+          "exercises": [
+            {
+              "description": "1. Crie uma lista chamada `letras = ['a', 'b', 'c', 'd']`, substitua o primeiro elemento por 'X' e imprima a lista completa.",
+              "expected_output": "['X', 'b', 'c', 'd']"
+            },
+            {
+              "description": "2. Dada a lista `numeros = [10, 20, 30, 40]`, use fatiamento para imprimir apenas os dois últimos elementos (`[30, 40]`).",
+              "expected_output": "[30, 40]"
+            },
+            {
+              "description": "3. Crie a lista `frutas = ['Maca', 'Banana', 'Uva']` e altere o segundo item para 'Pera'. Imprima a lista.",
+              "expected_output": "['Maca', 'Pera', 'Uva']"
+            },
+            {
+              "description": "4. Crie uma lista `pares = [2, 4, 6]`. Imprima o tamanho da lista usando a função len().",
+              "expected_output": "3"
+            },
+            {
+              "description": "5. Dada a lista `valores = [1, 2, 3, 4, 5]`, substitua os dois primeiros itens por [9, 9] usando fatiamento e imprima.",
+              "expected_output": "[9, 9, 3, 4, 5]"
+            }
+          ]
+        },
+        {
+          "content": "Assim como os textos, você também pode usar o parâmetro de 'passo' (step) ao fatiar listas. Além disso, listas possuem métodos embutidos muito úteis como `.append()` para adicionar um item ao final, ou `.sort()` para ordenar os itens instantaneamente.",
+          "example": "numeros = [1, 2, 3, 4, 5, 6]\n# Pegando números pulando de 2 em 2 (ímpares neste caso)\nprint(numeros[::2])  # [1, 3, 5]\n\n# Invertendo a lista inteira com passo negativo\nprint(numeros[::-1]) # [6, 5, 4, 3, 2, 1]",
+          "exercises": [
+            {
+              "description": "6. Junte as listas `[1, 2]` e `[3, 4]` usando o operador `+` e imprima o resultado.",
+              "expected_output": "[1, 2, 3, 4]"
+            },
+            {
+              "description": "7. Dada a lista `letras = ['a', 'b', 'c', 'd', 'e']`, esvazie os três primeiros elementos atribuindo uma lista vazia para o fatiamento e imprima.",
+              "expected_output": "['d', 'e']"
+            },
+            {
+              "description": "8. Crie a lista `itens = [100, 200, 300]`. Imprima o último item usando índice negativo.",
+              "expected_output": "300"
+            },
+            {
+              "description": "9. Crie a lista `cores = ['Azul', 'Verde', 'Amarelo']`. Altere o último item para 'Branco' usando índice negativo e imprima a lista.",
+              "expected_output": "['Azul', 'Verde', 'Branco']"
+            },
+            {
+              "description": "10. Usando a lista `nums = [10, 20, 30, 40, 50]`, pegue os itens do meio `[20, 30, 40]` via fatiamento e imprima.",
+              "expected_output": "[20, 30, 40]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "coding",
+      "title": "Aula 21: Atribuição Múltipla e Laço While",
+      "description": "Aprenda o poder de dar valores a várias coisas de uma vez e a repetir ações com o laço while.",
+      "tips": [
+        "A função print() sempre pula de linha no final. Se quiser evitar isso, coloque um `end=' '` dentro dela.",
+        "Na atribuição múltipla (`a, b = 1, 2`), o Python resolve toda a parte direita primeiro antes de guardar nas variáveis."
+      ],
+      "references": [
+        {
+          "label": "Primeiros passos para a programação",
+          "url": "https://docs.python.org/pt-br/3/tutorial/introduction.html#first-steps-towards-programming"
+        }
+      ],
+      "quiz": {
+        "question": "Como o Python sabe quais linhas de código fazem parte do repetidor (laço while) e quais estão fora dele?",
+        "options": [
+          "Colocando tudo dentro de chaves {}.",
+          "Pelos espaços em branco no começo da linha (indentação/alinhamento do texto).",
+          "Usando as palavras 'begin' e 'end'.",
+          "Ele adivinha sozinho se o código for curto."
+        ],
+        "answer": 1
+      },
+      "sections": [
+        {
+          "content": "No Python, você pode ser ágil e guardar vários valores ao mesmo tempo numa única linha (ex: `idade, peso = 25, 70`). Isso se chama **atribuição múltipla**.\n\nOutro super poder é o laço `while` (que significa 'enquanto'). Ele repete um bloco de comandos sem parar, *enquanto* uma condição for verdadeira. \n\n**Aviso Crítico:** O Python é super chato com a arrumação (indentação). Para ele saber o que está dentro do bloco do `while`, você **precisa** colocar espacinhos (ou Tab) antes das linhas, empurrando o texto para a direita. Se não alinhar direito, ele não vai rodar!",
+          "example": "# Gerando a sequência de Fibonacci\na, b = 0, 1\nwhile a < 10:\n    print(a, end=' ')\n    a, b = b, a + b\n# Saída: 0 1 1 2 3 5 8",
+          "exercises": [
+            {
+              "description": "1. Utilize atribuição múltipla para criar duas variáveis `x` e `y` valendo 5 e 10 respectivamente na mesma linha, e imprima a soma delas.",
+              "expected_output": "15"
+            },
+            {
+              "description": "2. Escreva um laço `while` que imprima os números de 1 a 3 (inclusive), um por linha, usando uma variável de controle chamada `i = 1`.",
+              "expected_output": "1\n2\n3"
+            },
+            {
+              "description": "3. Faça um laço `while` que conte regressivamente de 3 a 1 e imprima cada número em uma linha.",
+              "expected_output": "3\n2\n1"
+            },
+            {
+              "description": "4. Use atribuição múltipla para criar `a=10`, `b=20` e `c=30`. Imprima `a + b + c`.",
+              "expected_output": "60"
+            },
+            {
+              "description": "5. Crie um `while` que imprima a palavra 'Ola' exatamente 2 vezes.",
+              "expected_output": "Ola\nOla"
+            }
+          ]
+        },
+        {
+          "content": "A atribuição múltipla não serve apenas para declarar variáveis, ela é a forma mais 'pythônica' e elegante de desempacotar listas e tuplas diretamente em variáveis separadas! Além disso, no laço `while`, tome cuidado extra com os 'loops infinitos': se você esquecer de atualizar a variável de controle dentro do bloco, o laço rodará para sempre.",
+          "example": "# Desempacotando uma lista diretamente\ndados = ['Ana', 25, 'SP']\nnome, idade, estado = dados\nprint(nome, idade)  # Imprime: Ana 25\n\n# Exemplo de laço seguro (com controle)\ni = 0\nwhile i < 3:\n    print(i)\n    i += 1  # Jamais esqueça desta linha!",
+          "exercises": [
+            {
+              "description": "6. Faça um loop `while` que imprima apenas os números pares de 2 até 6, um por linha.",
+              "expected_output": "2\n4\n6"
+            },
+            {
+              "description": "7. Atribua `nome, idade = 'Ana', 20` e imprima apenas a idade.",
+              "expected_output": "20"
+            },
+            {
+              "description": "8. Crie um loop `while` que comece com `n=5` e vá imprimindo o número e subtraindo 2 dele enquanto for maior que 0.",
+              "expected_output": "5\n3\n1"
+            },
+            {
+              "description": "9. Com atribuição múltipla `x, y = 100, 200`, troque os valores das variáveis entre si e imprima `x`.",
+              "expected_output": "200"
+            },
+            {
+              "description": "10. Usando `i = 0`, imprima o número de vezes que o loop roda somando 3 a `i` até que `i` atinja 9. Os números devem ser impressos, exceto o 0.",
+              "expected_output": "3\n6\n9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "coding",
+      "title": "Aula 22: Ferramentas de Fluxo - If, For e Range",
+      "description": "Aprenda a fazer o computador tomar decisões com if e repetir com for e range.",
+      "tips": [
+        "Atenção ao range(3, 6): ele vai gerar os números 3, 4 e 5, mas SEMPRE exclui o último número (o 6 fica de fora!).",
+        "Não esqueça de colocar os dois pontos ':' no final das linhas de if, elif, else e for!"
+      ],
+      "references": [
+        {
+          "label": "Mais ferramentas de controle de fluxo",
+          "url": "https://docs.python.org/pt-br/3/tutorial/controlflow.html"
+        }
+      ],
+      "quiz": {
+        "question": "Se você pedir para o Python rodar um list(range(5)), o que ele vai te entregar?",
+        "options": [
+          "Os números 1, 2, 3, 4 e 5.",
+          "Os números 0, 1, 2, 3 e 4 (ele sempre começa do 0 e para um número antes).",
+          "O número 5.",
+          "Um erro avisando que faltam números."
+        ],
+        "answer": 1
+      },
+      "sections": [
+        {
+          "content": "Para fazer o programa tomar decisões como um humano, usamos o `if` (se). É como o porteiro de uma balada: 'Se for maior de 18, entra'. Se não, você pode adicionar o `elif` (se não for, mas for amigo do dono, entra) ou o `else` (se não for nada disso, fica de fora).\n\nOutra ferramenta fantástica é o `for`. Ele serve para você 'dar uma olhada' em cada item de uma caixa (como uma lista) um por um. E se você quiser apenas contar números (ex: contar de 0 a 10), o Python tem o `range()`, que é um super gerador automático de sequências numéricas!",
+          "example": "# Usando if, elif e else\nx = 42\nif x < 0:\n    print('Negativo')\nelif x == 0:\n    print('Zero')\nelse:\n    print('Positivo')\n\n# Usando range()\nfor i in range(3):\n    print(i)  # Imprime: 0, 1, 2",
+          "exercises": [
+            {
+              "description": "1. Crie um loop `for` usando `range(3, 6)` para imprimir os números gerados por essa progressão.",
+              "expected_output": "3\n4\n5"
+            },
+            {
+              "description": "2. Use o comando `if/else` para testar se `x = 10` é maior que 5. Se for, imprima 'Maior', senão 'Menor'.",
+              "expected_output": "Maior"
+            },
+            {
+              "description": "3. Crie um loop `for` usando `range(3)` para imprimir 'Bip' 3 vezes.",
+              "expected_output": "Bip\nBip\nBip"
+            },
+            {
+              "description": "4. Use `range(0, 10, 2)` para imprimir os números pares entre 0 e 8.",
+              "expected_output": "0\n2\n4\n6\n8"
+            },
+            {
+              "description": "5. Defina `idade = 15`. Faça um `if` para imprimir 'Adulto' se idade >= 18, `elif` idade >= 13 imprima 'Adolescente', `else` 'Crianca'.",
+              "expected_output": "Adolescente"
+            }
+          ]
+        },
+        {
+          "content": "Você sabia que condições `if` podem ser combinadas na mesma linha usando `and` e `or`? Isso permite testar múltiplas coisas de uma só vez. Já o `range()` também aceita o parâmetro de passo, igual ao fatiamento, permitindo fazer contagens regressivas ou pular números facilmente.",
+          "example": "x = 15\n# Combinando condições com 'and'\nif x > 10 and x < 20:\n    print('Dentro do limite')\n\n# Usando passo no range para contagem regressiva\nfor i in range(5, 0, -1):\n    print(i)\n# Imprime: 5, 4, 3, 2, 1",
+          "exercises": [
+            {
+              "description": "6. Use um laço `for` para iterar sobre a lista `cores = ['Azul', 'Vermelho']` e imprima cada cor.",
+              "expected_output": "Azul\nVermelho"
+            },
+            {
+              "description": "7. Com um loop `for`, some os números produzidos por `range(4)` (0, 1, 2, 3) e imprima o total (dica: precisa de uma variável fora do loop).",
+              "expected_output": "6"
+            },
+            {
+              "description": "8. Use um `if` para verificar se 'a' está na palavra 'Python'. Se não estiver, imprima 'Nao tem a'.",
+              "expected_output": "Nao tem a"
+            },
+            {
+              "description": "9. Crie um laço `for` com `range(10, 13)` e imprima os números.",
+              "expected_output": "10\n11\n12"
+            },
+            {
+              "description": "10. Escreva um teste condicional para `x = 0`. Imprima 'Zero' se for 0, 'Outro' caso contrário.",
+              "expected_output": "Zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "coding",
+      "title": "Aula 23: Cláusulas Break, Continue e Else em Laços",
+      "description": "Aprenda a ejetar de um laço de repetição ou pular a sua vez.",
+      "tips": [
+        "O comando 'pass' é só um fantasma. Ele não faz nada, só preenche um espaço quando o Python te obriga a escrever algo.",
+        "O 'else' de um laço for/while é quase como uma mensagem de 'Ufa, terminei tudo sem ser interrompido!'."
+      ],
+      "references": [
+        {
+          "label": "Break, Continue e Else em laços",
+          "url": "https://docs.python.org/pt-br/3/tutorial/controlflow.html#break-and-continue-statements-and-else-clauses-on-loops"
+        }
+      ],
+      "quiz": {
+        "question": "Quando é que a palavra mágica 'else' grudada no final de um laço 'for' realmente roda o seu código interno?",
+        "options": [
+          "Toda vez que apertamos o botão de ejetar (break).",
+          "Apenas na primeira vez que o laço roda.",
+          "Apenas quando o laço termina toda a sua contagem e encerra naturalmente (sem tomar um break).",
+          "Sempre que o laço pula a vez (continue)."
+        ],
+        "answer": 2
+      },
+      "sections": [
+        {
+          "content": "Imagine que você está rodando um laço (`for` ou `while`) procurando as suas chaves perdidas. Se você achou as chaves logo no começo, não precisa continuar procurando, certo? Aí entra o `break`: ele aperta o 'botão de ejetar' e encerra a repetição na hora!\n\nJá o `continue` é como 'pular a vez' em um jogo de tabuleiro: ele ignora o resto daquele ciclo e já pula direto para a próxima repetição.\n\nE uma curiosidade maluca do Python: você pode colocar um `else` no final de um laço! Esse `else` só é acionado se você terminou toda a repetição naturalmente, SEM usar o botão de ejetar (`break`).",
+          "example": "for n in range(2, 4):\n    for x in range(2, n):\n        if n % x == 0:\n            print(n, 'não é primo')\n            break\n    else:\n        # Executado se o loop interno terminar sem quebrar\n        print(n, 'é um número primo')",
+          "exercises": [
+            {
+              "description": "1. Escreva um laço `for i in range(5):` e use o comando `break` se `i == 2` para interromper o loop. Imprima o valor de `i` a cada ciclo antes do break.",
+              "expected_output": "0\n1"
+            },
+            {
+              "description": "2. Crie um loop `for i in range(4):` onde se `i == 1` você usa `continue`. Imprima os números restantes.",
+              "expected_output": "0\n2\n3"
+            },
+            {
+              "description": "3. Escreva um laço `for i in range(2):` que imprima 'Ok' no bloco e tenha uma cláusula `else` imprimindo 'Fim'.",
+              "expected_output": "Ok\nOk\nFim"
+            },
+            {
+              "description": "4. Use um `while True:` para imprimir 'Rodou' e logo em seguida dê um `break`.",
+              "expected_output": "Rodou"
+            },
+            {
+              "description": "5. Num laço `for i in range(5):`, se `i` for par (i % 2 == 0), aplique um `continue`. Imprima o restante (os números ímpares).",
+              "expected_output": "1\n3"
+            }
+          ]
+        },
+        {
+          "content": "Embora o `break` seja uma saída de emergência excelente, é recomendável manter o uso de `break` e `continue` com cautela para não deixar o fluxo do seu código muito confuso (o famoso 'código espaguete'). O `else` acoplado ao `for` é perfeito para situações de 'busca', onde se não encontrarmos nada (sem break), executamos uma ação padrão no final.",
+          "example": "frutas = ['Maca', 'Banana', 'Laranja']\nbusca = 'Uva'\n\nfor fruta in frutas:\n    if fruta == busca:\n        print('Encontrei a fruta!')\n        break\nelse:\n    # Roda se o break nunca foi atingido!\n    print('Não tínhamos essa fruta na lista.')",
+          "exercises": [
+            {
+              "description": "6. Faça um laço `while i < 3` com um `else` que imprima 'Acabou'. Imprima `i` dentro do while (comece `i = 1`).",
+              "expected_output": "1\n2\nAcabou"
+            },
+            {
+              "description": "7. Em um `for` iterando sobre `[10, 20, 30]`, use `break` após imprimir o 10.",
+              "expected_output": "10"
+            },
+            {
+              "description": "8. Iterando sobre `[1, 2, 3]`, use `continue` no número 2. Imprima os demais.",
+              "expected_output": "1\n3"
+            },
+            {
+              "description": "9. Faça um laço com `break` incondicional logo na primeira repetição `for i in range(2):`. Imprima 'Break' antes de sair.",
+              "expected_output": "Break"
+            },
+            {
+              "description": "10. Use `pass` dentro de um laço `for i in range(1):` seguido de um `else` que imprima 'Feito'.",
+              "expected_output": "Feito"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "coding",
+      "title": "Aula 24: Instrução Match e Definição de Funções",
+      "description": "Descubra como criar as suas próprias ferramentas mágicas (funções).",
+      "tips": [
+        "Sempre coloque nomes óbvios nas suas funções (ex: calcular_idade). Assim fica fácil lembrar o que elas fazem.",
+        "O 'case _' no match é como a opção 'Nenhuma das alternativas anteriores' de uma prova."
+      ],
+      "references": [
+        {
+          "label": "Definindo Funções no Tutorial",
+          "url": "https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions"
+        }
+      ],
+      "quiz": {
+        "question": "No painel de múltipla escolha do Python (o match), para que serve a gavetinha com o underline (case _)?",
+        "options": [
+          "Para causar um erro de propósito.",
+          "É o caso 'curinga' que vai agir como padrão caso nenhuma das opções anteriores dê certo.",
+          "Para reiniciar a contagem dos números.",
+          "Para apagar a variável do sistema."
+        ],
+        "answer": 1
+      },
+      "sections": [
+        {
+          "content": "O `match` funciona como um super painel de múltipla escolha. Você dá um valor pra ele, e ele sai testando gaveta por gaveta (`case`) para ver qual se encaixa. Se não encaixar em nenhuma, a gaveta curinga `case _` (com um underline) resolve o problema.\n\nE se você fez um código muito legal e não quer ficar copiando e colando toda hora, você pode empacotar ele usando a palavra `def`. Ao fazer isso, você acaba de inventar uma **Função**: uma ferramenta novinha, com um nome só dela, pronta para ser usada quantas vezes você quiser no programa!",
+          "example": "def responder_status(status):\n    \"\"\"Retorna uma descrição simples baseada no código de status HTTP.\"\"\"\n    match status:\n        case 400:\n            return \"Requisição ruim\"\n        case 404:\n            return \"Não encontrado\"\n        case _:\n            return \"Algo deu errado\"\n\nprint(responder_status(404))",
+          "exercises": [
+            {
+              "description": "1. Defina uma função simples chamada `boas_vindas()` que não recebe parâmetros e apenas retorna a string 'Olá, Mundo!'. Em seguida, chame-a e exiba o resultado.",
+              "expected_output": "Olá, Mundo!"
+            },
+            {
+              "description": "2. Defina uma função `dobrar(n)` que retorne o dobro de um número. Imprima o resultado de `dobrar(5)`.",
+              "expected_output": "10"
+            },
+            {
+              "description": "3. Crie uma estrutura `match` para a variável `opcao = 2`. No `case 1:` imprima 'Um', no `case 2:` imprima 'Dois'.",
+              "expected_output": "Dois"
+            },
+            {
+              "description": "4. Use um `match` com a variável `comando = 'pular'`. Caso não encontre nenhum `case` correspondente, use `case _:` para imprimir 'Comando desconhecido'.",
+              "expected_output": "Comando desconhecido"
+            },
+            {
+              "description": "5. Defina uma função `somar(a, b)` que retorna a soma. Imprima `somar(4, 6)`.",
+              "expected_output": "10"
+            }
+          ]
+        },
+        {
+          "content": "O `match-case` (introduzido no Python 3.10) não faz apenas verificações simples, ele suporta padrões avançados, como capturar variáveis e verificar tipos de dados ao mesmo tempo! É infinitamente mais poderoso que um simples switch-case de outras linguagens. E para funções, lembre-se que elas permitem o retorno de múltiplos valores de uma vez, graças à magia das tuplas.",
+          "example": "# Retornando múltiplos valores\ndef min_max(a, b):\n    return min(a,b), max(a,b)\n\nmenor, maior = min_max(10, 5)\nprint(menor, maior)  # Imprime: 5 10\n\n# Match com captura (Exemplo avançado)\ncomando = ['mover', 'esquerda']\nmatch comando:\n    case ['mover', direcao]:\n        print('Movendo para', direcao)",
+          "exercises": [
+            {
+              "description": "6. Defina uma função `cumprimentar(nome)` que imprima a mensagem de boas vindas, ex: 'Ola Ana'. Chame com 'Joao'.",
+              "expected_output": "Ola Joao"
+            },
+            {
+              "description": "7. Faça um `match` para o valor `status = 404`. Use o curinga para imprimir 'Erro' se for qualquer valor diferente de 200.",
+              "expected_output": "Erro"
+            },
+            {
+              "description": "8. Crie uma função chamada `eh_par(n)` que retorna 'Sim' se n % 2 == 0 e 'Nao' se não for. Imprima `eh_par(4)`.",
+              "expected_output": "Sim"
+            },
+            {
+              "description": "9. Faça uma função vazia `def nada():` usando `pass` no corpo. Chame-a e imprima 'Pronto'.",
+              "expected_output": "Pronto"
+            },
+            {
+              "description": "10. Use `match` para avaliar `fruta = 'maca'`. Se for 'maca' imprima 'Vermelha', se 'banana' imprima 'Amarela'.",
+              "expected_output": "Vermelha"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

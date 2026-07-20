@@ -1,0 +1,970 @@
+"""
+Camada de Interface Gráfica (GUI) usando Flet
+"""
+# pyrefly: ignore [missing-import]
+import flet as ft
+from content_manager import ContentManager
+from progress_manager import ProgressManager
+from communication import ConsoleController
+import config
+import re
+from logger import logger
+
+def main_app(page: ft.Page):
+    # Configurações da página
+    page.title = "Pyeduc - App Educacional Python"
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.padding = 0
+    page.spacing = 0
+    page.bgcolor = "#e2e8f0"
+    
+    # Propriedades da Janela (Evita bug de minimizar no Linux/Wayland)
+    page.window.min_width = 800
+    page.window.min_height = 600
+    
+    # Gerenciadores
+    content_manager = ContentManager("content/lessons.json")
+    progress_manager = ProgressManager("data")
+    console_controller = ConsoleController()
+    
+    all_lessons = content_manager.get_all_lessons()
+    current_lesson_idx = 0
+    admin_mode_enabled = config.ADMIN_MODE
+    
+    # ---------------------------------------------------------
+    # Componentes da Top Bar
+    # ---------------------------------------------------------
+    title_text = ft.Text("Aula 1: Introdução às Variáveis", color="white", weight="bold", size=16)
+    top_bar = ft.Container(visible=False,
+        content=title_text,
+        bgcolor="#2c3e50", # Cor escura semelhante ao mockup
+        padding=10,
+        alignment=ft.Alignment.CENTER
+    )
+    
+    
+    # ---------------------------------------------------------
+    # Modal de Zoom de Imagem
+    # ---------------------------------------------------------
+    zoom_image = ft.Image(src="", fit=ft.BoxFit.CONTAIN)
+    zoom_viewer = ft.InteractiveViewer(
+        content=zoom_image,
+        min_scale=0.5,
+        max_scale=5.0,
+        boundary_margin=ft.Margin.all(20),
+        expand=True
+    )
+    
+    def close_zoom_modal(e):
+        page.pop_dialog()
+        
+    zoom_modal = ft.AlertDialog(
+        content=ft.Container(zoom_viewer, width=800, height=600, bgcolor="black"),
+        content_padding=0,
+        actions=[ft.TextButton("Fechar", on_click=close_zoom_modal)],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+    
+    def handle_markdown_link(e):
+        # Se for um link de imagem (png, jpg), abre no modal
+        url = e.data
+        if url.endswith(".png") or url.endswith(".jpg"):
+            zoom_image.src = url
+            page.show_dialog(zoom_modal)
+            page.update()
+        else:
+            page.launch_url(url)
+
+    # ---------------------------------------------------------
+    # Painel Esquerdo: Conteúdo da Lição
+    # ---------------------------------------------------------
+    lesson_content_md = ft.Markdown(
+        selectable=True,
+        extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED,
+        on_tap_link=handle_markdown_link
+    )
+    
+    exercise_content_md = ft.Markdown(
+        selectable=True,
+        extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED,
+        on_tap_link=handle_markdown_link
+    )
+    exercises_col = ft.Column(spacing=10)
+    active_exercises_rows = []
+
+    
+    # ---------------------------------------------------------
+    # Painel Esquerdo: Console Python (Input e Output)
+    # ---------------------------------------------------------
+    console_input = ft.TextField(
+        multiline=True,
+        min_lines=6,
+        max_lines=10,
+        text_style=ft.TextStyle(font_family="Consolas", size=14, color="#f8fafc"),
+        bgcolor="#1e293b",
+        border_color="#334155",
+        border_radius=4,
+        content_padding=15,
+        hint_text="# Digite seu código Python aqui...",
+        hint_style=ft.TextStyle(color="#64748b")
+    )
+    
+    console_output = ft.TextField(
+        multiline=True,
+        read_only=True,
+        min_lines=8,
+        text_style=ft.TextStyle(font_family="Consolas", size=13, color="#10b981"),
+        bgcolor="#0f172a",
+        border=ft.InputBorder.NONE,
+        content_padding=15,
+        expand=True
+    )
+    
+    def on_execute_click(e):
+        code = console_input.value
+        if not code.strip():
+            return
+        console_output.value += f"\n>>> Executando código...\n"
+        page.update()
+        console_controller.execute_code(code)
+        
+    btn_execute = ft.ElevatedButton(
+        content="Executar Código",
+        icon=ft.Icons.PLAY_ARROW_ROUNDED,
+        color="white",
+        bgcolor="#4ade80",
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4)),
+        on_click=on_execute_click
+    )
+    
+    def on_clear_console(e):
+        console_output.value = ""
+        page.update()
+        
+    btn_clear = ft.TextButton(
+        content="Limpar",
+        icon=ft.Icons.DELETE_OUTLINE,
+        icon_color="grey",
+        style=ft.ButtonStyle(color="grey"),
+        on_click=on_clear_console
+    )
+    
+    # Container que vai segurar mensagens inteligentes no futuro
+    smart_messages_panel = ft.Container(
+        content=ft.Text("Dicas e Correções aparecerão aqui...", color="#475569", size=12, italic=True),
+        bgcolor="#1e293b",
+        border_radius=4,
+        padding=10,
+        expand=3, # 30% do espaço
+        alignment=ft.Alignment.CENTER
+    )
+
+    console_container = ft.Container(
+        content=ft.Column([
+            ft.Row([
+                ft.Text("Console Python", color="white", weight="bold", size=14),
+                ft.Row([btn_execute, btn_clear])
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            
+            ft.Row([
+                ft.Container(content=console_input, expand=7), # 70% do espaço para o editor
+                smart_messages_panel
+            ]),
+            
+            console_output
+        ], spacing=10),
+        bgcolor="#111827", # Quase preto
+        padding=15,
+        expand=50
+    )
+    
+    def on_copy_example(e):
+        console_input.value = example_text.value
+        page.update()
+        
+    btn_copy_example = ft.ElevatedButton(
+        content="Copiar Exemplo",
+        icon=ft.Icons.CONTENT_COPY,
+        on_click=on_copy_example
+    )
+    
+    example_text = ft.TextField(
+        multiline=True,
+        read_only=True,
+        text_style=ft.TextStyle(font_family="Consolas", size=13),
+        bgcolor="#f8fafc",
+        border_color="#e2e8f0"
+    )
+
+    coding_elements = ft.Column([
+        ft.Divider(color="#e2e8f0"),
+        ft.Text("Exemplo:", weight="bold", size=14, color="#334155"),
+        example_text,
+        btn_copy_example,
+        ft.Divider(color="#e2e8f0"),
+        ft.Text("Exercício(s):", weight="bold", size=14, color="#334155"),
+        exercise_content_md,
+        exercises_col
+    ])
+    
+    coding_elements_container = ft.Container(content=coding_elements)
+
+    lesson_container = ft.Container(
+        content=ft.Column([
+            lesson_content_md,
+            coding_elements_container
+        ], scroll=ft.ScrollMode.ALWAYS, spacing=10),
+        bgcolor="white",
+        padding=20,
+        expand=50
+    )
+    
+    # ---------------------------------------------------------
+    # Painel Esquerdo: Atividade Teórica (Quiz Central)
+    # ---------------------------------------------------------
+    theory_question = ft.Text("", size=18, weight="bold", color="#1e293b", text_align=ft.TextAlign.CENTER)
+    theory_options_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+    theory_feedback = ft.Text("", size=16, weight="bold", text_align=ft.TextAlign.CENTER)
+    
+    activity_container = ft.Container(
+        content=ft.Column([
+            ft.Text("Atividade de Fixação", size=14, color="#64748b", weight="bold"),
+            theory_question,
+            ft.Container(height=5),
+            theory_feedback,
+            ft.Container(height=10),
+            theory_options_col
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10, scroll=ft.ScrollMode.AUTO),
+        bgcolor="#f8fafc",
+        padding=30,
+        expand=50,
+        visible=False
+    )
+    
+    # ---------------------------------------------------------
+    # Painel Esquerdo: Bem-Vindo     # ---------------------------------------------------------
+    def on_login_click(e):
+        username = tf_username.value.strip()
+        password = tf_password.value.strip()
+        if not username or not password:
+            snack = ft.SnackBar(ft.Text("Preencha todos os campos!"))
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+            return
+            
+        if progress_manager.login(username, password):
+            # Login sucesso
+            sidebar.visible = True
+            footer.visible = True
+            top_bar.visible = True
+            lesson_container.visible = True
+            welcome_container.visible = False
+            
+            # Controle de modo administrador
+            is_admin = (username == "admin" and password == "admin")
+            admin_switch_container.visible = is_admin
+            if not is_admin:
+                nonlocal admin_mode_enabled
+                admin_mode_enabled = False
+                admin_switch.value = False
+
+            current = progress_manager.get_current_lesson()
+            update_progress_ui()
+            load_lesson(current)
+            snack = ft.SnackBar(ft.Text(f"Bem-vindo de volta, {username}!", color="white"), bgcolor="#10b981")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+        else:
+            snack = ft.SnackBar(ft.Text("Usuário ou senha incorretos!"), bgcolor="#dc2626")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+
+    def on_register_click(e):
+        username = tf_username.value.strip()
+        password = tf_password.value.strip()
+        if not username or not password:
+            snack = ft.SnackBar(ft.Text("Preencha todos os campos!"))
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+            return
+            
+        if progress_manager.register(username, password):
+            snack = ft.SnackBar(ft.Text(f"Usuário {username} cadastrado com sucesso! Faça Login."), bgcolor="#10b981")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+            tf_password.value = ""
+            page.update()
+        else:
+            snack = ft.SnackBar(ft.Text("Usuário já existe!"), bgcolor="#dc2626")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+
+    tf_username = ft.TextField(label="Nome de Usuário", width=300, bgcolor="white", color="black", border_color="#cbd5e1")
+    tf_password = ft.TextField(label="Senha", password=True, can_reveal_password=True, width=300, bgcolor="white", color="black", border_color="#cbd5e1")
+    
+    btn_login = ft.ElevatedButton("Entrar", bgcolor="#3b82f6", color="white", on_click=on_login_click, width=140)
+    btn_register = ft.ElevatedButton("Cadastrar", bgcolor="#10b981", color="white", on_click=on_register_click, width=140)
+
+    welcome_container = ft.Container(
+        content=ft.Column([
+            ft.Image(src="content/images/PyeducLOGO.png", width=250),
+            ft.Text("Pyeduc", size=32, weight="bold", color="#1e293b"),
+            ft.Text("Faça login para continuar de onde parou.", size=14, color="#64748b"),
+            ft.Container(height=20),
+            tf_username,
+            tf_password,
+            ft.Row([btn_login, btn_register], alignment=ft.MainAxisAlignment.CENTER)
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        bgcolor="#f8fafc",
+        padding=40,
+        expand=50,
+        visible=False
+    )
+    
+    def on_pan_update_splitter(e: ft.DragUpdateEvent):
+        # Ajusta o expand baseado no arrasto do mouse
+        # Multiplicador pequeno para suavizar o movimento
+        change = int((e.local_delta.y if e.local_delta else 0) * 0.5)
+        
+        # Limita a expansão entre 10 e 90 para não esmagar os painéis
+        new_lesson_expand = max(10, min(90, lesson_container.expand + change))
+        
+        lesson_container.expand = new_lesson_expand
+        console_container.expand = 100 - new_lesson_expand
+        activity_container.expand = 100 - new_lesson_expand
+        welcome_container.expand = 100 - new_lesson_expand
+        page.update()
+
+    drag_splitter = ft.GestureDetector(
+        mouse_cursor=ft.MouseCursor.RESIZE_UP_DOWN,
+        drag_interval=10,
+        on_pan_update=on_pan_update_splitter,
+        content=ft.Container(
+            height=6,
+            bgcolor="#cbd5e1", # Cinza claro
+            border_radius=3,
+            margin=ft.Margin.symmetric(vertical=4, horizontal=10)
+        )
+    )
+    
+    left_panel = ft.Column([
+        lesson_container,
+        drag_splitter,
+        console_container,
+        activity_container,
+        welcome_container
+    ], expand=7, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+    
+    # ---------------------------------------------------------
+    # Callbacks do Console Controller
+    # ---------------------------------------------------------
+    def on_exec_start():
+        btn_execute.disabled = True
+        page.update()
+        
+    def on_exec_finish(stdout, stderr, ret):
+        btn_execute.disabled = False
+        out = ""
+        
+        # Limpa o painel inteligente por padrão
+        smart_messages_panel.content = ft.Text("Tudo certo por enquanto! Continue o bom trabalho.", color="#94a3b8", size=12, italic=True)
+        smart_messages_panel.bgcolor = "#1e293b"
+        
+        if stdout:
+            out += stdout + "\n"
+        if stderr:
+            out += "ERRO:\n" + stderr + "\n"
+            
+            # Tradutor de Erros
+            if "SyntaxError" in stderr:
+                smart_messages_panel.content = ft.Text("Erro de Sintaxe (SyntaxError):\n\nParece que há um erro na escrita do código. Verifique se esqueceu de fechar aspas, parênteses ou se digitou algo errado.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#991b1b" # Vermelho escuro
+            elif "NameError" in stderr:
+                smart_messages_panel.content = ft.Text("Erro de Nome (NameError):\n\nVocê tentou usar uma variável ou função que não existe. Verifique se digitou o nome corretamente ou se esqueceu de criar a variável antes.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#991b1b"
+            elif "IndentationError" in stderr:
+                smart_messages_panel.content = ft.Text("Erro de Indentação (IndentationError):\n\nO Python exige que os espaços no começo da linha sejam exatos. Verifique os espaços antes dos comandos.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#991b1b"
+            elif "TypeError" in stderr:
+                smart_messages_panel.content = ft.Text("Erro de Tipo (TypeError):\n\nVocê tentou misturar tipos incompatíveis (ex: somar texto com número). Verifique os tipos das suas variáveis.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#991b1b"
+            else:
+                smart_messages_panel.content = ft.Text("Erro Desconhecido:\n\nLeia a saída no console para entender o que quebrou no seu código.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#991b1b"
+        
+        console_output.value += out
+        
+        # Auto-Grader Check
+        if stdout:
+            # Divide o output em linhas limpas
+            output_lines = [line.strip() for line in stdout.split('\n') if line.strip()]
+            
+            # Helper para fuzzy matching (remove pontuação no final e espaços extras)
+            def fuzzy_clean(text):
+                return re.sub(r'[\.,;:\!\?]+$', '', text.strip()).strip()
+            
+            fuzzy_output_lines = [fuzzy_clean(line) for line in output_lines]
+            
+            from collections import Counter
+            output_counts = Counter(output_lines)
+            fuzzy_output_counts = Counter(fuzzy_output_lines)
+            newly_marked_counts = {}
+            newly_marked_fuzzy_counts = {}
+            
+            almost_correct = False
+            
+            for row in active_exercises_rows:
+                expected = str(row.data).strip()
+                if not expected:
+                    continue
+                
+                icon = row.controls[0]
+                if icon.icon == ft.Icons.CHECK_CIRCLE:
+                    continue # Já completado
+                
+                expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
+                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
+                n = len(expected_lines)
+                
+                is_match = False
+                if n == 1:
+                    exp = expected_lines[0]
+                    f_exp = fuzzy_expected_lines[0]
+                    
+                    used = newly_marked_counts.get(exp, 0)
+                    f_used = newly_marked_fuzzy_counts.get(f_exp, 0)
+                    
+                    # Exact Match
+                    if output_counts.get(exp, 0) > used:
+                        is_match = True
+                        newly_marked_counts[exp] = used + 1
+                    # Fuzzy Match
+                    elif fuzzy_output_counts.get(f_exp, 0) > f_used:
+                        almost_correct = True
+                        newly_marked_fuzzy_counts[f_exp] = f_used + 1
+                        logger.info(f"Auto-grader (Quase): Esperava '{exp}', Aluno digitou algo fuzzy match")
+                elif n > 1:
+                    # Verifica match sequencial (Exato)
+                    for i in range(len(output_lines) - n + 1):
+                        if output_lines[i:i+n] == expected_lines:
+                            is_match = True
+                            break
+                    if not is_match:
+                        # Verifica match sequencial (Fuzzy)
+                        for i in range(len(fuzzy_output_lines) - n + 1):
+                            if fuzzy_output_lines[i:i+n] == fuzzy_expected_lines:
+                                almost_correct = True
+                                logger.info(f"Auto-grader (Quase multiline)")
+                                break
+                
+                if is_match:
+                    icon.icon = ft.Icons.CHECK_CIRCLE
+                    icon.color = "#10b981"
+            
+            if almost_correct and not is_match:
+                smart_messages_panel.content = ft.Text("💡 Quase lá!\n\nSeu código imprimiu quase o valor esperado. Verifique se você não colocou um ponto final, espaço a mais, ou errou uma letra maiúscula/minúscula na saída.", color="white", size=13)
+                smart_messages_panel.bgcolor = "#b45309" # Laranja escuro
+        
+        # Faz scroll para o final
+        page.update()
+        
+    console_controller.on_execution_start = on_exec_start
+    console_controller.on_execution_finish = on_exec_finish
+    
+    # ---------------------------------------------------------
+    # Painel Direito: Sidebar
+    # ---------------------------------------------------------
+    tips_col = ft.Column(spacing=5)
+    refs_col = ft.Column(spacing=5)
+    prog_col = ft.Column(spacing=5, height=250, scroll=ft.ScrollMode.AUTO)
+    
+    quiz_question = ft.Text(weight="bold", color="#334155")
+    quiz_options = ft.RadioGroup(content=ft.Column([]))
+    quiz_feedback = ft.Text(size=12, weight="bold")
+    
+    def on_quiz_submit(e):
+        lesson = all_lessons[current_lesson_idx]
+        ans = quiz_options.value
+        if ans == str(lesson["quiz"]["answer"]):
+            quiz_feedback.value = "Correto! Muito bem!"
+            quiz_feedback.color = "#059669" # Verde escuro
+            progress_manager.mark_lesson_completed(lesson["id"])
+            update_progress_ui()
+        else:
+            quiz_feedback.value = "Incorreto. Tente novamente."
+            quiz_feedback.color = "#dc2626" # Vermelho
+        page.update()
+        
+    btn_quiz = ft.ElevatedButton(
+        "Responder", 
+        on_click=on_quiz_submit,
+        color="white",
+        bgcolor="#8b5cf6", # Roxo
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4))
+    )
+    
+    sidebar_content = ft.Column([
+        # Dicas Rápidas
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Dicas Rápidas:", weight="bold", color="#92400e"),
+                tips_col
+            ]),
+            bgcolor="#fef3c7", # Amarelo pastel
+            padding=15,
+            border_radius=8,
+            border=ft.Border.all(1, "#fde68a")
+        ),
+        # Referências
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Referências:", weight="bold", color="#1e3a8a"),
+                refs_col
+            ]),
+            bgcolor="#eff6ff", # Azul pastel
+            padding=15,
+            border_radius=8,
+            border=ft.Border.all(1, "#bfdbfe")
+        ),
+        # Progresso
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Progresso:", weight="bold", color="#065f46"),
+                prog_col
+            ]),
+            bgcolor="#ecfdf5", # Verde pastel
+            padding=15,
+            border_radius=8,
+            border=ft.Border.all(1, "#a7f3d0")
+        )
+    ], scroll=ft.ScrollMode.AUTO, spacing=15)
+    
+    def toggle_admin_mode(e):
+        nonlocal admin_mode_enabled
+        admin_mode_enabled = e.control.value
+        update_progress_ui()
+        page.update()
+
+    admin_switch = ft.Switch(label="Admin Mode", value=config.ADMIN_MODE, on_change=toggle_admin_mode, active_color="#ef4444")
+    admin_switch_container = ft.Container(
+        content=admin_switch,
+        bgcolor="#fee2e2",
+        padding=10,
+        border_radius=8,
+        border=ft.Border.all(1, "#fca5a5"),
+        visible=False
+    )
+    sidebar_content.controls.insert(0, admin_switch_container)
+        
+    sidebar_quiz_container = ft.Container(
+        content=ft.Column([
+            ft.Text("Mini Quiz:", weight="bold", color="#5b21b6"),
+            quiz_question,
+            quiz_options,
+            btn_quiz,
+            quiz_feedback
+        ]),
+        bgcolor="#f5f3ff", # Roxo pastel
+        padding=15,
+        border_radius=8,
+        border=ft.Border.all(1, "#ddd6fe")
+    )
+    sidebar_content.controls.append(sidebar_quiz_container)
+    
+    sidebar = ft.Container(visible=False,
+        content=sidebar_content,
+        bgcolor="#f8fafc",
+        padding=15,
+        expand=3,
+        border=ft.Border.only(left=ft.BorderSide(1, "#cbd5e1"))
+    )
+    
+    def update_progress_ui():
+        prog_col.controls.clear()
+        for i, les in enumerate(all_lessons):
+            is_done = progress_manager.is_lesson_completed(les["id"])
+            icon = ft.Icons.CHECK_CIRCLE if is_done else ft.Icons.RADIO_BUTTON_UNCHECKED
+            color = "#10b981" if is_done else "#94a3b8"
+            
+            def make_on_click(idx):
+                def on_click(e):
+                    load_lesson(idx)
+                    page.update()
+                return on_click
+            
+            row = ft.Row([
+                ft.Icon(icon, color=color, size=16),
+                ft.Text(les["title"], size=12, color="#334155" if is_done else "#64748b")
+            ])
+            
+            if is_done or admin_mode_enabled:
+                item = ft.Container(
+                    content=row,
+                    on_click=make_on_click(i),
+                    tooltip="Clique para acessar esta aula",
+                    ink=True,
+                    border_radius=4,
+                    padding=2
+                )
+            else:
+                item = ft.Container(content=row, padding=2)
+                
+            prog_col.controls.append(item)
+    
+    # ---------------------------------------------------------
+    # Lógica de Carregamento de Lição
+    # ---------------------------------------------------------
+    def load_lesson(index):
+        nonlocal current_lesson_idx
+        current_lesson_idx = index
+        progress_manager.set_current_lesson(index)
+        lesson = all_lessons[index]
+        title_text.value = lesson["title"]
+        
+        # Reconstrói a área de conteúdo da aula
+        active_exercises_rows.clear()
+        lesson_container.content.controls.clear()
+        
+        sections = lesson.get("sections")
+        if not sections:
+            # Fallback para aulas no formato antigo
+            sections = []
+            sec = {}
+            if lesson.get("content"): sec["content"] = lesson["content"]
+            if lesson.get("example"): sec["example"] = lesson["example"]
+            if lesson.get("exercise"): sec["exercise"] = lesson["exercise"]
+            if lesson.get("exercises"): sec["exercises"] = lesson["exercises"]
+            sections.append(sec)
+            
+        for sec in sections:
+            if "content" in sec:
+                lesson_container.content.controls.append(
+                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                )
+                
+                # Injeta a imagem da lição 8 logo abaixo da teoria
+                if lesson.get("id") == 8:
+                    lesson_container.content.controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/variavel_exemple.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
+            
+            coding_controls = []
+            if sec.get("example"):
+                ex_text = ft.TextField(
+                    value=sec["example"],
+                    multiline=True, read_only=True,
+                    text_style=ft.TextStyle(font_family="Consolas", size=13),
+                    bgcolor="#f8fafc", border_color="#e2e8f0"
+                )
+                def make_copy_handler(text_val):
+                    def handler(e):
+                        console_input.value = text_val
+                        page.update()
+                    return handler
+                btn_copy = ft.ElevatedButton(
+                    content="Copiar Exemplo",
+                    icon=ft.Icons.CONTENT_COPY,
+                    on_click=make_copy_handler(sec["example"])
+                )
+                coding_controls.extend([
+                    ft.Divider(color="#e2e8f0"),
+                    ft.Text("Exemplo:", weight="bold", size=14, color="#334155"),
+                    ex_text, btn_copy
+                ])
+                
+            if sec.get("exercises") or sec.get("exercise"):
+                coding_controls.extend([
+                    ft.Divider(color="#e2e8f0"),
+                    ft.Text("Exercício(s):", weight="bold", size=14, color="#334155")
+                ])
+                if sec.get("exercise"):
+                    coding_controls.append(
+                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                    )
+                if sec.get("exercises"):
+                    sec_ex_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+                    for ex in sec["exercises"]:
+                        expected_out = ex.get("expected_output", "")
+                        if expected_out:
+                            row = ft.Row([
+                                ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=20),
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                            ], vertical_alignment=ft.CrossAxisAlignment.START)
+                        else:
+                            row = ft.Row([
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                            ], vertical_alignment=ft.CrossAxisAlignment.START)
+                        row.data = expected_out
+                        sec_ex_col.controls.append(row)
+                        active_exercises_rows.append(row)
+                    coding_controls.append(sec_ex_col)
+                    
+            if coding_controls:
+                lesson_container.content.controls.append(
+                    ft.Container(content=ft.Column(coding_controls))
+                )
+
+        # Injeta logo centralizada na tela de boas-vindas
+        if lesson.get("id") == 0:
+            lesson_container.content.controls.append(
+                ft.Container(
+                    content=ft.Image(src="content/images/PyeducLOGO.png", width=600),
+                    alignment=ft.Alignment.CENTER,
+                    margin=ft.Margin(top=30, bottom=20, left=0, right=0)
+                )
+            )
+
+        console_input.value = "" # Começa vazio para o aluno digitar
+        console_output.value = "" # Limpa qualquer output antigo do console
+        
+        # Alterna entre Teórica, Prática e Presentation
+        is_theory = lesson.get("type") == "theory"
+        is_presentation = lesson.get("type") == "presentation"
+
+        console_container.visible = not is_theory and not is_presentation
+        activity_container.visible = is_theory
+        coding_elements_container.visible = not is_theory and not is_presentation
+        sidebar_quiz_container.visible = not is_theory and not is_presentation
+
+        # Configuração do splitter e tamanhos
+        if is_presentation:
+            progress_manager.mark_lesson_completed(lesson["id"])
+            update_progress_ui()
+            drag_splitter.visible = False
+        else:
+            drag_splitter.visible = True
+            
+        # Mantém os valores de expand fixos e deixa o motor do Flet distribuir o espaço baseado na visibilidade (contorna o bug de redraw)
+        if is_theory:
+            lesson_container.expand = 40
+            activity_container.expand = 60
+        else:
+            lesson_container.expand = 50
+            console_container.expand = 50
+        
+        # Lógica da Aula Teórica
+        if is_theory:
+            theory_question.value = lesson["quiz"]["question"]
+            theory_feedback.value = ""
+            theory_options_col.controls.clear()
+            
+            is_multi = isinstance(lesson["quiz"]["answer"], list)
+            selected_indices = set()
+
+            if is_multi:
+                def toggle_option(idx):
+                    def on_click(e):
+                        if idx in selected_indices:
+                            selected_indices.remove(idx)
+                            e.control.bgcolor = "white"
+                            e.control.color = "#334155"
+                        else:
+                            selected_indices.add(idx)
+                            e.control.bgcolor = "#bfdbfe" # Azul claro
+                            e.control.color = "#1e3a8a"
+                        page.update()
+                    return on_click
+
+                def confirm_multi(e):
+                    correct_answers = set(lesson["quiz"]["answer"])
+                    if selected_indices == correct_answers:
+                        theory_feedback.value = "Correto! Excelente!"
+                        theory_feedback.color = "#16a34a"
+                        progress_manager.mark_lesson_completed(lesson["id"])
+                        update_progress_ui()
+                        for btn in theory_options_col.controls[:-1]:
+                            is_correct = btn.data in correct_answers
+                            btn.style = ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=8),
+                                bgcolor={
+                                    ft.ControlState.DISABLED: "#22c55e" if is_correct else "#f8fafc",
+                                    ft.ControlState.DEFAULT: "#22c55e" if is_correct else "#f8fafc"
+                                },
+                                color={
+                                    ft.ControlState.DISABLED: "white" if is_correct else "#94a3b8",
+                                    ft.ControlState.DEFAULT: "white" if is_correct else "#94a3b8"
+                                }
+                            )
+                            btn.disabled = True
+                        e.control.disabled = True
+                    else:
+                        theory_feedback.value = "Incorreto. Verifique suas opções!"
+                        theory_feedback.color = "#dc2626"
+                    page.update()
+
+                for i, opt in enumerate(lesson["quiz"]["options"]):
+                    btn = ft.ElevatedButton(
+                        content=opt,
+                        data=i,
+                        width=400,
+                        height=50,
+                        bgcolor="white",
+                        color="#334155",
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+                        on_click=toggle_option(i)
+                    )
+                    theory_options_col.controls.append(btn)
+                
+                btn_confirm = ft.ElevatedButton(
+                    content="Confirmar Respostas",
+                    width=400,
+                    height=50,
+                    bgcolor="#8b5cf6",
+                    color="white",
+                    on_click=confirm_multi
+                )
+                theory_options_col.controls.append(btn_confirm)
+                
+            else:
+                def make_option_click(idx):
+                    def on_click(e):
+                        is_correct = idx == lesson["quiz"]["answer"]
+                        if is_correct:
+                            theory_feedback.value = "Correto! Excelente!"
+                            theory_feedback.color = "#16a34a"
+                            progress_manager.mark_lesson_completed(lesson["id"])
+                            update_progress_ui()
+                        else:
+                            theory_feedback.value = "Incorreto. Tente novamente!"
+                            theory_feedback.color = "#dc2626"
+                        
+                        if is_correct:
+                            for i, btn in enumerate(theory_options_col.controls):
+                                is_btn_correct = i == lesson["quiz"]["answer"]
+                                btn.style = ft.ButtonStyle(
+                                    shape=ft.RoundedRectangleBorder(radius=8),
+                                    bgcolor={
+                                        ft.ControlState.DISABLED: "#22c55e" if is_btn_correct else "#f8fafc",
+                                        ft.ControlState.DEFAULT: "#22c55e" if is_btn_correct else "#f8fafc"
+                                    },
+                                    color={
+                                        ft.ControlState.DISABLED: "white" if is_btn_correct else "#94a3b8",
+                                        ft.ControlState.DEFAULT: "white" if is_btn_correct else "#94a3b8"
+                                    }
+                                )
+                                btn.disabled = True
+                        else:
+                            e.control.bgcolor = "#ef4444"
+                            e.control.color = "white"
+                        page.update()
+                    return on_click
+                
+                for i, opt in enumerate(lesson["quiz"]["options"]):
+                    btn = ft.ElevatedButton(
+                        content=opt,
+                        width=400,
+                        height=50,
+                        bgcolor="white",
+                        color="#334155",
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+                        on_click=make_option_click(i)
+                    )
+                    theory_options_col.controls.append(btn)
+        
+        tips_col.controls = [ft.Text(f"• {t}", size=12, color="#451a03") for t in lesson.get("tips", [])]
+        
+        refs_col.controls.clear()
+        for ref in lesson.get("references", []):
+            refs_col.controls.append(
+                ft.TextButton(
+                    content=ref["label"], 
+                    url=ref["url"], 
+                    icon=ft.Icons.LINK,
+                    style=ft.ButtonStyle(color="#1d4ed8", padding=0)
+                )
+            )
+            
+        update_progress_ui()
+        
+        quiz = lesson.get("quiz", {})
+        if quiz and "question" in quiz:
+            quiz_question.value = quiz["question"]
+            opts = []
+            for i, opt in enumerate(quiz.get("options", [])):
+                opts.append(ft.Radio(value=str(i), label=opt, label_position=ft.LabelPosition.RIGHT))
+            quiz_options.content = ft.Column(opts, spacing=5)
+            quiz_options.value = None
+            quiz_feedback.value = ""
+        else:
+            quiz_question.value = ""
+            quiz_options.content = ft.Column()
+            quiz_feedback.value = ""
+        
+        btn_prev.disabled = (index == 0)
+        btn_next.disabled = (index == len(all_lessons) - 1)
+        
+        page.update()
+        
+    # ---------------------------------------------------------
+    # Footer de Navegação
+    # ---------------------------------------------------------
+    def go_prev(e):
+        nonlocal current_lesson_idx
+        if current_lesson_idx > 0:
+            current_lesson_idx -= 1
+            load_lesson(current_lesson_idx)
+            
+    def go_next(e):
+        nonlocal current_lesson_idx
+        current_lesson_id = all_lessons[current_lesson_idx]["id"]
+        if not progress_manager.is_lesson_completed(current_lesson_id) and not admin_mode_enabled:
+            snack = ft.SnackBar(ft.Text("Complete os exercícios desta lição para poder avançar! 🔒"), bgcolor="#f59e0b")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+            return
+            
+        if current_lesson_idx < len(all_lessons) - 1:
+            current_lesson_idx += 1
+            load_lesson(current_lesson_idx)
+            
+    btn_prev = ft.ElevatedButton("Anterior", icon=ft.Icons.ARROW_BACK, on_click=go_prev)
+    btn_next = ft.ElevatedButton("Próxima", icon=ft.Icons.ARROW_FORWARD, on_click=go_next)
+    
+    footer = ft.Container(visible=False,
+        content=ft.Row([
+            ft.Text(f"Bem-vindo ao Pyeduc!", color="#475569", weight="bold"),
+            ft.Row([btn_prev, btn_next], alignment=ft.MainAxisAlignment.END, expand=True)
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+        bgcolor="#e2e8f0",
+        padding=10,
+        border=ft.Border.only(top=ft.BorderSide(1, "#cbd5e1"))
+    )
+    
+    # ---------------------------------------------------------
+    # Montagem da Estrutura
+    # ---------------------------------------------------------
+    main_row = ft.Row([left_panel, sidebar], expand=True, spacing=0, vertical_alignment=ft.CrossAxisAlignment.STRETCH)
+    
+    page.add(
+        ft.Column([
+            top_bar,
+            main_row,
+            footer
+        ], expand=True, spacing=0)
+    )
+    
+    # Inicia carregando a tela de Login (Bem-Vindo)
+    def show_welcome():
+        sidebar.visible = False
+        footer.visible = False
+        top_bar.visible = False
+        lesson_container.visible = False
+        console_container.visible = False
+        activity_container.visible = False
+        drag_splitter.visible = False
+        welcome_container.visible = True
+        welcome_container.expand = 100
+        page.update()
+
+    show_welcome()
