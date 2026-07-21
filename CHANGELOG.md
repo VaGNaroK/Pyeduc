@@ -4,6 +4,18 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.0.1] - 2026-07-20
+
+### Adicionado
+- **Imagens Ilustrativas:** Injeção de imagens didáticas via hardcode (`gui.py`) nas Aulas 11 (Booleanos), 12 (Operadores Aritméticos), 13 (Listas) e 21 (Atribuição Múltipla).
+- **Regra de Speckit:** Registro formal no `AGENTS.md` (Regra 11) sobre o novo padrão arquitetural de injeção de imagens via código (`lesson_container.content.controls.append`).
+
+### Alterado
+- **Teoria da Aula 12:** Incremento e melhoria didática na explicação sobre os operadores aritméticos em `lessons.json`.
+
+### Corrigido
+- **Case-Sensitivity no Auto-Grader:** A função `fuzzy_clean` em `src/gui.py` agora converte a saída para letras minúsculas (usando `.lower()`), garantindo que o alerta laranja de "Quase lá" seja disparado quando o aluno errar a capitalização da resposta esperada (como "P" vs "p" em "Python").
+
 ## [1.0.0] - Adoção Oficial do Flet e Persistência Sólida
 
 ### Adicionado

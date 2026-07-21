@@ -518,7 +518,7 @@
       "type": "coding",
       "title": "Aula 12: Operadores Aritméticos",
       "description": "Operações matemáticas básicas em Python",
-      "content": "Operadores aritméticos permitem fazer cálculos matemáticos em Python.\n\nOperadores disponíveis:\n- **+** (adição)\n- **-** (subtração)\n- **\\*** (multiplicação)\n- **/** (divisão)\n- **//** (divisão inteira)\n- **%** (módulo - resto da divisão)\n- **\\*\\*** (exponenciação)",
+      "content": "Assim como usamos calculadoras para fazer contas, na programação usamos **Operadores Aritméticos**! Eles são os símbolos responsáveis por realizar todos os cálculos matemáticos dentro do Python, desde contas simples de padaria até equações espaciais.\n\nAbaixo você confere os principais operadores disponíveis na linguagem:\n\n- **+** (adição): Soma dois valores.\n- **-** (subtração): Subtrai um valor do outro.\n- **\\*** (multiplicação): Multiplica os valores (usamos o asterisco!).\n- **/** (divisão): Divide e sempre devolve um número quebrado (decimal).\n- **//** (divisão inteira): Divide mas corta a parte decimal, deixando apenas o número inteiro.\n- **%** (módulo): Pega apenas o **resto** da divisão (ótimo para saber se um número é par ou ímpar).\n- **\\*\\*** (exponenciação): Eleva um número à potência do outro (ex: 2 ** 3 é 8).",
       "example": "anos = 10\ndias_no_ano = 365\na = 20\nb = 5\n\nprint(\"Adição:\", a + b)\nprint(\"Subtração:\", a - b)\nprint(\"Multiplicação:\", a * b)\nprint(\"Divisão:\", a / b)\nprint(\"Idade em dias:\", anos * dias_no_ano)",
       "tips": [
         "A divisão normal (/) sempre retorna um número decimal (float)",

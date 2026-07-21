@@ -405,9 +405,9 @@ def main_app(page: ft.Page):
             # Divide o output em linhas limpas
             output_lines = [line.strip() for line in stdout.split('\n') if line.strip()]
             
-            # Helper para fuzzy matching (remove pontuação no final e espaços extras)
+            # Helper para fuzzy matching (remove pontuação no final e espaços extras e ignora case)
             def fuzzy_clean(text):
-                return re.sub(r'[\.,;:\!\?]+$', '', text.strip()).strip()
+                return re.sub(r'[\.,;:\!\?]+$', '', text.strip()).strip().lower()
             
             fuzzy_output_lines = [fuzzy_clean(line) for line in output_lines]
             
@@ -657,6 +657,30 @@ def main_app(page: ft.Page):
                             margin=ft.Margin(top=20, bottom=20, left=0, right=0)
                         )
                     )
+                elif lesson.get("id") == 11:
+                    lesson_container.content.controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/boolean.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
+                elif lesson.get("id") == 12:
+                    lesson_container.content.controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/aritmetics.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
+                elif lesson.get("id") == 13:
+                    lesson_container.content.controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/list.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
             
             coding_controls = []
             if sec.get("example"):
@@ -681,6 +705,23 @@ def main_app(page: ft.Page):
                     ft.Text("Exemplo:", weight="bold", size=14, color="#334155"),
                     ex_text, btn_copy
                 ])
+                
+                if lesson.get("id") == 20 and "quadrados = " in sec["example"]:
+                    coding_controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/list2.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
+                elif lesson.get("id") == 21 and "# Gerando a sequência de Fibonacci" in sec["example"]:
+                    coding_controls.append(
+                        ft.Container(
+                            content=ft.Image(src="content/images/atribuition.png", width=1200),
+                            alignment=ft.Alignment.CENTER,
+                            margin=ft.Margin(top=20, bottom=20, left=0, right=0)
+                        )
+                    )
                 
             if sec.get("exercises") or sec.get("exercise"):
                 coding_controls.extend([

@@ -50,3 +50,8 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 ## 10. Inserção de Aulas e Provas Intermediárias
 - **Preservação de Progresso**: Se precisar inserir uma nova aula ou Prova Prática (ex: Projeto Calculadora) no meio do currículo atual (arquivo `lessons.json`), **NÃO USE IDs sequenciais pequenos** (ex: não mova a aula 14 para o ID 15 para encaixar a Prova). Isso corrompe o progresso dos usuários no banco de dados SQLite.
 - **Solução**: Sempre atribua **IDs altos (a partir de 1001)** para aulas inseridas no meio. Assim, o banco rastreará a nova lição como `1001` e os usuários veteranos manterão seu histórico inalterado nas lições originais.
+
+## 11. Injeção de Imagens Ilustrativas nas Aulas
+- Quando necessário adicionar imagens para ilustrar conceitos teóricos (como tabelas de variáveis ou diagramas de booleanos), elas não vêm diretamente do JSON.
+- O padrão do projeto é realizar a **injeção via hardcode** no `src/gui.py`, logo após a renderização do markdown (`ft.Markdown`).
+- A injeção deve ser feita validando o ID da lição (`if lesson.get("id") == X:`) e fazendo um `.append` na lista de `controls` do `lesson_container.content`. O container da imagem deve ter largura (`width=1200`), alinhamento centralizado (`alignment=ft.Alignment.CENTER`) e margens apropriadas.
