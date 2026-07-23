@@ -55,3 +55,21 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 - Quando necessário adicionar imagens para ilustrar conceitos teóricos (como tabelas de variáveis ou diagramas de booleanos), elas não vêm diretamente do JSON.
 - O padrão do projeto é realizar a **injeção via hardcode** no `src/gui.py`, logo após a renderização do markdown (`ft.Markdown`).
 - A injeção deve ser feita validando o ID da lição (`if lesson.get("id") == X:`) e fazendo um `.append` na lista de `controls` do `lesson_container.content`. O container da imagem deve ter largura (`width=1200`), alinhamento centralizado (`alignment=ft.Alignment.CENTER`) e margens apropriadas.
+
+## 12. Arquitetura do Tutor IA Sócratico (Ollama REST Integration)
+- A comunicação com o Ollama (`http://localhost:11434`) é feita via cliente REST nativo (`src/llm_client.py`), sem utilizar bibliotecas externas pesadas (como `langchain` ou `ollama-python`).
+- **Verificação de Saúde & SO**: O método `check_health()` usa `platform.system()` e `shutil.which("ollama")` para verificar o executável no SO (Linux/Windows/macOS), exibindo mensagens de status amigáveis no topo da barra lateral.
+- **Residência em VRAM & Descarregamento no Fechamento**: Todas as chamadas POST para a API REST usam a opção `"keep_alive": "-1m"` para manter o modelo pré-carregado em VRAM/RAM continuamente durante o uso do aluno. Ao fechar o aplicativo (`on_window_event("close")` ou `on_disconnect`), o Pyeduc dispara `ollama_client.unload_model()`, enviando `"keep_alive": 0` para descarregar o modelo da VRAM imediatamente e liberar toda a memória GPU/RAM.
+
+- **Modelos Recomendados**: O sistema prioriza modelos leves especializados em código (`qwen2.5-coder:3b` e `qwen2.5-coder:1.5b`), resolvendo dinamicamente o melhor modelo instalado na máquina do usuário via `resolve_best_model()`.
+
+## 13. Guardrails Educacionais & Diagnóstico Determinístico (`src/tutor_guardrails.py`)
+- **Diálogo Didático e Sócratico**: A IA responde obrigatoriamente em 2ª pessoa ("você"), organizada em 3 tópicos Markdown com quebras de linha duplas (`**💡 Conceito**:`, `**❓ Pergunta Guiada**:`, `**🔍 Dica Progressiva**:`). É terminantemente proibido entregar soluções ou blocos de código com a resposta pronta.
+- **Diagnóstico Estático Pré-Prompt**: Antes de chamar a IA, o `build_user_message` analisa o console (`NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`) e o código do aluno, injetando a causa verdadeira no contexto do prompt. Isso impede alucinações comuns de modelos compactos (ex: sugerir vírgulas em vez de aspas ou erro de espaço).
+- **Sanitização de Resposta e Stop Tokens**: O `sanitize_response` trunca seções extras (`Resposta:`, `Explicação:`), stop tokens (`num_predict: 200`, `stop: [...]`), previne repetições de `Conceito:` em loop e aplica a formatação em negrito nos cabeçalhos.
+
+## 14. Gerenciamento de Threads e Renderização Flet (`src/gui.py`)
+- **Evitar `threading.Thread` Direto para Atualizações de UI**: **NUNCA** invoque `threading.Thread(target=...).start()` diretamente para atualizar a interface Flet sem usar o despachante nativo do Flet. O uso de `threading.Thread` simples faz com que a interface do Flet Desktop no Linux/Windows congele até que ocorra um evento manual de janela (focar/minimizar).
+- **Usar `page.run_thread(fn)`**: Todas as chamadas assíncronas em segundo plano (como requisições da IA em `send_to_ai` e health check em `update_ollama_status`) DEVEM utilizar **`page.run_thread(fn)`**, que faz a notificação direta ao barramento de mensagens do Flutter C++ e força a renderização visual da tela e roleta em tempo real.
+- **Divisor Lateral Arrastável (`sidebar_splitter`)**: O redimensionamento do chat da IA na barra lateral direita é controlado por um `ft.GestureDetector` vertical (`sidebar_splitter`) posicionado na `main_row`.
+

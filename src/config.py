@@ -39,3 +39,14 @@ FONTS = {
 
 # Configurações de Teste/Admin
 ADMIN_MODE = False
+
+# Configurações do Tutor Ollama (IA Local)
+OLLAMA_BASE_URL = "http://localhost:11434"
+OLLAMA_DEFAULT_MODEL = "qwen2.5-coder:3b"  # Modelo recomendado (~2.2GB VRAM), raciocínio muito superior sem alucinações
+
+
+OLLAMA_TIMEOUT = 30  # segundos
+MAX_CHAT_HISTORY = 50
+OLLAMA_KEEP_ALIVE = "-1m"  # Mantém o modelo residente na VRAM/RAM indefinidamente (evita unload por idle)
+
+

@@ -4,7 +4,28 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.1.2] - 2026-07-21
+
+### Adicionado
+- **Integração Nativa do Tutor IA Ollama (`src/llm_client.py`):** Cliente REST interno conectando ao Ollama (`http://localhost:11434`) com detecção automática do Sistema Operacional (Linux/Windows/macOS) e verificação do binário do Ollama no PATH do sistema.
+- **Residência de Modelo na VRAM & Descarregamento Automático (`OLLAMA_KEEP_ALIVE`):** Implementação da opção `OLLAMA_KEEP_ALIVE = "-1m"` no payload da API para manter os modelos (`qwen2.5-coder:1.5b` e `qwen2.5-coder:3b`) residentes na VRAM/RAM continuamente durante os estudos do aluno, e descarregamento imediato automático da GPU (`keep_alive: 0` via `unload_model()`) ao fechar a janela do aplicativo.
+
+- **Módulo RAG Leve de Lições (`src/rag_module.py`):** Indexação e busca de termos e teoria relevantes em `content/lessons.json` para enriquecer os prompts do Tutor IA.
+- **Guardrails Educacionais Sócráticos (`src/tutor_guardrails.py`):** Módulo de controle que impede vazamento de código pronto, exige diálogos didáticos em 2ª pessoa e formata as respostas em 3 tópicos limpos (`**💡 Conceito**:`, `**❓ Pergunta Guiada**:`, `**🔍 Dica Progressiva**:`).
+- **Diagnóstico Estático Determinístico do Console:** Análise estática no `build_user_message` que detecta a classe exata do erro (`NameError` com sugestão de variável, `SyntaxError` de aspas em textos, `IndentationError`, `TypeError`, `ZeroDivisionError`), injetando a causa exata no prompt para impedir alucinações de modelos compactos de IA.
+- **Sanitização de Respostas e Stop Tokens:** Método `sanitize_response` e adição de stop tokens no payload (`num_predict: 200`, `stop: [...]`) para cortar seções extras (`Resposta:`, `Explicação:`), evitar repetições em loop e formatar cabeçalhos em negrito com quebras de linha duplas.
+- **Divisor Arrastável Lateral (`sidebar_splitter`):** Puxador vertical (`ft.GestureDetector`) entre o painel de conteúdo e a barra lateral direita para redimensionar a largura do chat do Tutor IA.
+
+### Alterado
+- **Modelo de IA Padrão Recomendado:** Alterado `OLLAMA_DEFAULT_MODEL` em `src/config.py` de `codellama:7b` (6GB-8GB VRAM) para `qwen2.5-coder:3b` e `qwen2.5-coder:1.5b` (~1.5GB-2.2GB VRAM), com seleção automática dinâmica do modelo mais leve instalado na máquina.
+- **Formatação de Bolhas no Chat:** Remoção da largura fixa (`width=260`) no `add_chat_message` em favor de `expand=True`, permitindo mensagens em formato fluido e responsivo no painel lateral.
+- **Gerenciamento de Threads da Interface (`src/gui.py`):** Substituição de `threading.Thread` nativo por **`page.run_thread()`**, corrigindo a dessincronização da interface Flet/Flutter no Linux Desktop e garantindo atualização imediata em tempo real do chat e da roleta de carregamento sem precisar focar/minimizar a janela.
+
+### Removido
+- **Seção de Referências:** Remoção completa dos botões e container de "Referências" da barra lateral e da lógica em `load_lesson`.
+
 ## [1.0.1] - 2026-07-20
+
 
 ### Adicionado
 - **Imagens Ilustrativas:** Injeção de imagens didáticas via hardcode (`gui.py`) nas Aulas 11 (Booleanos), 12 (Operadores Aritméticos), 13 (Listas) e 21 (Atribuição Múltipla).

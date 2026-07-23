@@ -8,7 +8,12 @@ from progress_manager import ProgressManager
 from communication import ConsoleController
 import config
 import re
+import threading
 from logger import logger
+from llm_client import OllamaClient
+from tutor_guardrails import EducationalGuardrails
+from rag_module import LessonRAG
+
 
 def main_app(page: ft.Page):
     # Configurações da página
@@ -21,6 +26,17 @@ def main_app(page: ft.Page):
     # Propriedades da Janela (Evita bug de minimizar no Linux/Wayland)
     page.window.min_width = 800
     page.window.min_height = 600
+
+    # Handler para descarregar o modelo de IA da VRAM ao fechar o aplicativo
+    def on_window_event(e):
+        if e.data == "close":
+            try:
+                ollama_client.unload_model()
+            except Exception:
+                pass
+    page.window.on_event = on_window_event
+    page.on_disconnect = lambda e: ollama_client.unload_model()
+
     
     # Gerenciadores
     content_manager = ContentManager("content/lessons.json")
@@ -32,15 +48,194 @@ def main_app(page: ft.Page):
     admin_mode_enabled = config.ADMIN_MODE
     
     # ---------------------------------------------------------
+    # Componentes da IA Ollama (Tutor Sócratico)
+    # ---------------------------------------------------------
+    ollama_client = OllamaClient()
+    lesson_rag = LessonRAG(all_lessons)
+    ai_chat_history = []
+    is_ai_generating = False
+
+    ai_status_icon = ft.Icon(ft.Icons.CIRCLE, color="#94a3b8", size=10)
+    ai_status_text = ft.Text("Ollama: verificando...", color="#94a3b8", size=11)
+    ai_chat_list = ft.ListView(height=260, spacing=10, auto_scroll=True, padding=5)
+    ai_loading_ring = ft.ProgressRing(width=18, height=18, stroke_width=2, visible=False)
+
+
+    def update_ollama_status():
+        def _check():
+            online, msg = ollama_client.check_health()
+            ai_status_text.value = msg
+            if online:
+                ai_status_icon.color = "#10b981"
+                ai_status_text.color = "#10b981"
+            else:
+                ai_status_icon.color = "#ef4444"
+                ai_status_text.color = "#ef4444"
+            page.update()
+        page.run_thread(_check)
+
+
+
+    def add_chat_message(role: str, text: str):
+        is_user = role == "user"
+        bg = "#e0e7ff" if is_user else "#f3e8ff"
+        fg = "#1e1b4b" if is_user else "#581c87"
+        align = ft.MainAxisAlignment.END if is_user else ft.MainAxisAlignment.START
+        title_prefix = "Você:" if is_user else "🤖 Tutor IA:"
+
+
+        msg_box = ft.Container(
+            content=ft.Column([
+                ft.Text(title_prefix, weight="bold", size=11, color=fg),
+                ft.Markdown(text, selectable=True) if not is_user else ft.Text(text, size=13, color=fg)
+            ], spacing=3),
+            bgcolor=bg,
+            padding=10,
+            border_radius=8,
+            expand=True
+        )
+        ai_chat_list.controls.append(ft.Row([msg_box], alignment=align))
+        try:
+            ai_chat_list.update()
+        except Exception:
+            pass
+        page.update()
+
+
+
+    def send_to_ai(user_prompt="", quick_action=None):
+        nonlocal is_ai_generating
+        if is_ai_generating:
+            return
+
+        text = user_prompt.strip() or ai_input_field.value.strip()
+        if not text and not quick_action:
+            return
+
+        ai_input_field.value = ""
+        is_ai_generating = True
+        ai_loading_ring.visible = True
+        btn_send_ai.disabled = True
+        try:
+            ai_loading_ring.update()
+            btn_send_ai.update()
+            ai_input_field.update()
+        except Exception:
+            pass
+        page.update()
+
+        display_text = text
+        if not display_text and quick_action:
+            if quick_action == "hint_no_spoiler": display_text = "Quero uma dica sem spoiler sobre este exercício."
+            elif quick_action == "error_help": display_text = "Por que meu código gerou erro no console?"
+            elif quick_action == "explain_concept": display_text = "Explique o conceito principal desta lição."
+
+        add_chat_message("user", display_text)
+
+        def _worker():
+            nonlocal is_ai_generating
+            try:
+                lesson = all_lessons[current_lesson_idx] if current_lesson_idx < len(all_lessons) else {}
+                title = lesson.get("title", "Python")
+                concepts = lesson.get("ai_context", {}).get("key_concepts", [title])
+                
+                rag_ctx = lesson_rag.get_relevant_context(
+                    user_query=text or display_text,
+                    current_lesson_id=lesson.get("id")
+                )
+
+                payload = EducationalGuardrails.prepare_chat_payload(
+                    history=ai_chat_history,
+                    user_query=text,
+                    lesson_title=title,
+                    key_concepts=concepts,
+                    rag_context=rag_ctx,
+                    student_code=console_input.value,
+                    console_output=console_output.value,
+                    quick_action=quick_action
+                )
+
+                raw_reply = ollama_client.chat(payload)
+                reply = EducationalGuardrails.sanitize_response(raw_reply, console_input.value)
+                ai_chat_history.append({"role": "user", "content": display_text})
+                ai_chat_history.append({"role": "assistant", "content": reply})
+
+                add_chat_message("assistant", reply)
+
+            except Exception as ex:
+                add_chat_message("assistant", f"⚠️ Ocorreu um erro ao comunicar com a IA: {str(ex)}")
+            finally:
+                is_ai_generating = False
+                ai_loading_ring.visible = False
+                btn_send_ai.disabled = False
+                try:
+                    ai_loading_ring.update()
+                    btn_send_ai.update()
+                except Exception:
+                    pass
+                page.update()
+
+        page.run_thread(_worker)
+
+
+
+    ai_input_field = ft.TextField(
+        hint_text="Pergunte algo ao Tutor...",
+        expand=True,
+        border_radius=8,
+        border_color="#cbd5e1",
+        content_padding=10,
+        text_size=13,
+        on_submit=lambda e: send_to_ai()
+    )
+    btn_send_ai = ft.IconButton(icon=ft.Icons.SEND_ROUNDED, icon_color="#7c3aed", on_click=lambda e: send_to_ai())
+
+    ai_drawer = ft.NavigationDrawer(
+        controls=[
+            ft.Container(
+                content=ft.Column([
+                    ft.Row([
+                        ft.Row([
+                            ft.Icon(ft.Icons.SMART_TOY_ROUNDED, color="#7c3aed", size=24),
+                            ft.Text("Tutor IA Sócratico", weight="bold", size=16, color="#1e1b4b"),
+                        ]),
+                        ft.Row([ai_status_icon, ai_status_text])
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    ft.Divider(height=1, color="#e2e8f0"),
+                    ft.Text("Ajuda Rápida:", size=12, weight="bold", color="#64748b"),
+                    ft.Row([
+                        ft.OutlinedButton("💡 Dica", on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler"), style=ft.ButtonStyle(padding=4)),
+                        ft.OutlinedButton("❌ Erro", on_click=lambda e: send_to_ai(quick_action="error_help"), style=ft.ButtonStyle(padding=4)),
+                        ft.OutlinedButton("📘 Conceito", on_click=lambda e: send_to_ai(quick_action="explain_concept"), style=ft.ButtonStyle(padding=4)),
+                    ], spacing=5, wrap=True),
+                    ft.Divider(height=1, color="#e2e8f0"),
+                    ai_chat_list,
+                    ft.Row([ai_input_field, ai_loading_ring, btn_send_ai], spacing=5)
+                ], expand=True, spacing=10),
+                padding=15,
+                expand=True
+            )
+        ]
+    )
+    page.end_drawer = ai_drawer
+
+    def open_ai_drawer(e=None):
+        update_ollama_status()
+        ai_drawer.open = True
+        page.update()
+
+    # ---------------------------------------------------------
     # Componentes da Top Bar
     # ---------------------------------------------------------
     title_text = ft.Text("Aula 1: Introdução às Variáveis", color="white", weight="bold", size=16)
+    btn_top_ai = ft.ElevatedButton("🤖 Tutor IA", icon=ft.Icons.AUTO_AWESOME, bgcolor="#7c3aed", color="white", on_click=open_ai_drawer)
     top_bar = ft.Container(visible=False,
-        content=title_text,
-        bgcolor="#2c3e50", # Cor escura semelhante ao mockup
+        content=ft.Row([title_text, btn_top_ai], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+        bgcolor="#2c3e50",
         padding=10,
         alignment=ft.Alignment.CENTER
     )
+
     
     
     # ---------------------------------------------------------
@@ -149,15 +344,30 @@ def main_app(page: ft.Page):
         on_click=on_clear_console
     )
     
-    # Container que vai segurar mensagens inteligentes no futuro
+    # Panel de mensagens inteligentes integrado ao Tutor IA
     smart_messages_panel = ft.Container(
-        content=ft.Text("Dicas e Correções aparecerão aqui...", color="#475569", size=12, italic=True),
+        content=ft.Column([
+            ft.Row([
+                ft.Text("🤖 Tutor IA", color="white", weight="bold", size=13),
+                ai_status_icon
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            ft.Text("Tire suas dúvidas sem spoiler!", color="#94a3b8", size=11),
+            ft.Row([
+                ft.ElevatedButton("💡 Dica", icon=ft.Icons.LIGHTBULB_OUTLINE, bgcolor="#7c3aed", color="white", 
+                                  on_click=lambda e: (open_ai_drawer(), send_to_ai(quick_action="hint_no_spoiler"))),
+                ft.ElevatedButton("❌ Erro", icon=ft.Icons.BUG_REPORT_OUTLINED, bgcolor="#dc2626", color="white", 
+                                  on_click=lambda e: (open_ai_drawer(), send_to_ai(quick_action="error_help")))
+            ], wrap=True, spacing=5),
+            ft.TextButton("💬 Abrir Chat", icon=ft.Icons.CHAT_BUBBLE_OUTLINE, icon_color="#c084fc", style=ft.ButtonStyle(color="#c084fc"),
+                          on_click=open_ai_drawer)
+        ], spacing=8, alignment=ft.MainAxisAlignment.CENTER),
         bgcolor="#1e293b",
         border_radius=4,
         padding=10,
         expand=3, # 30% do espaço
         alignment=ft.Alignment.CENTER
     )
+
 
     console_container = ft.Container(
         content=ft.Column([
@@ -255,6 +465,7 @@ def main_app(page: ft.Page):
             
         if progress_manager.login(username, password):
             # Login sucesso
+
             sidebar.visible = True
             footer.visible = True
             top_bar.visible = True
@@ -360,6 +571,26 @@ def main_app(page: ft.Page):
         activity_container,
         welcome_container
     ], expand=7, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+
+    def on_pan_update_sidebar_splitter(e):
+        change = 1 if (e.local_delta and e.local_delta.x < 0) else (-1 if (e.local_delta and e.local_delta.x > 0) else 0)
+        new_sidebar_expand = max(2, min(6, sidebar.expand + change))
+        sidebar.expand = new_sidebar_expand
+        left_panel.expand = 10 - new_sidebar_expand
+        page.update()
+
+    sidebar_splitter = ft.GestureDetector(
+        mouse_cursor=ft.MouseCursor.RESIZE_LEFT_RIGHT,
+        drag_interval=10,
+        on_pan_update=on_pan_update_sidebar_splitter,
+        content=ft.Container(
+            width=6,
+            bgcolor="#cbd5e1",
+            border_radius=3,
+            margin=ft.Margin.symmetric(vertical=10, horizontal=2)
+        )
+    )
+
     
     # ---------------------------------------------------------
     # Callbacks do Console Controller
@@ -372,8 +603,18 @@ def main_app(page: ft.Page):
         btn_execute.disabled = False
         out = ""
         
-        # Limpa o painel inteligente por padrão
-        smart_messages_panel.content = ft.Text("Tudo certo por enquanto! Continue o bom trabalho.", color="#94a3b8", size=12, italic=True)
+        # Limpa o painel inteligente por padrão mantendo o botão da IA
+        btn_ask_ai_default = ft.ElevatedButton(
+            "🤖 Pedir Dica à IA",
+            icon=ft.Icons.LIGHTBULB_OUTLINE,
+            bgcolor="#7c3aed",
+            color="white",
+            on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler")
+        )
+        smart_messages_panel.content = ft.Column([
+            ft.Text("Tudo certo por enquanto! Continue o bom trabalho.", color="#94a3b8", size=12, italic=True),
+            btn_ask_ai_default
+        ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
         smart_messages_panel.bgcolor = "#1e293b"
         
         if stdout:
@@ -381,22 +622,46 @@ def main_app(page: ft.Page):
         if stderr:
             out += "ERRO:\n" + stderr + "\n"
             
-            # Tradutor de Erros
+            btn_ask_ai_err = ft.ElevatedButton(
+                "🤖 Pedir ajuda da IA para este erro",
+                icon=ft.Icons.AUTO_AWESOME,
+                bgcolor="#7c3aed",
+                color="white",
+                on_click=lambda e: send_to_ai(quick_action="error_help")
+            )
+
+            # Tradutor de Erros com botão preservado para a IA
             if "SyntaxError" in stderr:
-                smart_messages_panel.content = ft.Text("Erro de Sintaxe (SyntaxError):\n\nParece que há um erro na escrita do código. Verifique se esqueceu de fechar aspas, parênteses ou se digitou algo errado.", color="white", size=13)
-                smart_messages_panel.bgcolor = "#991b1b" # Vermelho escuro
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("Erro de Sintaxe (SyntaxError):\nParece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação.", color="white", size=12),
+                    btn_ask_ai_err
+                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                smart_messages_panel.bgcolor = "#991b1b"
             elif "NameError" in stderr:
-                smart_messages_panel.content = ft.Text("Erro de Nome (NameError):\n\nVocê tentou usar uma variável ou função que não existe. Verifique se digitou o nome corretamente ou se esqueceu de criar a variável antes.", color="white", size=13)
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("Erro de Nome (NameError):\nVocê tentou usar uma variável ou função inexistente.", color="white", size=12),
+                    btn_ask_ai_err
+                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
                 smart_messages_panel.bgcolor = "#991b1b"
             elif "IndentationError" in stderr:
-                smart_messages_panel.content = ft.Text("Erro de Indentação (IndentationError):\n\nO Python exige que os espaços no começo da linha sejam exatos. Verifique os espaços antes dos comandos.", color="white", size=13)
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("Erro de Indentação (IndentationError):\nVerifique os espaços no começo das linhas.", color="white", size=12),
+                    btn_ask_ai_err
+                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
                 smart_messages_panel.bgcolor = "#991b1b"
             elif "TypeError" in stderr:
-                smart_messages_panel.content = ft.Text("Erro de Tipo (TypeError):\n\nVocê tentou misturar tipos incompatíveis (ex: somar texto com número). Verifique os tipos das suas variáveis.", color="white", size=13)
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("Erro de Tipo (TypeError):\nVocê tentou misturar tipos incompatíveis.", color="white", size=12),
+                    btn_ask_ai_err
+                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
                 smart_messages_panel.bgcolor = "#991b1b"
             else:
-                smart_messages_panel.content = ft.Text("Erro Desconhecido:\n\nLeia a saída no console para entender o que quebrou no seu código.", color="white", size=13)
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("Erro de Execução:\nVerifique o erro retornado no console.", color="white", size=12),
+                    btn_ask_ai_err
+                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
                 smart_messages_panel.bgcolor = "#991b1b"
+
         
         console_output.value += out
         
@@ -521,18 +786,8 @@ def main_app(page: ft.Page):
             border_radius=8,
             border=ft.Border.all(1, "#fde68a")
         ),
-        # Referências
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Referências:", weight="bold", color="#1e3a8a"),
-                refs_col
-            ]),
-            bgcolor="#eff6ff", # Azul pastel
-            padding=15,
-            border_radius=8,
-            border=ft.Border.all(1, "#bfdbfe")
-        ),
         # Progresso
+
         ft.Container(
             content=ft.Column([
                 ft.Text("Progresso:", weight="bold", color="#065f46"),
@@ -576,6 +831,57 @@ def main_app(page: ft.Page):
         border=ft.Border.all(1, "#ddd6fe")
     )
     sidebar_content.controls.append(sidebar_quiz_container)
+
+    # Painel Embutido do Tutor IA na Barra Lateral
+    sidebar_ai_container = ft.Container(
+        content=ft.Column([
+            ft.Row([
+                ft.Text("🤖 Tutor IA Sócratico", weight="bold", color="#581c87", size=14),
+                ai_loading_ring
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            ft.Row([
+                ft.OutlinedButton("💡 Dica", on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler"), style=ft.ButtonStyle(padding=4)),
+                ft.OutlinedButton("❌ Erro", on_click=lambda e: send_to_ai(quick_action="error_help"), style=ft.ButtonStyle(padding=4)),
+                ft.OutlinedButton("📘 Conceito", on_click=lambda e: send_to_ai(quick_action="explain_concept"), style=ft.ButtonStyle(padding=4)),
+            ], spacing=4, wrap=True),
+            ft.Divider(height=1, color="#ddd6fe"),
+            ai_chat_list,
+            ft.Row([
+                ai_input_field,
+                btn_send_ai
+            ], spacing=5)
+        ], spacing=8),
+        bgcolor="#faf5ff",
+        padding=12,
+        border_radius=8,
+        border=ft.Border.all(1, "#c084fc")
+    )
+    sidebar_content.controls.append(sidebar_ai_container)
+
+    # Badge de Status do Ollama no Topo da Sidebar
+    btn_refresh_ollama = ft.IconButton(
+        icon=ft.Icons.REFRESH_ROUNDED,
+        icon_size=16,
+        tooltip="Verificar Ollama",
+        on_click=lambda e: update_ollama_status()
+    )
+    ollama_status_container = ft.Container(
+        content=ft.Row([
+            ft.Row([
+                ft.Icon(ft.Icons.SMART_TOY_ROUNDED, color="#7c3aed", size=18),
+                ai_status_icon,
+                ai_status_text
+            ], spacing=6),
+            btn_refresh_ollama
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+        bgcolor="#f3e8ff",
+        padding=8,
+        border_radius=8,
+        border=ft.Border.all(1, "#ddd6fe")
+    )
+    sidebar_content.controls.insert(0, ollama_status_container)
+    update_ollama_status()
+
     
     sidebar = ft.Container(visible=False,
         content=sidebar_content,
@@ -913,19 +1219,8 @@ def main_app(page: ft.Page):
                     theory_options_col.controls.append(btn)
         
         tips_col.controls = [ft.Text(f"• {t}", size=12, color="#451a03") for t in lesson.get("tips", [])]
-        
-        refs_col.controls.clear()
-        for ref in lesson.get("references", []):
-            refs_col.controls.append(
-                ft.TextButton(
-                    content=ref["label"], 
-                    url=ref["url"], 
-                    icon=ft.Icons.LINK,
-                    style=ft.ButtonStyle(color="#1d4ed8", padding=0)
-                )
-            )
-            
         update_progress_ui()
+
         
         quiz = lesson.get("quiz", {})
         if quiz and "question" in quiz:
@@ -985,7 +1280,7 @@ def main_app(page: ft.Page):
     # ---------------------------------------------------------
     # Montagem da Estrutura
     # ---------------------------------------------------------
-    main_row = ft.Row([left_panel, sidebar], expand=True, spacing=0, vertical_alignment=ft.CrossAxisAlignment.STRETCH)
+    main_row = ft.Row([left_panel, sidebar_splitter, sidebar], expand=True, spacing=0, vertical_alignment=ft.CrossAxisAlignment.STRETCH)
     
     page.add(
         ft.Column([
@@ -998,6 +1293,7 @@ def main_app(page: ft.Page):
     # Inicia carregando a tela de Login (Bem-Vindo)
     def show_welcome():
         sidebar.visible = False
+        sidebar_splitter.visible = False
         footer.visible = False
         top_bar.visible = False
         lesson_container.visible = False
@@ -1007,5 +1303,6 @@ def main_app(page: ft.Page):
         welcome_container.visible = True
         welcome_container.expand = 100
         page.update()
+
 
     show_welcome()

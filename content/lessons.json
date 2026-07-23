@@ -213,6 +213,15 @@
         "Não pode haver espaços no nome da variável! Use underline '_' (snake_case) em vez disso.",
         "Lembre-se: sem as aspas, o Python vai achar que o seu texto é o nome de uma variável que não existe!"
       ],
+      "ai_context": {
+        "key_concepts": ["variáveis", "strings", "atribuição", "print", "concatenação", "aspas"],
+        "common_mistakes": ["esquecer aspas em strings", "espaço em nome de variável", "usar maiúsculas incorretamente (case sensitivity)"],
+        "socratic_hints": [
+          "O que acontece se você tentar imprimir uma variável sem atribuir um valor a ela primeiro?",
+          "Verificou se a sua string está envolvida por aspas simples ou duplas?",
+          "Lembre-se do sinal de igual '=': ele serve para guardar o valor na variável."
+        ]
+      },
       "references": [],
       "quiz": {
         "question": "O que acontece se esquecermos de colocar as aspas ao redor de um texto?",

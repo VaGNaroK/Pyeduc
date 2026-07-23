@@ -64,3 +64,8 @@ Lessons live in `content/lessons.json`. Each lesson has:
 - `Pyeduc.7z` is a distributable archive
 - `.gitignore` excludes `data/progress.json` but NOT `data/pyeduc.db` (add if committing)
 - `ARCHITECTURE.md` references PyQt signals — outdated, app uses Flet callbacks
+- **Ollama AI Tutor (`src/llm_client.py`)**: Local REST API integration, `OLLAMA_KEEP_ALIVE="-1m"` while open, auto-unloads from VRAM (`keep_alive: 0` via `unload_model()`) when app closes. Recommended models: `qwen2.5-coder:3b` / `1.5b`.
+
+- **Educational Guardrails (`src/tutor_guardrails.py`)**: Deterministic static error analysis for `NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`, strictly 3 Socratic topics with bold markdown, no code leakage.
+- **Flet Threading (`src/gui.py`)**: Use `page.run_thread(fn)` instead of `threading.Thread(...)` for real-time background UI updates.
+

@@ -40,6 +40,10 @@ Thumbs.db
 data/progress.json
 data/pyeduc.db
 
+# Logs
+logs/
+*.log
+
 # Arquivos temporários
 *.tmp
 *.bak
