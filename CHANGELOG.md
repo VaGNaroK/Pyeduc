@@ -4,6 +4,26 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.1.3] - 2026-07-22
+
+### Adicionado
+- **Destaque do Tutor IA no Topo da Sidebar:** Posicionamento do painel do Tutor IA Sócratico no topo da barra lateral direita para acesso imediato ao chat de dúvidas sem necessidade de rolagem de tela.
+- **Quiz da Lição em Popup Modal (`ft.AlertDialog`):** Migração do questionário de fixação para uma janela popup centralizada acionada pelo botão `🎯 Responder Quiz da Lição`. O botão é exibido dinamicamente apenas em lições com quiz.
+- **Console Python de Alto Contraste:** Fundo do console em Azul Slate Escuro (`#0f172a`), com o editor de código (`console_input`) destacado por **borda Azul Ciano (`#38bdf8`)** e o terminal de saída (`console_output_container`) por **borda Verde Esmeralda (`#10b981`)**.
+- **Rodapé Dinâmico de Progresso (`footer`):** Exibição em tempo real do status do aluno logado e percentual de conclusão do curso (ex: `👤 Aluno: vagner | Lição 10 de 24 (41% concluído)`).
+
+### Alterado
+- **Responsividade Vertical de Popup Modal (`tight=True`):** Adicionada a propriedade `tight=True` na coluna interna do `quiz_modal`, fazendo com que a janela envolva dinamicamente a altura exata das perguntas e alternativas.
+- **Ajuste de Linhas e Visibilidade Simultânea no Console:** Linhas mínimas ajustadas (`min_lines=4` no editor e `min_lines=5` no terminal de saída), garantindo exibição simultânea de ambas as caixas sem cortes ou necessidade de rolagem.
+- **Purificação da Barra Superior (Top Bar):** Remoção do botão redundante `🤖 Tutor IA` do cabeçalho da aplicação.
+- **Limpeza Automática de Chat por Lição:** Inclusão de `ai_chat_history.clear()`, `ai_chat_list.controls.clear()` e `ai_input_field.value = ""` na função `load_lesson()`, zerando a conversa do Tutor IA a cada transição de aula.
+- **Padronização do Modelo Oficial Ollama:** Atualizado o modelo oficial recomendado no `README.md` e `INSTALL.md` para `qwen2.5-coder:3b`.
+
+### Corrigido
+- **NameError em `sidebar_quiz_container`:** Removidas referências obsoletas da antiga caixa do quiz na barra lateral durante a navegação entre aulas.
+- **AttributeError em `get_current_username`:** Criado e utilizado o método oficial `progress_manager.get_current_username()` para recuperar o nome do usuário logado na sessão.
+- **Atualização das Regras do Projeto ([AGENTS.md](AGENTS.md)):** Registro da Seção 15 travando o projeto contra regressões visuais e de lógica.
+
 ## [1.1.2] - 2026-07-21
 
 ### Adicionado
