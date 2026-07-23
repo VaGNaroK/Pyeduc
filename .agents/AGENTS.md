@@ -73,3 +73,10 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 - **Usar `page.run_thread(fn)`**: Todas as chamadas assíncronas em segundo plano (como requisições da IA em `send_to_ai` e health check em `update_ollama_status`) DEVEM utilizar **`page.run_thread(fn)`**, que faz a notificação direta ao barramento de mensagens do Flutter C++ e força a renderização visual da tela e roleta em tempo real.
 - **Divisor Lateral Arrastável (`sidebar_splitter`)**: O redimensionamento do chat da IA na barra lateral direita é controlado por um `ft.GestureDetector` vertical (`sidebar_splitter`) posicionado na `main_row`.
 
+## 15. Regras de Interface, Limpeza do Chat IA e Método Username
+- **Limpeza de Estado do Tutor IA em `load_lesson()`**: Ao trocar de lição, é mandatório executar `ai_chat_history.clear()`, `ai_chat_list.controls.clear()` e `ai_input_field.value = ""` para zerar o contexto do chat e impedir vazamento de mensagens da aula anterior.
+- **Nome de Usuário em `ProgressManager`**: Para recuperar o nome do usuário ativo na sessão, use estritamente `progress_manager.get_current_username()` (não tente invocar `get_current_user`, que causará um `AttributeError`).
+- **Alto Contraste no Console Python**: O container principal do console usa fundo `#0f172a` (Slate Escuro). O editor de código (`console_input`) utiliza borda brilhante **Azul Ciano (`#38bdf8`)** (`min_lines=4`), enquanto a caixa do terminal de saída (`console_output_container`) utiliza borda brilhante **Verde Esmeralda (`#10b981`)** (`min_lines=5`).
+- **Responsividade do Popup Modal (`ft.AlertDialog`)**: Qualquer coluna interna dentro de contêineres de Popup Modal (como `quiz_modal`) DEVE obrigatoriamente declarar `tight=True` (`ft.Column([..., tight=True])`) para que a janela envolva dinamicamente a altura exata do seu conteúdo, evitando espaços cinzas vazios verticais.
+- **Visibilidade Condicional da Sidebar IA**: O painel do Tutor IA (`sidebar_ai_container`) deve ser visível exclusivamente em lições práticas (`sidebar_ai_container.visible = not is_theory and not is_presentation`), sendo ocultado em aulas teóricas e apresentações.
+

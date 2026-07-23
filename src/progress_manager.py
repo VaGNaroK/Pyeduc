@@ -79,6 +79,10 @@ class ProgressManager:
 
     def is_logged_in(self) -> bool:
         return self.current_user_id is not None
+
+    def get_current_username(self) -> Optional[str]:
+        """Retorna o nome do usuário logado"""
+        return self.current_username
         
     def logout(self):
         logger.info(f"Logout efetuado: {self.current_username}")

@@ -68,4 +68,9 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 - **Educational Guardrails (`src/tutor_guardrails.py`)**: Deterministic static error analysis for `NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`, strictly 3 Socratic topics with bold markdown, no code leakage.
 - **Flet Threading (`src/gui.py`)**: Use `page.run_thread(fn)` instead of `threading.Thread(...)` for real-time background UI updates.
+- **Tutor IA Chat Reset (`src/gui.py`)**: `load_lesson()` must run `ai_chat_history.clear()`, `ai_chat_list.controls.clear()`, and `ai_input_field.value = ""` on lesson transitions to prevent stale context.
+- **ProgressManager Username (`src/progress_manager.py`)**: Use `progress_manager.get_current_username()` to fetch current logged-in username.
+- **High Contrast Console UI**: `console_input` uses `#38bdf8` (Cyan) border, `console_output_container` uses `#10b981` (Emerald) border with `#0f172a` outer container.
+- **Popup Modal Responsiveness**: Inner Columns inside `ft.AlertDialog` must declare `tight=True` (`ft.Column([..., tight=True])`) to fit content height dynamically.
+
 

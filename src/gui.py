@@ -228,12 +228,11 @@ def main_app(page: ft.Page):
     # Componentes da Top Bar
     # ---------------------------------------------------------
     title_text = ft.Text("Aula 1: Introdução às Variáveis", color="white", weight="bold", size=16)
-    btn_top_ai = ft.ElevatedButton("🤖 Tutor IA", icon=ft.Icons.AUTO_AWESOME, bgcolor="#7c3aed", color="white", on_click=open_ai_drawer)
     top_bar = ft.Container(visible=False,
-        content=ft.Row([title_text, btn_top_ai], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-        bgcolor="#2c3e50",
-        padding=10,
-        alignment=ft.Alignment.CENTER
+        content=ft.Row([title_text], alignment=ft.MainAxisAlignment.START),
+        bgcolor="#1e293b",
+        padding=12,
+        alignment=ft.Alignment.CENTER_LEFT
     )
 
     
@@ -293,25 +292,34 @@ def main_app(page: ft.Page):
     # ---------------------------------------------------------
     console_input = ft.TextField(
         multiline=True,
-        min_lines=6,
-        max_lines=10,
+        min_lines=4,
+        max_lines=7,
         text_style=ft.TextStyle(font_family="Consolas", size=14, color="#f8fafc"),
         bgcolor="#1e293b",
-        border_color="#334155",
-        border_radius=4,
-        content_padding=15,
+        border_color="#38bdf8", # Borda Azul Ciano Brilhante de Alto Contraste
+        border_radius=6,
+        content_padding=12,
         hint_text="# Digite seu código Python aqui...",
-        hint_style=ft.TextStyle(color="#64748b")
+        hint_style=ft.TextStyle(color="#94a3b8")
     )
     
     console_output = ft.TextField(
         multiline=True,
         read_only=True,
-        min_lines=8,
+        min_lines=5,
         text_style=ft.TextStyle(font_family="Consolas", size=13, color="#10b981"),
-        bgcolor="#0f172a",
+        bgcolor="#090d16",
         border=ft.InputBorder.NONE,
-        content_padding=15,
+        content_padding=12,
+        expand=True
+    )
+    
+    console_output_container = ft.Container(
+        content=console_output,
+        bgcolor="#090d16",
+        border=ft.Border.all(1.5, "#10b981"), # Borda Verde Esmeralda Brilhante de Alto Contraste
+        border_radius=6,
+        padding=2,
         expand=True
     )
     
@@ -339,8 +347,8 @@ def main_app(page: ft.Page):
     btn_clear = ft.TextButton(
         content="Limpar",
         icon=ft.Icons.DELETE_OUTLINE,
-        icon_color="grey",
-        style=ft.ButtonStyle(color="grey"),
+        icon_color="#cbd5e1",
+        style=ft.ButtonStyle(color="#cbd5e1"),
         on_click=on_clear_console
     )
     
@@ -382,9 +390,9 @@ def main_app(page: ft.Page):
                 smart_messages_column
             ]),
             
-            console_output
+            console_output_container
         ], spacing=10),
-        bgcolor="#111827", # Quase preto
+        bgcolor="#0f172a", # Fundo Azul Slate Escuro Elegante
         padding=15,
         expand=50
     )
@@ -791,11 +799,11 @@ def main_app(page: ft.Page):
         page.update()
 
     btn_open_quiz_modal = ft.ElevatedButton(
-        "🎯 Quiz da Lição",
+        "🎯 Responder Quiz da Lição",
         icon=ft.Icons.QUIZ_ROUNDED,
         bgcolor="#7c3aed",
         color="white",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6), padding=10),
         on_click=open_quiz_modal,
         visible=False
     )
@@ -1086,6 +1094,18 @@ def main_app(page: ft.Page):
         console_input.value = "" # Começa vazio para o aluno digitar
         console_output.value = "" # Limpa qualquer output antigo do console
         
+        # Limpa o chat do Tutor IA para não manter conversas da aula anterior
+        ai_chat_history.clear()
+        ai_chat_list.controls.clear()
+        ai_input_field.value = ""
+        
+        # Atualiza rodapé dinâmico com informações do usuário e progresso
+        total_lessons = len(all_lessons)
+        user_current = index + 1
+        pct = int((user_current / total_lessons) * 100)
+        username = progress_manager.get_current_username() or "Aluno"
+        footer_status_text.value = f"👤 Aluno: {username}  |  Lição {user_current} de {total_lessons} ({pct}% concluído)"
+
         # Alterna entre Teórica, Prática e Presentation
         is_theory = lesson.get("type") == "theory"
         is_presentation = lesson.get("type") == "presentation"
@@ -1281,9 +1301,10 @@ def main_app(page: ft.Page):
     btn_prev = ft.ElevatedButton("Anterior", icon=ft.Icons.ARROW_BACK, on_click=go_prev)
     btn_next = ft.ElevatedButton("Próxima", icon=ft.Icons.ARROW_FORWARD, on_click=go_next)
     
+    footer_status_text = ft.Text("Bem-vindo ao Pyeduc!", color="#334155", weight="bold", size=13)
     footer = ft.Container(visible=False,
         content=ft.Row([
-            ft.Text(f"Bem-vindo ao Pyeduc!", color="#475569", weight="bold"),
+            footer_status_text,
             ft.Row([btn_prev, btn_next], alignment=ft.MainAxisAlignment.END, expand=True)
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
         bgcolor="#e2e8f0",
