@@ -79,10 +79,8 @@ O Pyeduc possui suporte a um **Tutor IA local inteligente** rodando via [Ollama]
      ```
    - **Windows:** Baixe o instalador oficial em [Ollama.com/download](https://ollama.com/download)
 
-2. **Baixar um modelo leve de código (recomendado):**
+2. **Baixar o modelo recomendado de código (`qwen2.5-coder:3b`):**
    ```bash
-   ollama pull qwen2.5-coder:1.5b
-   # ou
    ollama pull qwen2.5-coder:3b
    ```
 

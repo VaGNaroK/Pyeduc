@@ -29,7 +29,7 @@ O conteúdo fica no arquivo JSON `content/lessons.json` e é dividido entre liç
 
 - Python 3.8+
 - Flet (`pip install flet`)
-- **Ollama (Opcional para o Tutor IA)**: [Ollama.com](https://ollama.com) com o modelo `qwen2.5-coder:1.5b` ou `qwen2.5-coder:3b`.
+- **Ollama (Opcional para o Tutor IA)**: [Ollama.com](https://ollama.com) com o modelo oficial `qwen2.5-coder:3b`.
 
 ## 🚀 Instalação e Execução
 
