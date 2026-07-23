@@ -4,6 +4,9 @@ Um aplicativo educacional interativo desenvolvido em Python com **Flet** (interf
 
 ## 🎯 Características
 
+- **Tutor IA Sócratico (Ollama LLM)**: Assistente de inteligência artificial local integrado para tirar dúvidas dos alunos em 3 tópicos didáticos (Conceito, Pergunta Guiada e Dica Progressiva) sem fornecer respostas prontas ou spoilers de código.
+- **Diagnóstico Estático de Erros**: Identificação automática e determinística de erros comuns (`SyntaxError`, `NameError`, `IndentationError`, `TypeError`, `ZeroDivisionError`) com auxílio imediato da IA.
+- **Mecanismo RAG Leve**: Recuperação de contexto e conceitos de lições passadas baseados na dúvida digitada pelo aluno.
 - **Interface Pedagógica Dividida**: 
   - Parte superior: explicações teóricas, exemplos e exercícios interativos.
   - Parte inferior: console Python interativo (`PersistentPythonShell`).
@@ -19,21 +22,25 @@ O conteúdo fica no arquivo JSON `content/lessons.json` e é dividido entre liç
 - **Teoria Inicial:**
   - Bem-vindo ao Pyeduc!
   - A História do Python, O Ecossistema Python, Compilada vs Interpretada, Código Fonte e Arquivos .py, Versões do Python (2 vs 3), Regras para Nomear Variáveis.
-- **Prática (com Console, Auto-Grader e Múltiplos Exercícios):**
+- **Prática (com Console, Auto-Grader, Tutor IA e Múltiplos Exercícios):**
   - Variáveis e Textos (Strings), Números Inteiros (Int), Números Decimais (Float), Valores Booleanos (Bool), Operadores Aritméticos, Listas e Iteração.
 
 ## 📋 Requisitos
 
 - Python 3.8+
 - Flet (`pip install flet`)
+- **Ollama (Opcional para o Tutor IA)**: [Ollama.com](https://ollama.com) com o modelo `qwen2.5-coder:1.5b` ou `qwen2.5-coder:3b`.
 
 ## 🚀 Instalação e Execução
 
-Para ver o passo a passo de como configurar seu ambiente virtual, instalar dependências e rodar o projeto localmente, acesse o guia oficial em **[INSTALL.md](INSTALL.md)**.
+Para ver o passo a passo de como configurar seu ambiente virtual, instalar dependências e rodar o projeto localmente (incluindo o Tutor IA), acesse o guia oficial em **[INSTALL.md](INSTALL.md)**.
 
 ## 📁 Estrutura Principal do Projeto
 
 - `src/gui.py`: Camada de Interface Flet (`main_app`).
+- `src/llm_client.py`: Cliente REST nativo para integração com a API local do **Ollama** (gerenciamento inteligente de modelos e VRAM).
+- `src/tutor_guardrails.py`: Diagnóstico estático de erros e guardrails educacionais sócraticos.
+- `src/rag_module.py`: Mecanismo RAG leve para busca de contexto e conceitos no conteúdo das lições.
 - `src/communication.py`: Callbacks fazendo a ponte entre GUI e o Executor.
 - `src/executor.py`: Subprocesso persistente do Python em que os códigos rodam (`PersistentPythonShell`).
 - `src/content_manager.py`: Controlador de conteúdo (carrega o `lessons.json`).

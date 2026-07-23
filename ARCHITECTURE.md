@@ -28,6 +28,11 @@ O Pyeduc é um aplicativo educacional estruturado em **5 camadas de arquitetura*
 |  - Banco data/pyeduc.db                  |
 |  - Salva checks das aulas concluídas     |
 +------------------------------------------+
+|   Camada 6: Inteligência Artificial (LLM)|
+|  - llm_client.py (Ollama REST API)       |
+|  - tutor_guardrails.py (Diagnóstico/Regras)|
+|  - rag_module.py (Recuperação de lições) |
++------------------------------------------+
 ```
 
 ## Módulos e Responsabilidades
@@ -37,6 +42,7 @@ Trabalha como o cérebro visual da aplicação. Ao contrário do paradigma tradi
 - **Flet Components**: Utiliza caixas (`ft.Container`), colunas e linhas que esticam dinamicamente.
 - **Divisor Arrastável**: Implementa um `ft.GestureDetector` (drag_splitter) que varia o `expand` (peso de layout) para ajustar proporções de tela dinamicamente dependendo do tipo da aula.
 - **Auto-Grader**: Faz checagem de exercícios através de line-by-line matching com resultados previstos pela aula.
+- **Tutor IA Sócratico Integrado**: Painel de inteligência artificial acoplado para sanar dúvidas do aluno sem fornecer spoilers de código.
 
 ### 2. **communication.py** - Camada de Comunicação
 - Substituiu o antigo modelo de Sinais do `PyQt`/`PySide`.
@@ -56,6 +62,11 @@ Trabalha como o cérebro visual da aplicação. Ao contrário do paradigma tradi
 - Mantém o registro imutável do que o usuário já resolveu.
 - Arquivos prévios como `data/progress.json` são legados/stale.
 - Fornece métodos visuais que invocam callbacks na GUI para repintar checks verdes nas lições da Sidebar.
+
+### 6. **llm_client.py / tutor_guardrails.py / rag_module.py** - Camada de Inteligência Artificial
+- **`llm_client.py`**: Cliente HTTP REST para comunicação nativa com o **Ollama** local via biblioteca padrão `urllib`. Resolve automaticamente o melhor modelo instalado (`qwen2.5-coder`) e gerencia descarregamento dinâmico de VRAM/RAM ao fechar a aplicação (`unload_model()`).
+- **`tutor_guardrails.py`**: Análise estática determinística de erros (`NameError`, `SyntaxError`, etc.) e aplicação estrita do formato de resposta sócratico em 3 tópicos (**💡 Conceito**, **❓ Pergunta Guiada**, **🔍 Dica Progressiva**).
+- **`rag_module.py`**: Indexador e recuperador de contexto didático em tempo real baseado no conteúdo de `content/lessons.json`.
 
 ## Padrões de Design e Prevenção de Erros (Flet Quirks)
 1. **Stretch Responsivo**: Ao dividir layout numa row, exige `vertical_alignment=ft.CrossAxisAlignment.STRETCH`. Seus filhos devem declarar `horizontal_alignment=ft.CrossAxisAlignment.STRETCH`.

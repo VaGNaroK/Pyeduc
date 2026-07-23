@@ -68,6 +68,26 @@ python src/main.py
 
 Se tudo estiver certo, uma janela elegante interativa do Flet se abrirá! 🎉
 
+## 🤖 Passo 5 (Opcional): Configurar o Tutor IA Sócratico (Ollama)
+
+O Pyeduc possui suporte a um **Tutor IA local inteligente** rodando via [Ollama](https://ollama.com). O uso é 100% gratuito, privado e não requer chaves de API pagas.
+
+1. **Instalar o Ollama:**
+   - **Linux / macOS:**
+     ```bash
+     curl -fsSL https://ollama.com/install.sh | sh
+     ```
+   - **Windows:** Baixe o instalador oficial em [Ollama.com/download](https://ollama.com/download)
+
+2. **Baixar um modelo leve de código (recomendado):**
+   ```bash
+   ollama pull qwen2.5-coder:1.5b
+   # ou
+   ollama pull qwen2.5-coder:3b
+   ```
+
+3. **Pronto!** O Pyeduc detectará o Ollama automaticamente e exibirá a indicação `Ollama online` no topo da barra lateral e nas lições práticas.
+
 ## 🆘 Solução de Problemas (Troubleshooting)
 
 ### ❌ "python não é reconhecido"
