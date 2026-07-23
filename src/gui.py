@@ -774,7 +774,74 @@ def main_app(page: ft.Page):
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4))
     )
     
+    # Modal Popup do Quiz da Lição
+    def close_quiz_modal(e=None):
+        page.pop_dialog()
+
+    btn_close_quiz_modal = ft.TextButton("Fechar", on_click=close_quiz_modal)
+    quiz_modal_container = ft.Container(
+        content=ft.Column([
+            quiz_question,
+            quiz_options,
+            btn_quiz,
+            quiz_feedback
+        ], spacing=10),
+        width=450,
+        padding=10
+    )
+    quiz_modal = ft.AlertDialog(
+        title=ft.Row([
+            ft.Icon(ft.Icons.QUIZ_ROUNDED, color="#7c3aed", size=22),
+            ft.Text("Mini Quiz de Fixação", weight="bold", size=16, color="#1e293b")
+        ], spacing=8),
+        content=quiz_modal_container,
+        actions=[btn_close_quiz_modal],
+        actions_alignment=ft.MainAxisAlignment.END
+    )
+
+    def open_quiz_modal(e=None):
+        page.show_dialog(quiz_modal)
+        page.update()
+
+    btn_open_quiz_modal = ft.ElevatedButton(
+        "🎯 Quiz da Lição",
+        icon=ft.Icons.QUIZ_ROUNDED,
+        bgcolor="#7c3aed",
+        color="white",
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+        on_click=open_quiz_modal,
+        visible=False
+    )
+
+    # Painel Embutido do Tutor IA na Barra Lateral (Posicionado no Topo)
+    sidebar_ai_container = ft.Container(
+        content=ft.Column([
+            ft.Row([
+                ft.Text("🤖 Tutor IA Sócratico", weight="bold", color="#581c87", size=14),
+                ai_loading_ring
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            ft.Row([
+                ft.OutlinedButton("💡 Dica", on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler"), style=ft.ButtonStyle(padding=4)),
+                ft.OutlinedButton("❌ Erro", on_click=lambda e: send_to_ai(quick_action="error_help"), style=ft.ButtonStyle(padding=4)),
+                ft.OutlinedButton("📘 Conceito", on_click=lambda e: send_to_ai(quick_action="explain_concept"), style=ft.ButtonStyle(padding=4)),
+            ], spacing=4, wrap=True),
+            ft.Divider(height=1, color="#ddd6fe"),
+            ai_chat_list,
+            ft.Row([
+                ai_input_field,
+                btn_send_ai
+            ], spacing=5),
+            ft.Divider(height=1, color="#ddd6fe"),
+            btn_open_quiz_modal
+        ], spacing=8),
+        bgcolor="#faf5ff",
+        padding=12,
+        border_radius=8,
+        border=ft.Border.all(1, "#c084fc")
+    )
+    
     sidebar_content = ft.Column([
+        sidebar_ai_container,
         # Dicas Rápidas
         ft.Container(
             content=ft.Column([
@@ -787,7 +854,6 @@ def main_app(page: ft.Page):
             border=ft.Border.all(1, "#fde68a")
         ),
         # Progresso
-
         ft.Container(
             content=ft.Column([
                 ft.Text("Progresso:", weight="bold", color="#065f46"),
@@ -816,47 +882,6 @@ def main_app(page: ft.Page):
         visible=False
     )
     sidebar_content.controls.insert(0, admin_switch_container)
-        
-    sidebar_quiz_container = ft.Container(
-        content=ft.Column([
-            ft.Text("Mini Quiz:", weight="bold", color="#5b21b6"),
-            quiz_question,
-            quiz_options,
-            btn_quiz,
-            quiz_feedback
-        ]),
-        bgcolor="#f5f3ff", # Roxo pastel
-        padding=15,
-        border_radius=8,
-        border=ft.Border.all(1, "#ddd6fe")
-    )
-    sidebar_content.controls.append(sidebar_quiz_container)
-
-    # Painel Embutido do Tutor IA na Barra Lateral
-    sidebar_ai_container = ft.Container(
-        content=ft.Column([
-            ft.Row([
-                ft.Text("🤖 Tutor IA Sócratico", weight="bold", color="#581c87", size=14),
-                ai_loading_ring
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-            ft.Row([
-                ft.OutlinedButton("💡 Dica", on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler"), style=ft.ButtonStyle(padding=4)),
-                ft.OutlinedButton("❌ Erro", on_click=lambda e: send_to_ai(quick_action="error_help"), style=ft.ButtonStyle(padding=4)),
-                ft.OutlinedButton("📘 Conceito", on_click=lambda e: send_to_ai(quick_action="explain_concept"), style=ft.ButtonStyle(padding=4)),
-            ], spacing=4, wrap=True),
-            ft.Divider(height=1, color="#ddd6fe"),
-            ai_chat_list,
-            ft.Row([
-                ai_input_field,
-                btn_send_ai
-            ], spacing=5)
-        ], spacing=8),
-        bgcolor="#faf5ff",
-        padding=12,
-        border_radius=8,
-        border=ft.Border.all(1, "#c084fc")
-    )
-    sidebar_content.controls.append(sidebar_ai_container)
 
     # Badge de Status do Ollama no Topo da Sidebar
     btn_refresh_ollama = ft.IconButton(
@@ -1081,7 +1106,6 @@ def main_app(page: ft.Page):
         console_container.visible = not is_theory and not is_presentation
         activity_container.visible = is_theory
         coding_elements_container.visible = not is_theory and not is_presentation
-        sidebar_quiz_container.visible = not is_theory and not is_presentation
 
         # Configuração do splitter e tamanhos
         if is_presentation:
@@ -1231,10 +1255,12 @@ def main_app(page: ft.Page):
             quiz_options.content = ft.Column(opts, spacing=5)
             quiz_options.value = None
             quiz_feedback.value = ""
+            btn_open_quiz_modal.visible = True
         else:
             quiz_question.value = ""
             quiz_options.content = ft.Column()
             quiz_feedback.value = ""
+            btn_open_quiz_modal.visible = False
         
         btn_prev.disabled = (index == 0)
         btn_next.disabled = (index == len(all_lessons) - 1)
