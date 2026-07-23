@@ -344,30 +344,31 @@ def main_app(page: ft.Page):
         on_click=on_clear_console
     )
     
-    # Panel de mensagens inteligentes integrado ao Tutor IA
-    smart_messages_panel = ft.Container(
-        content=ft.Column([
-            ft.Row([
-                ft.Text("🤖 Tutor IA", color="white", weight="bold", size=13),
-                ai_status_icon
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-            ft.Text("Tire suas dúvidas sem spoiler!", color="#94a3b8", size=11),
-            ft.Row([
-                ft.ElevatedButton("💡 Dica", icon=ft.Icons.LIGHTBULB_OUTLINE, bgcolor="#7c3aed", color="white", 
-                                  on_click=lambda e: (open_ai_drawer(), send_to_ai(quick_action="hint_no_spoiler"))),
-                ft.ElevatedButton("❌ Erro", icon=ft.Icons.BUG_REPORT_OUTLINED, bgcolor="#dc2626", color="white", 
-                                  on_click=lambda e: (open_ai_drawer(), send_to_ai(quick_action="error_help")))
-            ], wrap=True, spacing=5),
-            ft.TextButton("💬 Abrir Chat", icon=ft.Icons.CHAT_BUBBLE_OUTLINE, icon_color="#c084fc", style=ft.ButtonStyle(color="#c084fc"),
-                          on_click=open_ai_drawer)
-        ], spacing=8, alignment=ft.MainAxisAlignment.CENTER),
-        bgcolor="#1e293b",
-        border_radius=4,
-        padding=10,
-        expand=3, # 30% do espaço
-        alignment=ft.Alignment.CENTER
+    btn_ask_ai_err = ft.ElevatedButton(
+        "🤖 Pedir ajuda da IA para este erro",
+        icon=ft.Icons.AUTO_AWESOME,
+        bgcolor="#7c3aed",
+        color="white",
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8), padding=12),
+        on_click=lambda e: send_to_ai(quick_action="error_help"),
+        visible=False
     )
 
+    # Painel de mensagens inteligentes do console
+    smart_messages_panel = ft.Container(
+        content=ft.Column([
+            ft.Text("Tudo certo por enquanto!", weight="bold", size=14, color="white"),
+            ft.Text("Continue o bom trabalho.", color="#94a3b8", size=13, italic=True)
+        ], spacing=6),
+        bgcolor="#1e293b",
+        border_radius=6,
+        padding=15
+    )
+
+    smart_messages_column = ft.Column([
+        smart_messages_panel,
+        btn_ask_ai_err
+    ], spacing=10, expand=3, alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
     console_container = ft.Container(
         content=ft.Column([
@@ -378,7 +379,7 @@ def main_app(page: ft.Page):
             
             ft.Row([
                 ft.Container(content=console_input, expand=7), # 70% do espaço para o editor
-                smart_messages_panel
+                smart_messages_column
             ]),
             
             console_output
@@ -603,63 +604,49 @@ def main_app(page: ft.Page):
         btn_execute.disabled = False
         out = ""
         
-        # Limpa o painel inteligente por padrão mantendo o botão da IA
-        btn_ask_ai_default = ft.ElevatedButton(
-            "🤖 Pedir Dica à IA",
-            icon=ft.Icons.LIGHTBULB_OUTLINE,
-            bgcolor="#7c3aed",
-            color="white",
-            on_click=lambda e: send_to_ai(quick_action="hint_no_spoiler")
-        )
         smart_messages_panel.content = ft.Column([
-            ft.Text("Tudo certo por enquanto! Continue o bom trabalho.", color="#94a3b8", size=12, italic=True),
-            btn_ask_ai_default
-        ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+            ft.Text("Tudo certo por enquanto!", weight="bold", size=14, color="white"),
+            ft.Text("Continue o bom trabalho.", color="#94a3b8", size=13, italic=True)
+        ], spacing=6)
         smart_messages_panel.bgcolor = "#1e293b"
+        btn_ask_ai_err.visible = False
         
         if stdout:
             out += stdout + "\n"
         if stderr:
             out += "ERRO:\n" + stderr + "\n"
-            
-            btn_ask_ai_err = ft.ElevatedButton(
-                "🤖 Pedir ajuda da IA para este erro",
-                icon=ft.Icons.AUTO_AWESOME,
-                bgcolor="#7c3aed",
-                color="white",
-                on_click=lambda e: send_to_ai(quick_action="error_help")
-            )
+            btn_ask_ai_err.visible = True
 
-            # Tradutor de Erros com botão preservado para a IA
+            # Tradutor de Erros com texto ampliado e separado do botão
             if "SyntaxError" in stderr:
                 smart_messages_panel.content = ft.Column([
-                    ft.Text("Erro de Sintaxe (SyntaxError):\nParece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação.", color="white", size=12),
-                    btn_ask_ai_err
-                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                    ft.Text("Erro de Sintaxe (SyntaxError):", weight="bold", size=14, color="white"),
+                    ft.Text("Parece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação.", size=13, color="white")
+                ], spacing=6)
                 smart_messages_panel.bgcolor = "#991b1b"
             elif "NameError" in stderr:
                 smart_messages_panel.content = ft.Column([
-                    ft.Text("Erro de Nome (NameError):\nVocê tentou usar uma variável ou função inexistente.", color="white", size=12),
-                    btn_ask_ai_err
-                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                    ft.Text("Erro de Nome (NameError):", weight="bold", size=14, color="white"),
+                    ft.Text("Você tentou usar uma variável ou função inexistente.", size=13, color="white")
+                ], spacing=6)
                 smart_messages_panel.bgcolor = "#991b1b"
             elif "IndentationError" in stderr:
                 smart_messages_panel.content = ft.Column([
-                    ft.Text("Erro de Indentação (IndentationError):\nVerifique os espaços no começo das linhas.", color="white", size=12),
-                    btn_ask_ai_err
-                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                    ft.Text("Erro de Indentação (IndentationError):", weight="bold", size=14, color="white"),
+                    ft.Text("Verifique os espaços no começo das linhas.", size=13, color="white")
+                ], spacing=6)
                 smart_messages_panel.bgcolor = "#991b1b"
             elif "TypeError" in stderr:
                 smart_messages_panel.content = ft.Column([
-                    ft.Text("Erro de Tipo (TypeError):\nVocê tentou misturar tipos incompatíveis.", color="white", size=12),
-                    btn_ask_ai_err
-                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                    ft.Text("Erro de Tipo (TypeError):", weight="bold", size=14, color="white"),
+                    ft.Text("Você tentou misturar tipos incompatíveis.", size=13, color="white")
+                ], spacing=6)
                 smart_messages_panel.bgcolor = "#991b1b"
             else:
                 smart_messages_panel.content = ft.Column([
-                    ft.Text("Erro de Execução:\nVerifique o erro retornado no console.", color="white", size=12),
-                    btn_ask_ai_err
-                ], spacing=8, alignment=ft.MainAxisAlignment.CENTER)
+                    ft.Text("Erro de Execução:", weight="bold", size=14, color="white"),
+                    ft.Text("Verifique o erro retornado no console.", size=13, color="white")
+                ], spacing=6)
                 smart_messages_panel.bgcolor = "#991b1b"
 
         
@@ -785,7 +772,7 @@ def main_app(page: ft.Page):
             quiz_options,
             btn_quiz,
             quiz_feedback
-        ], spacing=10),
+        ], spacing=10, tight=True),
         width=450,
         padding=10
     )
@@ -1106,6 +1093,7 @@ def main_app(page: ft.Page):
         console_container.visible = not is_theory and not is_presentation
         activity_container.visible = is_theory
         coding_elements_container.visible = not is_theory and not is_presentation
+        sidebar_ai_container.visible = not is_theory and not is_presentation
 
         # Configuração do splitter e tamanhos
         if is_presentation:
