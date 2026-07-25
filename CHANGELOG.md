@@ -4,7 +4,16 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.2.0] - 2026-07-25
+
+### Adicionado
+- **Suíte de Testes Automatizados (`pytest`):** Criados 14 testes unitários cobrindo o leitor de lições (`ContentManager`), o interpretador REPL (`PersistentPythonShell`), o banco de dados (`ProgressManager`) e os guardrails do Tutor IA (`EducationalGuardrails`).
+- **Guia de Contribuição ([CONTRIBUTING.md](CONTRIBUTING.md)):** Documento orientativo detalhando a arquitetura em 5 camadas do Pyeduc, ambiente de desenvolvimento, padrões Flet e diretrizes de preservação de progresso (**IDs >= 1001**).
+- **Exportação e Importação de Progresso em JSON:** Funcionalidade de backup/restauração no `ProgressManager` e botões visuais na barra superior (`top_bar`) integrados via `ft.FilePicker`.
+- **Expansão do Currículo Didático (9 Novas Aulas):** Adicionadas as aulas de Tuplas (ID 1003), Dicionários (ID 1004), Conjuntos (ID 1005), Aprofundamento em Funções (ID 1006), Módulos (ID 1007), Tratamento de Erros (ID 1008), Manipulação de Arquivos (ID 1009), Orientação a Objetos (ID 1010) e a Prova Prática Integradora 3 (ID 1011).
+
 ## [1.1.3] - 2026-07-22
+
 
 ### Adicionado
 - **Destaque do Tutor IA no Topo da Sidebar:** Posicionamento do painel do Tutor IA Sócratico no topo da barra lateral direita para acesso imediato ao chat de dúvidas sem necessidade de rolagem de tela.
@@ -20,6 +29,8 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Padronização do Modelo Oficial Ollama:** Atualizado o modelo oficial recomendado no `README.md` e `INSTALL.md` para `qwen2.5-coder:3b`.
 
 ### Corrigido
+- **Correção na Avaliação do Auto-Grader (`src/gui.py`):** Reestruturação do algoritmo de validação em duas passadas com consumo de linhas de saída (1ª passada: exata, 2ª passada: fuzzy). Corrige o falso alarme *"💡 Quase lá!"* quando o código do aluno dava match exato em um exercício (ex: Aula 8), mas outros exercícios pendentes na aula reutilizavam erroneamente a saída no match fuzzy.
+- **Conclusão Automática de Aulas Práticas:** Integração com `progress_manager.mark_lesson_completed()` ao concluir todos os exercícios de uma aula no console.
 - **NameError em `sidebar_quiz_container`:** Removidas referências obsoletas da antiga caixa do quiz na barra lateral durante a navegação entre aulas.
 - **AttributeError em `get_current_username`:** Criado e utilizado o método oficial `progress_manager.get_current_username()` para recuperar o nome do usuário logado na sessão.
 - **Atualização das Regras do Projeto ([AGENTS.md](AGENTS.md)):** Registro da Seção 15 travando o projeto contra regressões visuais e de lógica.

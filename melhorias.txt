@@ -1,0 +1,114 @@
+1. Arquitetura e Organização do Código (Alta Prioridade)
+
+GUI monolítica: O arquivo gui.py (~770 linhas em uma única função main_app) viola princípios de responsabilidade única.
+Melhoria sugerida: Refatorar para uma abordagem baseada em componentes ou classes. Exemplo:
+LessonView.py (renderização de lições)
+ConsolePanel.py
+TutorPanel.py
+SidebarProgress.py
+
+Benefício: Mais fácil testar, manter e reutilizar.
+
+Falta de modularidade em alguns módulos: Vários arquivos misturam lógica de negócio com detalhes de UI ou I/O.
+Adicionar camadas de abstração: Criar interfaces claras (ex: ExecutorInterface, ContentProvider, TutorService).
+
+2. Testabilidade e Qualidade de Código
+
+Atualmente não há testes visíveis.
+Melhorias recomendadas:
+Testes unitários para executor.py (mock de subprocess), rag_module, tutor_guardrails e progress_manager.
+Testes de integração para fluxo completo de lições (usando pytest + flet testing se disponível).
+Testes de snapshot para estrutura JSON das lições.
+Linting + formatação (ruff + black) e CI com GitHub Actions (já existe workflow, mas pode ser expandido).
+
+
+3. Conteúdo Didático e Currículo
+
+Cobertura ainda muito básica (apenas variáveis, tipos primitivos, operadores e listas).
+Sugestões de expansão:
+Módulos intermediários: Funções, Loops avançados, Dicionários, Manipulação de arquivos, Introdução a OOP, Módulos e pacotes.
+Lições com dificuldade progressiva e projetos integradores (ex: mini-jogo, calculadora, gerenciador de tarefas).
+Suporte a multi-linguagem no JSON (português + inglês).
+Exercícios com dicas adaptativas baseadas no histórico do aluno.
+
+
+4. Experiência do Usuário (UX/UI)
+
+Divisor arrastável é bom, mas pode ser aprimorado com limites mínimos/máximos e persistência de posição.
+Feedback visual: Melhorar indicadores de progresso, animações suaves no Flet, temas (dark/light).
+Acessibilidade: Suporte a leitores de tela, navegação por teclado, tamanhos de fonte ajustáveis.
+Onboarding: Tutorial interativo inicial + tour guiado.
+Modo offline-first mais robusto (melhor mensagem quando Ollama não está rodando).
+
+5. Inteligência Artificial e Tutor
+
+Dependência forte de um único modelo (qwen2.5-coder:3b).
+Melhorias:
+Suporte a múltiplos modelos e fallback.
+Sistema de avaliação de respostas da IA (evitar alucinações ou spoilers).
+Memória de conversa por lição (histórico contextual).
+Análise mais avançada de código do aluno (usar AST Python + ferramentas como pyright ou pylint leve).
+Métricas de engajamento do tutor (quantas dúvidas por lição, etc.).
+
+
+6. Segurança e Execução de Código
+
+O executor atual é bom, mas pode evoluir:
+Sandbox mais rígido (usar restrictedpython ou containerização leve para execuções avançadas).
+Limites de memória/CPU por execução.
+Prevenção de imports perigosos (os, subprocess, sys etc.) com whitelist.
+Logging seguro de tentativas maliciosas (para análise futura).
+
+
+7. Persistência e Dados
+
+SQLite é adequado, mas pode melhorar:
+Migrações de schema (usando Alembic).
+Export/Import de progresso (JSON ou backup).
+Estatísticas mais ricas (tempo gasto por lição, taxa de acerto, heatmap de erros).
+
+
+8. Distribuição e Instalação
+
+Melhorias:
+Pacotes prontos para Windows (.msi ou .exe com instalador), macOS e Linux (AppImage/Flatpak).
+Versão web (Flet já suporta) para acesso fácil sem instalação.
+Configurador automático de Ollama (download + instalação do modelo sugerido).
+Suporte a Python embutido (PyInstaller + Flet) para usuários sem Python instalado.
+
+
+9. Documentação e Comunidade
+
+Boa documentação técnica, mas faltam:
+Guia de contribuição (CONTRIBUTING.md).
+Roadmap público.
+Exemplos de como adicionar novos tipos de exercícios.
+Documentação de API interna (Sphinx ou MkDocs).
+
+
+10. Performance e Manutenibilidade
+
+Otimizar carregamento inicial (especialmente com Ollama).
+Cache de conteúdo JSON.
+Lazy loading de componentes Flet.
+Refatoração gradual para Type Hints completos.
+
+
+Priorização Recomendada (Roadmap Sugerido)
+Fase 1 (Curto prazo):
+
+Refatoração da GUI
+Adição de testes básicos
+Melhoria na documentação de contribuição
+
+Fase 2 (Médio prazo):
+
+Expansão significativa do currículo
+Melhorias no Tutor IA
+Pacotes de distribuição mais amigáveis
+
+Fase 3 (Longo prazo):
+
+Sandbox avançado
+Modo multi-usuário / sala de aula
+Versão web + analytics

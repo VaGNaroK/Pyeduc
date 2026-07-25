@@ -225,15 +225,80 @@ def main_app(page: ft.Page):
         page.update()
 
     # ---------------------------------------------------------
-    # Componentes da Top Bar
+    # Componentes da Top Bar e Exportação/Importação de Progresso
     # ---------------------------------------------------------
+    file_picker = ft.FilePicker()
+    page.services.append(file_picker)
+
+    async def do_export_progress(e):
+        saved_path = await file_picker.save_file(
+            dialog_title="Exportar Progresso (JSON)",
+            file_name=f"progresso_{progress_manager.get_current_username() or 'pyeduc'}.json",
+            allowed_extensions=["json"]
+        )
+        if saved_path:
+            success = progress_manager.export_progress(saved_path)
+            if success:
+                snack = ft.SnackBar(ft.Text("Progresso exportado com sucesso! 💾"), bgcolor="#10b981")
+            else:
+                snack = ft.SnackBar(ft.Text("Erro ao exportar o progresso do usuário! ❌"), bgcolor="#ef4444")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+
+    async def do_import_progress(e):
+        selected_files = await file_picker.pick_files(
+            dialog_title="Importar Progresso (JSON)",
+            allowed_extensions=["json"]
+        )
+        if selected_files and len(selected_files) > 0:
+            file_path = selected_files[0].path
+            success = progress_manager.import_progress(file_path)
+            if success:
+                update_progress_ui()
+                current_id = progress_manager.get_current_lesson()
+                target_idx = 0
+                for idx, les in enumerate(all_lessons):
+                    if les["id"] == current_id:
+                        target_idx = idx
+                        break
+                load_lesson(target_idx)
+                snack = ft.SnackBar(ft.Text("Progresso importado com sucesso! 🎉"), bgcolor="#10b981")
+            else:
+                snack = ft.SnackBar(ft.Text("Arquivo de progresso inválido ou corrompido! ❌"), bgcolor="#ef4444")
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+
     title_text = ft.Text("Aula 1: Introdução às Variáveis", color="white", weight="bold", size=16)
+
+    btn_export = ft.OutlinedButton(
+        "Exportar",
+        icon=ft.Icons.DOWNLOAD,
+        icon_color="#38bdf8",
+        style=ft.ButtonStyle(color="white"),
+        on_click=do_export_progress
+    )
+
+    btn_import = ft.OutlinedButton(
+        "Importar",
+        icon=ft.Icons.UPLOAD_FILE,
+        icon_color="#10b981",
+        style=ft.ButtonStyle(color="white"),
+        on_click=do_import_progress
+    )
+
     top_bar = ft.Container(visible=False,
-        content=ft.Row([title_text], alignment=ft.MainAxisAlignment.START),
+        content=ft.Row([
+            title_text,
+            ft.Row([btn_export, btn_import], spacing=10)
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
         bgcolor="#1e293b",
         padding=12,
         alignment=ft.Alignment.CENTER_LEFT
     )
+
+
 
     
     
@@ -661,7 +726,12 @@ def main_app(page: ft.Page):
         console_output.value += out
         
         # Auto-Grader Check
-        if stdout:
+        pending_exercises = [
+            r for r in active_exercises_rows 
+            if str(r.data).strip() and r.controls and isinstance(r.controls[0], ft.Icon) and r.controls[0].icon != ft.Icons.CHECK_CIRCLE
+        ]
+        
+        if stdout and stdout.strip():
             # Divide o output em linhas limpas
             output_lines = [line.strip() for line in stdout.split('\n') if line.strip()]
             
@@ -669,19 +739,16 @@ def main_app(page: ft.Page):
             def fuzzy_clean(text):
                 return re.sub(r'[\.,;:\!\?]+$', '', text.strip()).strip().lower()
             
-            fuzzy_output_lines = [fuzzy_clean(line) for line in output_lines]
+            available_lines = list(output_lines)
+            available_fuzzy = [fuzzy_clean(l) for l in available_lines]
             
-            from collections import Counter
-            output_counts = Counter(output_lines)
-            fuzzy_output_counts = Counter(fuzzy_output_lines)
-            newly_marked_counts = {}
-            newly_marked_fuzzy_counts = {}
+            any_exact_match = False
+            any_fuzzy_match = False
             
-            almost_correct = False
-            
+            # 1ª Passada: Busca por correspondências EXATAS entre exercícios ainda não concluídos
             for row in active_exercises_rows:
                 expected = str(row.data).strip()
-                if not expected:
+                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
                     continue
                 
                 icon = row.controls[0]
@@ -689,47 +756,89 @@ def main_app(page: ft.Page):
                     continue # Já completado
                 
                 expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
-                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
                 n = len(expected_lines)
                 
                 is_match = False
                 if n == 1:
                     exp = expected_lines[0]
-                    f_exp = fuzzy_expected_lines[0]
-                    
-                    used = newly_marked_counts.get(exp, 0)
-                    f_used = newly_marked_fuzzy_counts.get(f_exp, 0)
-                    
-                    # Exact Match
-                    if output_counts.get(exp, 0) > used:
+                    if exp in available_lines:
+                        idx = available_lines.index(exp)
+                        available_lines.pop(idx)
+                        available_fuzzy.pop(idx)
                         is_match = True
-                        newly_marked_counts[exp] = used + 1
-                    # Fuzzy Match
-                    elif fuzzy_output_counts.get(f_exp, 0) > f_used:
-                        almost_correct = True
-                        newly_marked_fuzzy_counts[f_exp] = f_used + 1
-                        logger.info(f"Auto-grader (Quase): Esperava '{exp}', Aluno digitou algo fuzzy match")
                 elif n > 1:
-                    # Verifica match sequencial (Exato)
-                    for i in range(len(output_lines) - n + 1):
-                        if output_lines[i:i+n] == expected_lines:
+                    for i in range(len(available_lines) - n + 1):
+                        if available_lines[i:i+n] == expected_lines:
+                            for _ in range(n):
+                                available_lines.pop(i)
+                                available_fuzzy.pop(i)
                             is_match = True
                             break
-                    if not is_match:
-                        # Verifica match sequencial (Fuzzy)
-                        for i in range(len(fuzzy_output_lines) - n + 1):
-                            if fuzzy_output_lines[i:i+n] == fuzzy_expected_lines:
-                                almost_correct = True
-                                logger.info(f"Auto-grader (Quase multiline)")
-                                break
                 
                 if is_match:
                     icon.icon = ft.Icons.CHECK_CIRCLE
                     icon.color = "#10b981"
-            
-            if almost_correct and not is_match:
+                    any_exact_match = True
+
+            # 2ª Passada: Busca por correspondências FUZZY nos exercícios pendentes (usando saídas restantes)
+            for row in active_exercises_rows:
+                expected = str(row.data).strip()
+                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
+                    continue
+                
+                icon = row.controls[0]
+                if icon.icon == ft.Icons.CHECK_CIRCLE:
+                    continue # Já completado (incluindo os recém marcados)
+                
+                expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
+                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
+                n = len(expected_lines)
+                
+                if n == 1:
+                    f_exp = fuzzy_expected_lines[0]
+                    if f_exp in available_fuzzy:
+                        idx = available_fuzzy.index(f_exp)
+                        available_lines.pop(idx)
+                        available_fuzzy.pop(idx)
+                        any_fuzzy_match = True
+                        logger.info(f"Auto-grader (Quase): Esperava '{expected}', Aluno digitou algo fuzzy match")
+                elif n > 1:
+                    for i in range(len(available_fuzzy) - n + 1):
+                        if available_fuzzy[i:i+n] == fuzzy_expected_lines:
+                            for _ in range(n):
+                                available_lines.pop(i)
+                                available_fuzzy.pop(i)
+                            any_fuzzy_match = True
+                            logger.info("Auto-grader (Quase multiline)")
+                            break
+
+            if any_exact_match:
+                gradable_rows = [r for r in active_exercises_rows if str(r.data).strip() and r.controls and isinstance(r.controls[0], ft.Icon)]
+                all_done = gradable_rows and all(r.controls[0].icon == ft.Icons.CHECK_CIRCLE for r in gradable_rows)
+                if all_done:
+                    lesson = all_lessons[current_lesson_idx]
+                    progress_manager.mark_lesson_completed(lesson["id"])
+                    update_progress_ui()
+                    smart_messages_panel.content = ft.Text("🎉 Parabéns! Todos os exercícios desta aula foram concluídos!", color="white", size=13, weight="bold")
+                    smart_messages_panel.bgcolor = "#15803d"
+                else:
+                    smart_messages_panel.content = ft.Text("✅ Muito bem! Exercício concluído com sucesso.", color="white", size=13, weight="bold")
+                    smart_messages_panel.bgcolor = "#15803d"
+            elif any_fuzzy_match:
                 smart_messages_panel.content = ft.Text("💡 Quase lá!\n\nSeu código imprimiu quase o valor esperado. Verifique se você não colocou um ponto final, espaço a mais, ou errou uma letra maiúscula/minúscula na saída.", color="white", size=13)
                 smart_messages_panel.bgcolor = "#b45309" # Laranja escuro
+            elif pending_exercises and not stderr:
+                smart_messages_panel.content = ft.Column([
+                    ft.Text("⚠️ Saída não corresponde ao exercício:", weight="bold", size=14, color="white"),
+                    ft.Text("Seu código imprimiu um resultado, mas a saída não atende ao esperado pelos exercícios pendentes.", size=13, color="white")
+                ], spacing=6)
+                smart_messages_panel.bgcolor = "#b45309" # Laranja escuro
+        elif not stderr and pending_exercises:
+            smart_messages_panel.content = ft.Column([
+                ft.Text("⚠️ Nenhum resultado impresso na tela:", weight="bold", size=14, color="white"),
+                ft.Text("Seu código foi executado sem erros, mas não imprimiu nada. Lembre-se de usar a função print(...) para exibir o resultado (ex: print(saudacao)).", size=13, color="white")
+            ], spacing=6)
+            smart_messages_panel.bgcolor = "#b45309" # Laranja escuro
         
         # Faz scroll para o final
         page.update()

@@ -214,8 +214,19 @@
         "Lembre-se: sem as aspas, o Python vai achar que o seu texto é o nome de uma variável que não existe!"
       ],
       "ai_context": {
-        "key_concepts": ["variáveis", "strings", "atribuição", "print", "concatenação", "aspas"],
-        "common_mistakes": ["esquecer aspas em strings", "espaço em nome de variável", "usar maiúsculas incorretamente (case sensitivity)"],
+        "key_concepts": [
+          "variáveis",
+          "strings",
+          "atribuição",
+          "print",
+          "concatenação",
+          "aspas"
+        ],
+        "common_mistakes": [
+          "esquecer aspas em strings",
+          "espaço em nome de variável",
+          "usar maiúsculas incorretamente (case sensitivity)"
+        ],
         "socratic_hints": [
           "O que acontece se você tentar imprimir uma variável sem atribuir um valor a ela primeiro?",
           "Verificou se a sua string está envolvida por aspas simples ou duplas?",
@@ -1418,6 +1429,352 @@
           ]
         }
       ]
+    },
+    {
+      "id": 1003,
+      "type": "coding",
+      "title": "Aula 25: Tuplas - Coleções Imutáveis",
+      "description": "Aprenda sobre tuplas em Python, como criá-las, desempacotá-las e por que a imutabilidade é útil.",
+      "content": "### O que são Tuplas?\n\nUma **Tupla** é uma sequência ordenada de elementos, muito semelhante a uma Lista, porém com uma diferença fundamental: **tuplas são imutáveis**! Isso significa que após ser criada, você não pode adicionar, remover ou modificar os elementos de uma tupla.\n\n**Sintaxe:**\n```python\nponto = (10, 20)\ncores = ('vermelho', 'verde', 'azul')\n```\n\n**Vantagens das Tuplas:**\n- **Desempenho**: São mais leves e rápidas que listas na memória.\n- **Segurança de dados**: Garante que dados fixos (ex: coordenadas GPS, configurações) não serão alterados por acidente.\n- **Desempacotamento**: É fácil atribuir valores de uma tupla diretamente a variáveis:\n```python\nx, y = ponto\nprint(x)  # 10\n```",
+      "example": "# Criando e desempacotando tuplas\nponto = (100, 200)\nx, y = ponto\nprint(f'X={x}, Y={y}')\n\n# Tentativa de alteração gera TypeError:\n# ponto[0] = 50  # Erro!",
+      "exercises": [
+        {
+          "description": "1. Crie uma tupla chamada `coordenadas` com os valores `(5, 10)`. Imprima o primeiro elemento usando o índice 0.",
+          "expected_output": "5"
+        },
+        {
+          "description": "2. Crie uma tupla `dados = ('Ana', 25)`. Desempacote-a nas variáveis `nome` e `idade`, e depois imprima a variável `nome`.",
+          "expected_output": "Ana"
+        }
+      ],
+      "tips": [
+        "Use parênteses () para definir tuplas.",
+        "Para criar uma tupla de apenas 1 elemento, coloque uma vírgula no final: `unidade = (5,)`."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Tuplas",
+          "url": "https://docs.python.org/pt-br/3/tutorial/datastructures.html#tuples-and-sequences"
+        }
+      ],
+      "quiz": {
+        "question": "Qual é a principal diferença entre uma Lista e uma Tupla em Python?",
+        "options": [
+          "Tuplas aceitam apenas números, enquanto listas aceitam qualquer tipo de dados",
+          "Tuplas são imutáveis, enquanto listas podem ser modificadas",
+          "Listas usam parênteses e tuplas usam colchetes",
+          "Não existe diferença, ambas são exatamente iguais"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1004,
+      "type": "coding",
+      "title": "Aula 26: Dicionários - Mapeando Chaves e Valores",
+      "description": "Domine a estrutura de dicionários em Python para associar chaves únicas a valores.",
+      "content": "### O que são Dicionários?\n\nUm **Dicionário** (`dict`) é uma coleção mutável de pares **chave: valor**. Enquanto listas usam índices numéricos (0, 1, 2...), os dicionários usam chaves de texto ou números para localizar informações instantaneamente.\n\n**Sintaxe:**\n```python\naluno = {\n    'nome': 'Carlos',\n    'idade': 22,\n    'curso': 'Python'\n}\n```\n\n**Operações Principais:**\n- **Acessar valor**: `aluno['nome']` ou `aluno.get('nome')` \n- **Adicionar/Atualizar**: `aluno['nota'] = 9.5` \n- **Iterar**: `.keys()`, `.values()`, `.items()`",
+      "example": "aluno = {'nome': 'Beatriz', 'nota': 10}\nprint(aluno['nome'])\n\n# Adicionando nova chave\naluno['curso'] = 'Engenharia'\nprint(aluno['curso'])",
+      "exercises": [
+        {
+          "description": "1. Crie um dicionário `produto = {'nome': 'Teclado', 'preco': 150}`. Imprima o valor associado à chave `'nome'`.",
+          "expected_output": "Teclado"
+        },
+        {
+          "description": "2. Crie um dicionário `carro = {'marca': 'Ford'}`. Adicione a chave `'ano'` com o valor `2020` e imprima `carro['ano']`.",
+          "expected_output": "2020"
+        }
+      ],
+      "tips": [
+        "Chaves de dicionários devem ser únicas e imutáveis (strings e números são ideais).",
+        "O método `.get('chave', padrão)` evita que o programa trave se a chave não existir."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Dicionários",
+          "url": "https://docs.python.org/pt-br/3/tutorial/datastructures.html#dictionaries"
+        }
+      ],
+      "quiz": {
+        "question": "Como acessamos o valor associado à chave 'idade' em um dicionário chamado `pessoa`?",
+        "options": [
+          "pessoa(0)",
+          "pessoa['idade']",
+          "pessoa.idade",
+          "pessoa[1]"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1005,
+      "type": "coding",
+      "title": "Aula 27: Conjuntos (Sets) - Elementos Únicos",
+      "description": "Descubra como utilizar conjuntos em Python para eliminar elementos duplicados e realizar operações matemáticas.",
+      "content": "### O que são Conjuntos (Sets)?\n\nUm **Set** (conjunto) é uma coleção não ordenada de elementos **únicos**. Ele é perfeito para remover itens duplicados de uma coleção e realizar operações matemáticas como União, Interseção e Diferença.\n\n**Sintaxe:**\n```python\nnumeros = {1, 2, 3, 3, 3}\nprint(numeros)  # Imprime: {1, 2, 3}\n```\n\n**Métodos e Operações:**\n- `add(item)`: Adiciona um elemento.\n- `remove(item)`: Remove um elemento.\n- **União (`|`)**: Combina dois conjuntos.\n- **Interseção (`&`)**: Retorna apenas os elementos presentes em ambos os conjuntos.",
+      "example": "# Removendo duplicatas de uma lista\nlista_com_duplicatas = [1, 2, 2, 3, 4, 4, 4]\nset_unico = set(lista_com_duplicatas)\nprint(sorted(list(set_unico)))  # Imprime: [1, 2, 3, 4]",
+      "exercises": [
+        {
+          "description": "1. Crie uma lista `nums = [1, 1, 2, 3, 3]`. Converta para `set`, depois descubra o tamanho usando `len()` e imprima.",
+          "expected_output": "3"
+        },
+        {
+          "description": "2. Crie um conjunto `frutas = {'maca', 'banana'}`. Adicione `'laranja'` com `.add()` e imprima se `'laranja' in frutas`.",
+          "expected_output": "True"
+        }
+      ],
+      "tips": [
+        "Sets não possuem índices, portanto não é possível fazer `meu_set[0]`.",
+        "Para criar um set vazio use `set()`, pois `{}` cria um dicionário vazio."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Sets",
+          "url": "https://docs.python.org/pt-br/3/tutorial/datastructures.html#sets"
+        }
+      ],
+      "quiz": {
+        "question": "O que acontece ao adicionar um elemento duplicado em um `set` no Python?",
+        "options": [
+          "O programa lança um ValueError",
+          "O elemento é ignorado e o set permanece com apenas um exemplar dele",
+          "O elemento substitui o elemento anterior",
+          "O set aceita e duplica a informação"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1006,
+      "type": "coding",
+      "title": "Aula 28: Aprofundando em Funções (Parâmetros, Retornos e Escopo)",
+      "description": "Aprenda a criar funções profissionais com retorno de valores, parâmetros padrão e controle de escopo.",
+      "content": "### Dominando Funções em Python\n\nFunções são os blocos fundamentais para organização de código reutilizável. Nesta aula, avançaremos no estudo de **valores de retorno** com `return`, **parâmetros padrão** e **escopo de variáveis**.\n\n**O comando `return`:**\nUma função que não utiliza `return` devolve `None`. O `return` devolve o resultado para quem chamou a função e encerra sua execução imediatamente.\n\n```python\ndef multiplicar(a, b):\n    return a * b\n\nresultado = multiplicar(3, 4)\nprint(resultado)  # 12\n```\n\n**Parâmetros Padrão:**\n```python\ndef saudar(nome=\"Estudante\"):\n    print(f\"Olá, {nome}!\")\n```",
+      "example": "def calcular_media(nota1, nota2=7.0):\n    return (nota1 + nota2) / 2\n\nprint(calcular_media(9.0))  # Usa nota2 padrão (7.0) -> Media 8.0",
+      "exercises": [
+        {
+          "description": "1. Defina uma função `dobro(n)` que retorne o dobro de n. Imprima `dobro(5)`.",
+          "expected_output": "10"
+        },
+        {
+          "description": "2. Crie uma função `saudacao(nome='Aluno')` que retorne `'Ola ' + nome`. Imprima `saudacao()`.",
+          "expected_output": "Ola Aluno"
+        }
+      ],
+      "tips": [
+        "Evite usar variáveis globais dentro de funções; passe os valores como parâmetros.",
+        "Você pode retornar múltiplos valores separando-os por vírgulas (Python criará uma Tupla automaticamente)."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Definindo Funções",
+          "url": "https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions"
+        }
+      ],
+      "quiz": {
+        "question": "O que acontece se uma função não possuir a instrução `return`?",
+        "options": [
+          "Ela gera um SyntaxError",
+          "Ela retorna automaticamente o valor 0",
+          "Ela retorna o valor especial `None`",
+          "Ela executa em loop infinito"
+        ],
+        "answer": 2
+      }
+    },
+    {
+      "id": 1007,
+      "type": "coding",
+      "title": "Aula 29: Módulos e Bibliotecas Nativas (math, random, datetime)",
+      "description": "Aprenda a importar e reaproveitar os módulos nativos fornecidos na biblioteca padrão do Python.",
+      "content": "### O que são Módulos?\n\nUm **Módulo** é um arquivo contendo definições e comandos em Python prontas para uso. O Python já vem com a chamada \"bateria inclusa\" (Standard Library) cheia de módulos úteis!\n\n**Importando Módulos:**\n```python\nimport math\nprint(math.sqrt(16))  # Raiz quadrada -> 4.0\n\nimport random\nnumero_sorteado = random.randint(1, 10)\n```\n\n**Sintaxe de Importação:**\n- `import modulo`: Importa o módulo completo.\n- `from modulo import funcao`: Importa apenas a função específica.",
+      "example": "import math\nfrom random import choice\n\nprint(math.ceil(4.2))  # Arredonda para cima -> 5\nfrutas = ['maca', 'banana', 'uva']\nprint(choice(frutas) in frutas)  # Imprime True",
+      "exercises": [
+        {
+          "description": "1. Importe o módulo `math`. Imprima o valor da constante de Pi arredondada com `round(math.pi, 2)`.",
+          "expected_output": "3.14"
+        },
+        {
+          "description": "2. Importe o módulo `random`. Use `random.randint(5, 5)` para gerar um número no intervalo [5, 5] e imprima-o.",
+          "expected_output": "5"
+        }
+      ],
+      "tips": [
+        "Use `import math` para operações trigonométricas, logaritmos e raízes.",
+        "Sempre insira os comandos `import` no início do seu arquivo de código."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Módulos",
+          "url": "https://docs.python.org/pt-br/3/tutorial/modules.html"
+        }
+      ],
+      "quiz": {
+        "question": "Qual palavra-chave é usada para incluir a funcionalidade de um módulo nativo no seu código Python?",
+        "options": [
+          "include",
+          "import",
+          "require",
+          "using"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1008,
+      "type": "coding",
+      "title": "Aula 30: Tratamento de Erros (try, except, finally)",
+      "description": "Aprenda a tratar exceções e erros em tempo de execução para evitar que seu aplicativo quebre.",
+      "content": "### Tratamento de Exceções em Python\n\nErros acontecem! Por exemplo, quando o usuário tenta dividir um número por zero ou digita texto onde esperávamos um número. Em vez de permitir que o aplicativo quebre, usamos blocos `try-except`.\n\n**Estrutura Básica:**\n```python\ntry:\n    numero = int(\"abc\")\nexcept ValueError:\n    print(\"Erro: Entrada inválida!\")\nfinally:\n    print(\"Execução finalizada.\")\n```\n\n**Tipos de Exceções Comuns:**\n- `ValueError`: Valor incompatível.\n- `ZeroDivisionError`: Divisão por zero.\n- `TypeError`: Tipo de dado incorreto.",
+      "example": "try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print('Divisao por zero impedida!')\nfinally:\n    print('Fim')",
+      "exercises": [
+        {
+          "description": "1. Escreva um bloco `try` que divida 10 por 0. Capture a exceção `ZeroDivisionError` e imprima 'Nao dividiras por zero'.",
+          "expected_output": "Nao dividiras por zero"
+        },
+        {
+          "description": "2. Crie um bloco `try` tentando converter a string `'python'` em inteiro com `int()`. Capture `ValueError` e imprima 'Texto invalido'.",
+          "expected_output": "Texto invalido"
+        }
+      ],
+      "tips": [
+        "Evite capturar exceções genéricas (`except:` sem tipo especifico); capture erros específicos.",
+        "O bloco `finally` sempre executa, ocorrendo erro ou não (ideal para fechar arquivos ou conexões)."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Erros e Exceções",
+          "url": "https://docs.python.org/pt-br/3/tutorial/errors.html"
+        }
+      ],
+      "quiz": {
+        "question": "Qual bloco de código é executado SEMPRE, independentemente de ter ocorrido uma exceção ou não?",
+        "options": [
+          "try",
+          "except",
+          "finally",
+          "else"
+        ],
+        "answer": 2
+      }
+    },
+    {
+      "id": 1009,
+      "type": "coding",
+      "title": "Aula 31: Manipulação de Arquivos (open, read, write)",
+      "description": "Aprenda a ler e escrever arquivos de texto persistentes em disco com Python.",
+      "content": "### Manipulando Arquivos em Python\n\nPara salvar dados de forma permanente no disco, utilizamos a função `open()`. A melhor prática em Python é utilizar o gerenciador de contexto `with`, que garante o fechamento automático do arquivo.\n\n**Modos de Abertura:**\n- `'w'`: Escrita (sobreescreve o arquivo).\n- `'a'`: Anexo (adiciona ao final do arquivo).\n- `'r'`: Leitura.\n\n```python\n# Escrevendo em um arquivo\nwith open('nota.txt', 'w', encoding='utf-8') as f:\n    f.write('Olá, arquivo!')\n\n# Lendo do arquivo\nwith open('nota.txt', 'r', encoding='utf-8') as f:\n    conteudo = f.read()\n    print(conteudo)\n```",
+      "example": "import tempfile\nimport os\n\n# Criando um arquivo temporário para teste\npath = os.path.join(tempfile.gettempdir(), 'teste.txt')\nwith open(path, 'w', encoding='utf-8') as f:\n    f.write('Linha 1')\n\nwith open(path, 'r', encoding='utf-8') as f:\n    print(f.read())",
+      "exercises": [
+        {
+          "description": "1. Abra um arquivo usando `with open('dados_teste.txt', 'w') as f:` e escreva a string 'Pyeduc'. Depois abra em modo `'r'` e imprima o conteúdo.",
+          "expected_output": "Pyeduc"
+        },
+        {
+          "description": "2. Crie um arquivo `teste_a.txt` com 'A'. Abra em modo `'a'`, escreva 'B'. Abra em modo `'r'` e imprima o conteúdo.",
+          "expected_output": "AB"
+        }
+      ],
+      "tips": [
+        "Use sempre `encoding='utf-8'` ao trabalhar com arquivos de texto para evitar problemas com acentuação.",
+        "O gerenciador de contexto `with` fecha o arquivo automaticamente mesmo se ocorrer um erro durante a leitura/escrita."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Leitura e Escrita de Arquivos",
+          "url": "https://docs.python.org/pt-br/3/tutorial/inputoutput.html#reading-and-writing-files"
+        }
+      ],
+      "quiz": {
+        "question": "Qual é a principal vantagem de usar o bloco `with open(...)` ao manipular arquivos?",
+        "options": [
+          "Acelera a velocidade de gravação no disco em 10x",
+          "Garante que o arquivo será fechado automaticamente ao sair do bloco",
+          "Criptografa o arquivo automaticamente",
+          "Impede que o arquivo seja excluído do computador"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1010,
+      "type": "coding",
+      "title": "Aula 32: Introdução à Orientação a Objetos (Classes e Objetos)",
+      "description": "Entenda os fundamentos do paradigma de Orientação a Objetos em Python.",
+      "content": "### O que é Orientação a Objetos (POO)?\n\nPOO é um paradigma de programação que organiza o código em torno de **Objetos** (representações do mundo real) criados a partir de **Classes** (moldes ou projetos).\n\n**Conceitos Chave:**\n- **Classe**: O molde (`class Pessoa:`).\n- **Objeto**: A instância criada a partir da classe (`p1 = Pessoa()`).\n- `__init__`: O método construtor invocado na criação do objeto.\n- `self`: Referência à própria instância do objeto.\n\n```python\nclass Pessoa:\n    def __init__(self, nome, idade):\n        self.nome = nome\n        self.idade = idade\n\n    def apresentar(self):\n        return f\"Olá, meu nome é {self.nome}!\"\n```",
+      "example": "class Cachorro:\n    def __init__(self, nome):\n        self.nome = nome\n    def latir(self):\n        return f'{self.nome} disse: Au Au!'\n\ndog = Cachorro('Rex')\nprint(dog.latir())",
+      "exercises": [
+        {
+          "description": "1. Crie uma classe `Livro` com `__init__(self, titulo)`. Instancie com `'Python 101'` e imprima o atributo `.titulo`.",
+          "expected_output": "Python 101"
+        },
+        {
+          "description": "2. Crie uma classe `Calculadora` com o método `somar(self, a, b)` que retorne `a + b`. Instancie `calc = Calculadora()` e imprima `calc.somar(3, 7)`.",
+          "expected_output": "10"
+        }
+      ],
+      "tips": [
+        "Por convenção em Python, nomes de Classes utilizam CamelCase (ex: `ContaBancaria`).",
+        "O primeiro parâmetro de qualquer método de instância dentro de uma classe DEVE ser `self`."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python - Classes",
+          "url": "https://docs.python.org/pt-br/3/tutorial/classes.html"
+        }
+      ],
+      "quiz": {
+        "question": "Qual é a função do parâmetro `self` em métodos de classe em Python?",
+        "options": [
+          "Identifica que o método é estático e global",
+          "Refere-se à instância atual do objeto que está executando o método",
+          "É um parâmetro opcional reservado para o sistema operacional",
+          "Converte a classe para um dicionário"
+        ],
+        "answer": 1
+      }
+    },
+    {
+      "id": 1011,
+      "type": "coding",
+      "title": "Prova Prática 3: Sistema de Cadastro e Gerenciador de Tarefas",
+      "description": "Desafio integrador: combine Funções, Dicionários, Tratamento de Erros e POO para construir um minissistema.",
+      "content": "### 🏆 Prova Prática Integradora 3!\n\nParabéns por chegar até aqui! Agora você tem o conhecimento necessário para estruturar pequenos projetos de software completos em Python.\n\nNesta prova prática integradora, você colocará à prova tudo o que aprendeu sobre **Dicionários**, **Funções**, **Tratamento de Exceções** e **Classes**.\n\nSiga as instruções dos exercícios para construir componentes de um gerenciador de tarefas completo!",
+      "example": "# Exemplo de estrutura de um minissistema\ntarefas = []\ndef adicionar_tarefa(titulo):\n    tarefas.append({'titulo': titulo, 'concluida': False})\n    return f'Tarefa \"{titulo}\" adicionada!'\n\nprint(adicionar_tarefa('Estudar POO'))",
+      "exercises": [
+        {
+          "description": "1. Defina uma função `criar_usuario(nome, email)` que retorne um dicionário `{'nome': nome, 'email': email}`. Imprima `criar_usuario('Lucas', 'lucas@mail.com')['nome']`.",
+          "expected_output": "Lucas"
+        },
+        {
+          "description": "2. Crie uma função `dividir_seguro(a, b)` que tente retornar `a / b`. Se der `ZeroDivisionError`, retorne `'Erro'`. Imprima `dividir_seguro(10, 0)`.",
+          "expected_output": "Erro"
+        },
+        {
+          "description": "3. Crie uma classe `Tarefa` com `__init__(self, titulo)` e o método `status(self)` que retorne `'Pendente'`. Instancie `t = Tarefa('Estudar')` e imprima `t.status()`.",
+          "expected_output": "Pendente"
+        }
+      ],
+      "tips": [
+        "Combine dicionários dentro de listas para criar gerenciadores flexíveis.",
+        "Trate sempre os tipos de exceção específicos no seu código."
+      ],
+      "references": [
+        {
+          "label": "Documentação Oficial Python",
+          "url": "https://docs.python.org/pt-br/3/"
+        }
+      ],
+      "quiz": {
+        "question": "Qual estrutura de dados é ideal para armazenar um cadastro contendo nome, e-mail e idade associados a chaves fixas?",
+        "options": [
+          "Tupla",
+          "Lista",
+          "Dicionário",
+          "Set"
+        ],
+        "answer": 2
+      }
     }
   ]
 }

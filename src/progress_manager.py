@@ -2,6 +2,7 @@
 Camada de Persistência: Gerenciamento de progresso do usuário via SQLite
 """
 import sqlite3
+import json
 from logger import logger
 from pathlib import Path
 from typing import List, Optional
@@ -144,3 +145,66 @@ class ProgressManager:
             cursor.execute('DELETE FROM progress WHERE user_id = ?', (self.current_user_id,))
             cursor.execute('UPDATE user_state SET current_lesson = 0 WHERE user_id = ?', (self.current_user_id,))
             conn.commit()
+
+    def export_progress(self, filepath: str) -> bool:
+        """Exporta o progresso do usuário logado para um arquivo JSON"""
+        if not self.is_logged_in():
+            logger.warning("Tentativa de exportar progresso sem usuário logado.")
+            return False
+        try:
+            data = {
+                "version": "1.0",
+                "username": self.current_username,
+                "current_lesson": self.get_current_lesson(),
+                "completed_lessons": self.get_completed_lessons()
+            }
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            logger.info(f"Progresso exportado com sucesso para: {filepath}")
+            return True
+        except Exception as e:
+            logger.error(f"Erro ao exportar progresso: {e}")
+            return False
+
+    def import_progress(self, filepath: str) -> bool:
+        """Importa o progresso do usuário a partir de um arquivo JSON"""
+        if not self.is_logged_in():
+            logger.warning("Tentativa de importar progresso sem usuário logado.")
+            return False
+        path = Path(filepath)
+        if not path.exists():
+            logger.error(f"Arquivo de importação não encontrado: {filepath}")
+            return False
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            if not isinstance(data, dict) or "completed_lessons" not in data or "current_lesson" not in data:
+                logger.error("Formato de arquivo de progresso inválido.")
+                return False
+
+            completed_lessons = data.get("completed_lessons", [])
+            current_lesson = data.get("current_lesson", 0)
+
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                for lesson_id in completed_lessons:
+                    cursor.execute('''
+                        INSERT INTO progress (user_id, lesson_id, completed)
+                        VALUES (?, ?, 1)
+                        ON CONFLICT(user_id, lesson_id) DO UPDATE SET completed=1
+                    ''', (self.current_user_id, lesson_id))
+                
+                cursor.execute('''
+                    INSERT INTO user_state (user_id, current_lesson)
+                    VALUES (?, ?)
+                    ON CONFLICT(user_id) DO UPDATE SET current_lesson=?
+                ''', (self.current_user_id, current_lesson, current_lesson))
+                conn.commit()
+
+            logger.info(f"Progresso importado com sucesso de: {filepath}")
+            return True
+        except Exception as e:
+            logger.error(f"Erro ao importar progresso: {e}")
+            return False
+
