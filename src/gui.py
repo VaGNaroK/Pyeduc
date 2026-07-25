@@ -275,16 +275,44 @@ def main_app(page: ft.Page):
     btn_export = ft.OutlinedButton(
         "Exportar",
         icon=ft.Icons.DOWNLOAD,
-        icon_color="#38bdf8",
-        style=ft.ButtonStyle(color="white"),
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.HOVERED: "white",
+                ft.ControlState.DEFAULT: "#38bdf8"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#0284c7",
+                ft.ControlState.DEFAULT: "transparent"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 4,
+                ft.ControlState.DEFAULT: 0
+            },
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
         on_click=do_export_progress
     )
 
     btn_import = ft.OutlinedButton(
         "Importar",
         icon=ft.Icons.UPLOAD_FILE,
-        icon_color="#10b981",
-        style=ft.ButtonStyle(color="white"),
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.HOVERED: "white",
+                ft.ControlState.DEFAULT: "#10b981"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#059669",
+                ft.ControlState.DEFAULT: "transparent"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 4,
+                ft.ControlState.DEFAULT: 0
+            },
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
         on_click=do_import_progress
     )
 
@@ -399,9 +427,21 @@ def main_app(page: ft.Page):
     btn_execute = ft.ElevatedButton(
         content="Executar Código",
         icon=ft.Icons.PLAY_ARROW_ROUNDED,
-        color="white",
-        bgcolor="#4ade80",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4)),
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.DEFAULT: "white"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#15803d",
+                ft.ControlState.DEFAULT: "#16a34a"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 6,
+                ft.ControlState.DEFAULT: 2
+            },
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
         on_click=on_execute_click
     )
     
@@ -409,11 +449,25 @@ def main_app(page: ft.Page):
         console_output.value = ""
         page.update()
         
-    btn_clear = ft.TextButton(
+    btn_clear = ft.OutlinedButton(
         content="Limpar",
         icon=ft.Icons.DELETE_OUTLINE,
-        icon_color="#cbd5e1",
-        style=ft.ButtonStyle(color="#cbd5e1"),
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.HOVERED: "white",
+                ft.ControlState.DEFAULT: "#ef4444"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#dc2626",
+                ft.ControlState.DEFAULT: "transparent"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 3,
+                ft.ControlState.DEFAULT: 0
+            },
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
         on_click=on_clear_console
     )
     
@@ -614,11 +668,10 @@ def main_app(page: ft.Page):
     
     def on_pan_update_splitter(e: ft.DragUpdateEvent):
         # Ajusta o expand baseado no arrasto do mouse
-        # Multiplicador pequeno para suavizar o movimento
         change = int((e.local_delta.y if e.local_delta else 0) * 0.5)
         
-        # Limita a expansão entre 10 e 90 para não esmagar os painéis
-        new_lesson_expand = max(10, min(90, lesson_container.expand + change))
+        # Limita a expansão entre 20 e 80 para garantir visibilidade confortável de ambos os painéis
+        new_lesson_expand = max(20, min(80, lesson_container.expand + change))
         
         lesson_container.expand = new_lesson_expand
         console_container.expand = 100 - new_lesson_expand
@@ -626,16 +679,26 @@ def main_app(page: ft.Page):
         welcome_container.expand = 100 - new_lesson_expand
         page.update()
 
+    drag_splitter_container = ft.Container(
+        height=10,
+        bgcolor="#cbd5e1",
+        border_radius=5,
+        alignment=ft.Alignment.CENTER,
+        content=ft.Icon(ft.Icons.DRAG_HANDLE, size=16, color="#64748b"),
+        margin=ft.Margin.symmetric(vertical=2, horizontal=10),
+        animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT)
+    )
+
+    def on_hover_splitter(e):
+        drag_splitter_container.bgcolor = "#38bdf8" if e.data == "true" else "#cbd5e1"
+        drag_splitter_container.update()
+
     drag_splitter = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.RESIZE_UP_DOWN,
         drag_interval=10,
         on_pan_update=on_pan_update_splitter,
-        content=ft.Container(
-            height=6,
-            bgcolor="#cbd5e1", # Cinza claro
-            border_radius=3,
-            margin=ft.Margin.symmetric(vertical=4, horizontal=10)
-        )
+        on_hover=on_hover_splitter,
+        content=drag_splitter_container
     )
     
     left_panel = ft.Column([
@@ -647,22 +710,32 @@ def main_app(page: ft.Page):
     ], expand=7, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
     def on_pan_update_sidebar_splitter(e):
-        change = 1 if (e.local_delta and e.local_delta.x < 0) else (-1 if (e.local_delta and e.local_delta.x > 0) else 0)
-        new_sidebar_expand = max(2, min(6, sidebar.expand + change))
-        sidebar.expand = new_sidebar_expand
-        left_panel.expand = 10 - new_sidebar_expand
-        page.update()
+        delta = e.local_delta.x if e.local_delta else 0
+        if abs(delta) > 2:
+            change = 1 if delta < 0 else -1
+            new_sidebar_expand = max(2, min(4, sidebar.expand + change))
+            sidebar.expand = new_sidebar_expand
+            left_panel.expand = 10 - new_sidebar_expand
+            page.update()
+
+    sidebar_splitter_container = ft.Container(
+        width=6,
+        bgcolor="#cbd5e1",
+        border_radius=3,
+        margin=ft.Margin.symmetric(vertical=10, horizontal=2),
+        animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT)
+    )
+
+    def on_hover_sidebar_splitter(e):
+        sidebar_splitter_container.bgcolor = "#38bdf8" if e.data == "true" else "#cbd5e1"
+        sidebar_splitter_container.update()
 
     sidebar_splitter = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.RESIZE_LEFT_RIGHT,
         drag_interval=10,
         on_pan_update=on_pan_update_sidebar_splitter,
-        content=ft.Container(
-            width=6,
-            bgcolor="#cbd5e1",
-            border_radius=3,
-            margin=ft.Margin.symmetric(vertical=10, horizontal=2)
-        )
+        on_hover=on_hover_sidebar_splitter,
+        content=sidebar_splitter_container
     )
 
     
@@ -873,9 +946,21 @@ def main_app(page: ft.Page):
     btn_quiz = ft.ElevatedButton(
         "Responder", 
         on_click=on_quiz_submit,
-        color="white",
-        bgcolor="#8b5cf6", # Roxo
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4))
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.DEFAULT: "white"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#6d28d9",
+                ft.ControlState.DEFAULT: "#8b5cf6"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 6,
+                ft.ControlState.DEFAULT: 2
+            },
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        )
     )
     
     # Modal Popup do Quiz da Lição
@@ -910,9 +995,22 @@ def main_app(page: ft.Page):
     btn_open_quiz_modal = ft.ElevatedButton(
         "🎯 Responder Quiz da Lição",
         icon=ft.Icons.QUIZ_ROUNDED,
-        bgcolor="#7c3aed",
-        color="white",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6), padding=10),
+        style=ft.ButtonStyle(
+            color={
+                ft.ControlState.DEFAULT: "white"
+            },
+            bgcolor={
+                ft.ControlState.HOVERED: "#5b21b6",
+                ft.ControlState.DEFAULT: "#7c3aed"
+            },
+            elevation={
+                ft.ControlState.HOVERED: 8,
+                ft.ControlState.DEFAULT: 3
+            },
+            shape=ft.RoundedRectangleBorder(radius=8),
+            padding=12,
+            animation_duration=200
+        ),
         on_click=open_quiz_modal,
         visible=False
     )
