@@ -49,3 +49,34 @@ def test_sanitize_response_removes_code_blocks():
     assert "```python" not in sanitized
     assert "x = 10" not in sanitized
     assert "**💡 Conceito**" in sanitized
+
+
+def test_ast_analysis_unused_variable():
+    code = "x = 10\ny = 20\nprint(y)"
+    alerts = EducationalGuardrails.analyze_code_ast(code)
+    assert any("variável 'x'" in a and "nunca é lida" in a for a in alerts)
+
+
+def test_ast_analysis_builtin_overwrite():
+    code = "list = [1, 2, 3]\nprint(list)"
+    alerts = EducationalGuardrails.analyze_code_ast(code)
+    assert any("sobrescrevendo o nome de uma função/tipo nativo" in a for a in alerts)
+
+
+def test_ast_analysis_missing_return():
+    code = "def somar(a, b):\n    total = a + b\n"
+    alerts = EducationalGuardrails.analyze_code_ast(code)
+    assert any("sem a instrução 'return'" in a for a in alerts)
+
+
+def test_ast_analysis_while_true_no_break():
+    code = "while True:\n    print('infinito')\n"
+    alerts = EducationalGuardrails.analyze_code_ast(code)
+    assert any("risco de loop infinito" in a for a in alerts)
+
+
+def test_ast_analysis_syntax_error():
+    code = "if True\n    print('erro')"
+    alerts = EducationalGuardrails.analyze_code_ast(code)
+    assert any("Faltou os dois-pontos" in a for a in alerts)
+

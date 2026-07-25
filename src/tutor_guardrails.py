@@ -1,14 +1,10 @@
-"""
-Módulo de Guardrails Educacionais e Gestão de Prompts Sócraticos para o Tutor de IA.
-Garante que a IA ajude o aluno sem fornecer respostas prontas ("spoilers").
-"""
-
 import re
+import ast
 from typing import List, Dict, Optional
 
-
-
 class EducationalGuardrails:
+    BUILTIN_NAMES = {"print", "input", "len", "type", "str", "int", "float", "list", "dict", "set", "tuple", "sum", "max", "min", "range", "open"}
+
     PROHIBITED_INTENTS = [
         "me da a resposta",
         "me dá a resposta",
@@ -41,9 +37,6 @@ CONTEXTO DA LIÇÃO ATUAL:
 {rag_context_section}
 """
 
-
-
-
     @classmethod
     def build_system_prompt(cls, lesson_title: str, key_concepts: List[str], rag_context: str = "") -> str:
         concepts_str = ", ".join(key_concepts) if key_concepts else "Python básico"
@@ -53,6 +46,80 @@ CONTEXTO DA LIÇÃO ATUAL:
             key_concepts=concepts_str,
             rag_context_section=rag_section
         )
+
+    @classmethod
+    def analyze_code_ast(cls, code: str) -> List[str]:
+        """
+        Realiza análise estática determinística no AST do código do aluno.
+        Retorna uma lista de alertas didáticos identificados.
+        """
+        if not code or not code.strip():
+            return []
+
+        diagnostics = []
+        try:
+            tree = ast.parse(code)
+        except SyntaxError as e:
+            msg = f"Erro de Sintaxe no AST (linha {e.lineno}): "
+            if "was never closed" in str(e) or "parenthesis" in str(e):
+                msg += "Um parêntese ou colchete não foi fechado."
+            elif "expected ':'" in str(e) or "colon" in str(e):
+                msg += "Faltou os dois-pontos ':' no final da instrução (if, def, for, while, etc.)."
+            else:
+                msg += f"{e.msg}"
+            return [msg]
+
+        # 1. Verificação de sobrescrita de built-ins (ex: list = [], print = "...")
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id in cls.BUILTIN_NAMES:
+                        diagnostics.append(
+                            f"A variável '{target.id}' está sobrescrevendo o nome de uma função/tipo nativo do Python ({target.id}). Oriente a trocar o nome da variável."
+                        )
+
+        # 2. Verificação de funções sem comando return
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                has_return = any(isinstance(n, ast.Return) and n.value is not None for n in ast.walk(node))
+                if not has_return:
+                    diagnostics.append(
+                        f"A função '{node.name}' foi definida sem a instrução 'return' devolvendo um valor. Oriente sobre o uso do 'return'."
+                    )
+
+        # 3. Verificação de laços while True sem break
+        for node in ast.walk(tree):
+            if isinstance(node, ast.While):
+                is_always_true = False
+                if isinstance(node.test, ast.Constant) and bool(node.test.value) is True:
+                    is_always_true = True
+                elif isinstance(node.test, ast.Name) and node.test.id == "True":
+                    is_always_true = True
+                
+                if is_always_true:
+                    has_break = any(isinstance(n, ast.Break) for n in ast.walk(node))
+                    if not has_break:
+                        diagnostics.append(
+                            "O laço 'while True' não possui nenhuma instrução 'break' para interrompê-lo, correndo risco de loop infinito."
+                        )
+
+        # 4. Verificação de variáveis declaradas mas não utilizadas
+        assigned_vars = set()
+        loaded_vars = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name):
+                if isinstance(node.ctx, ast.Store):
+                    assigned_vars.add(node.id)
+                elif isinstance(node.ctx, ast.Load):
+                    loaded_vars.add(node.id)
+
+        unused = assigned_vars - loaded_vars - cls.BUILTIN_NAMES - {"_"}
+        for var in sorted(unused):
+            diagnostics.append(
+                f"A variável '{var}' foi atribuída mas nunca é lida ou utilizada no código."
+            )
+
+        return diagnostics
 
     @classmethod
     def build_user_message(
@@ -79,6 +146,11 @@ CONTEXTO DA LIÇÃO ATUAL:
 
         if student_code and student_code.strip():
             parts.append(f"\nMeu código atual:\n```python\n{student_code.strip()}\n```")
+            
+            # Análise estática AST do código
+            ast_alerts = cls.analyze_code_ast(student_code)
+            for alert in ast_alerts:
+                parts.append(f"\n[ANÁLISE ESTÁTICA AST DO PYEDUC: {alert}]")
 
         if console_output and console_output.strip():
             # Limpa códigos de controle de integração de shell/terminal (ex: ]633;C]633;E...)
@@ -106,6 +178,7 @@ CONTEXTO DA LIÇÃO ATUAL:
                     parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um ZeroDivisionError. O aluno tentou realizar uma divisão por zero na matemática do Python.]")
 
         return "\n".join(parts)
+
 
 
 
