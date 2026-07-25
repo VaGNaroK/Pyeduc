@@ -1324,7 +1324,7 @@ def main_app(page: ft.Page):
                 )
                 coding_controls.extend([
                     ft.Divider(color="#e2e8f0"),
-                    ft.Text("Exemplo:", weight="bold", size=14, color="#334155"),
+                    ft.Text("Exemplo:", weight="bold", size=max(13, sz), color="#334155"),
                     ex_text, btn_copy
                 ])
                 
@@ -1348,11 +1348,11 @@ def main_app(page: ft.Page):
             if sec.get("exercises") or sec.get("exercise"):
                 coding_controls.extend([
                     ft.Divider(color="#e2e8f0"),
-                    ft.Text("Exercício(s):", weight="bold", size=14, color="#334155")
+                    ft.Text("Exercício(s):", weight="bold", size=max(13, sz), color="#334155")
                 ])
                 if sec.get("exercise"):
                     coding_controls.append(
-                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style)
                     )
                 if sec.get("exercises"):
                     sec_ex_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
@@ -1360,12 +1360,12 @@ def main_app(page: ft.Page):
                         expected_out = ex.get("expected_output", "")
                         if expected_out:
                             row = ft.Row([
-                                ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=20),
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                                ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=max(16, sz + 2)),
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         else:
                             row = ft.Row([
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         row.data = expected_out
                         sec_ex_col.controls.append(row)
