@@ -329,37 +329,44 @@ def main_app(page: ft.Page):
     def get_current_font_size() -> int:
         return FONT_SIZES[current_font_idx]
 
+    btn_font_minus_text = ft.Text("A-", size=12, weight="bold")
+    btn_font_reset_text = ft.Text("100%", size=11, weight="bold")
+    btn_font_plus_text = ft.Text("A+", size=12, weight="bold")
+
     btn_font_minus = ft.OutlinedButton(
-        "A-",
+        content=btn_font_minus_text,
         tooltip="Diminuir fonte (Acessibilidade)",
         style=ft.ButtonStyle(
             color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
             bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
             shape=ft.RoundedRectangleBorder(radius=6),
+            padding=6,
             animation_duration=200
         ),
         on_click=lambda e: change_font_size(-1)
     )
 
     btn_font_reset = ft.OutlinedButton(
-        "100%",
+        content=btn_font_reset_text,
         tooltip="Tamanho padrão de fonte",
         style=ft.ButtonStyle(
             color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
             bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
             shape=ft.RoundedRectangleBorder(radius=6),
+            padding=6,
             animation_duration=200
         ),
         on_click=lambda e: change_font_size(0, reset=True)
     )
 
     btn_font_plus = ft.OutlinedButton(
-        "A+",
+        content=btn_font_plus_text,
         tooltip="Aumentar fonte (Acessibilidade)",
         style=ft.ButtonStyle(
             color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
             bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
             shape=ft.RoundedRectangleBorder(radius=6),
+            padding=6,
             animation_duration=200
         ),
         on_click=lambda e: change_font_size(1)
@@ -372,14 +379,15 @@ def main_app(page: ft.Page):
         else:
             current_font_idx = max(0, min(len(FONT_SIZES) - 1, current_font_idx + delta))
         
-        btn_font_reset.text = f"{int((FONT_SIZES[current_font_idx] / 15.0) * 100)}%"
+        btn_font_reset_text.value = f"{int((FONT_SIZES[current_font_idx] / 15.0) * 100)}%"
         apply_font_size_ui()
 
     def apply_font_size_ui():
         sz = get_current_font_size()
         console_input.text_size = sz
         console_output.size = max(10, sz - 1)
-        load_lesson(current_lesson_idx)
+        if current_lesson_idx < len(all_lessons):
+            load_lesson(current_lesson_idx)
         page.update()
 
     top_bar = ft.Container(visible=False,
