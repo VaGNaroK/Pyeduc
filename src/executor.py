@@ -6,6 +6,7 @@ import sys
 import threading
 import queue
 import time
+import ast
 from typing import Tuple
 from logger import logger
 
@@ -15,13 +16,55 @@ class PersistentPythonShell:
     Mantém uma sessão Python interativa persistente rodando em segundo plano.
     Permite executar comandos preservando o estado das variáveis.
     """
-    
+    DISALLOWED_MODULES = {
+        "os", "subprocess", "sys", "shutil", "socket", "http",
+        "urllib", "requests", "ctypes", "signal", "multiprocessing", "importlib"
+    }
+    DISALLOWED_CALLS = {"eval", "exec", "compile", "globals", "locals", "__import__"}
+
     def __init__(self, timeout: int = 5):
         self.timeout = timeout
         self.process = None
         self.stdout_queue = queue.Queue()
         self.stderr_queue = queue.Queue()
         self.start()
+
+    @classmethod
+    def validate_security(cls, code: str) -> Tuple[bool, str]:
+        """
+        Valida o código do aluno usando AST para proibir a importação de módulos inseguros
+        e a chamada de funções perigosas antes de enviar ao subprocesso.
+        """
+        if not code or not code.strip():
+            return True, ""
+
+        try:
+            tree = ast.parse(code)
+        except Exception:
+            # Erros de sintaxe são capturados pelo compilador normal
+            return True, ""
+
+        for node in ast.walk(tree):
+            # 1. Checa 'import os', 'import subprocess'
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    mod_root = alias.name.split('.')[0]
+                    if mod_root in cls.DISALLOWED_MODULES:
+                        return False, f"O módulo '{alias.name}' está bloqueado por motivos de segurança no ambiente de aprendizado."
+
+            # 2. Checa 'from os import path'
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    mod_root = node.module.split('.')[0]
+                    if mod_root in cls.DISALLOWED_MODULES:
+                        return False, f"O módulo '{node.module}' está bloqueado por motivos de segurança no ambiente de aprendizado."
+
+            # 3. Checa chamadas perigosas como eval(), exec(), __import__()
+            elif isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Name) and node.func.id in cls.DISALLOWED_CALLS:
+                    return False, f"A função '{node.func.id}()' está desativada no ambiente interativo por motivos de segurança."
+
+        return True, ""
 
     def start(self):
         """Inicia o interpretador interativo em um subprocesso"""
@@ -68,7 +111,12 @@ class PersistentPythonShell:
         if not self.process or self.process.poll() is not None:
             self.start()
 
-        # 1. Valida a sintaxe localmente no processo principal para evitar travar o REPL
+        # 1. Validação de Segurança via AST (Evita importação de módulos inseguros)
+        is_safe, sec_error = self.validate_security(code)
+        if not is_safe:
+            return "", f"Erro de Segurança: {sec_error}\n"
+
+        # 2. Valida a sintaxe localmente no processo principal para evitar travar o REPL
         try:
             # Compila como 'exec' para aceitar blocos de código multi-linha
             compile(code, '<stdin>', 'exec')

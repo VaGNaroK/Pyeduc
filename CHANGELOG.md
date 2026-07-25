@@ -14,6 +14,9 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Expansão do Currículo Didático (9 Novas Aulas):** Adicionadas as aulas de Tuplas (ID 1003), Dicionários (ID 1004), Conjuntos (ID 1005), Aprofundamento em Funções (ID 1006), Módulos (ID 1007), Tratamento de Erros (ID 1008), Manipulação de Arquivos (ID 1009), Orientação a Objetos (ID 1010) e a Prova Prática Integradora 3 (ID 1011).
 - **Travas de Limites e Alça Visual nos Divisores Arrastáveis:** Limitação de redimensionamento dos painéis entre 20% e 80% (`drag_splitter`) e 20% a 40% (`sidebar_splitter`), com alça visual `DRAG_HANDLE` e destaque de hover em Azul Ciano (`#38bdf8`).
 - **Micro-Animações e Elevação Dinâmica nos Botões:** Adicionados efeitos de hover com transição suave (`animation_duration=200ms`) e elevação dinâmica nos botões "Exportar", "Importar", "Executar Código", "Limpar" e "Responder Quiz da Lição".
+- **Modo Offline Gracioso e Diagnóstico do Ollama:** Adicionado fallback no `OllamaClient` ([src/llm_client.py](src/llm_client.py)) para exibir instruções de inicialização em Markdown no chat quando a IA estiver offline ou desinstalada, além do indicador tri-estado na barra lateral (Verde, Amarelo e Vermelho).
+- **Whitelist de Módulos e Validação de Segurança no Executor REPL:** Implementada inspeção estática via AST no `PersistentPythonShell` ([src/executor.py](src/executor.py)), bloqueando a importação de módulos de sistema inseguros (`os`, `subprocess`, etc.) e chamadas perigosas (`eval()`, `exec()`), preservando `open()` para as lições práticas do currículo.
+
 
 
 

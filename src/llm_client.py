@@ -104,6 +104,40 @@ class OllamaClient:
         # Retorna o primeiro modelo instalado se nenhum preferencial for encontrado
         return installed[0]
 
+    def get_offline_help_message(self) -> str:
+        """
+        Retorna uma mensagem formatada didaticamente em Markdown orientando o aluno sobre como ativar o Ollama.
+        """
+        installed = self.is_ollama_installed()
+        models = self.list_models()
+
+        if not installed:
+            return (
+                "**💡 Conceito**: O Tutor IA do Pyeduc funciona localmente no seu computador através do **Ollama**, garantindo privacidade total e uso sem internet.\n\n"
+                "**❓ Pergunta Guiada**: Você gostaria de ativar o assistente de IA no seu sistema?\n\n"
+                "**🔍 Dica Progressiva**: Siga os passos para ativar:\n"
+                "1. Baixe o Ollama em [https://ollama.com](https://ollama.com)\n"
+                f"2. Abra o terminal ({self.os_name}) e execute:\n"
+                f"   `ollama run {self.default_model}`\n"
+                "3. Reenvie sua pergunta no Pyeduc!"
+            )
+        elif not models:
+            return (
+                "**💡 Conceito**: O serviço Ollama está rodando no seu computador, porém ainda não possui nenhum modelo de código baixado.\n\n"
+                "**❓ Pergunta Guiada**: Vamos baixar o modelo recomendado para o Pyeduc?\n\n"
+                "**🔍 Dica Progressiva**: Execute no seu terminal:\n"
+                f"```bash\nollama pull {self.default_model}\n```\n"
+                "Após o término do download, envie sua dúvida novamente!"
+            )
+        else:
+            return (
+                "**💡 Conceito**: O serviço do Ollama está instalado no seu sistema, mas o servidor local está desligado no momento.\n\n"
+                "**❓ Pergunta Guiada**: O serviço do Ollama foi iniciado no seu sistema?\n\n"
+                "**🔍 Dica Progressiva**: Para ligar o serviço local do Ollama, execute no terminal:\n"
+                f"```bash\nollama run {self.default_model}\n```\n"
+                "Assim que a mensagem de boas-vindas aparecer, pergunte novamente ao Tutor IA!"
+            )
+
     def chat(self, messages: List[Dict[str, str]], model: Optional[str] = None, keep_alive: Optional[str] = None, options: Optional[Dict] = None) -> str:
         """
         Envia um histórico de mensagens para a API /api/chat do Ollama.
@@ -151,8 +185,8 @@ class OllamaClient:
                     return msg.get("content", "").strip()
                 else:
                     return f"[Erro Ollama HTTP {response.status}]"
-        except urllib.error.URLError as e:
-            return f"Não foi possível conectar ao Ollama ({e.reason}). Verifique se o Ollama está rodando."
+        except (urllib.error.URLError, ConnectionError, OSError):
+            return self.get_offline_help_message()
         except Exception as e:
             return f"Erro na geração da resposta pela IA: {str(e)}"
 

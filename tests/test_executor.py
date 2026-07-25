@@ -40,3 +40,39 @@ def test_executor_multiline_block():
         assert stderr == ""
     finally:
         shell.close()
+
+
+def test_executor_security_blocks_import_os():
+    shell = PersistentPythonShell(timeout=2)
+    try:
+        stdout, stderr = shell.execute_line("import os\nprint(os.getcwd())")
+        assert stdout == ""
+        assert "Erro de Segurança" in stderr
+        assert "módulo 'os' está bloqueado" in stderr
+
+        stdout, stderr = shell.execute_line("from subprocess import Popen")
+        assert stdout == ""
+        assert "Erro de Segurança" in stderr
+        assert "módulo 'subprocess' está bloqueado" in stderr
+    finally:
+        shell.close()
+
+
+def test_executor_security_blocks_eval_exec():
+    shell = PersistentPythonShell(timeout=2)
+    try:
+        stdout, stderr = shell.execute_line("eval('1 + 1')")
+        assert stdout == ""
+        assert "Erro de Segurança" in stderr
+        assert "função 'eval()' está desativada" in stderr
+    finally:
+        shell.close()
+
+
+def test_executor_allows_math_and_open():
+    is_safe_math, _ = PersistentPythonShell.validate_security("import math\nprint(math.sqrt(16))")
+    assert is_safe_math is True
+
+    is_safe_open, _ = PersistentPythonShell.validate_security("with open('test.txt', 'w') as f:\n    f.write('hi')")
+    assert is_safe_open is True
+

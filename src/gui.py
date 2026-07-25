@@ -66,10 +66,14 @@ def main_app(page: ft.Page):
             online, msg = ollama_client.check_health()
             ai_status_text.value = msg
             if online:
-                ai_status_icon.color = "#10b981"
-                ai_status_text.color = "#10b981"
+                if "nenhum modelo" in msg.lower():
+                    ai_status_icon.color = "#f59e0b"  # Amarelo (Serviço ativo, mas sem modelos)
+                    ai_status_text.color = "#d97706"
+                else:
+                    ai_status_icon.color = "#10b981"  # Verde Esmeralda (Online)
+                    ai_status_text.color = "#10b981"
             else:
-                ai_status_icon.color = "#ef4444"
+                ai_status_icon.color = "#ef4444"      # Vermelho (Offline ou não instalado)
                 ai_status_text.color = "#ef4444"
             page.update()
         page.run_thread(_check)
