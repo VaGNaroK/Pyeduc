@@ -48,6 +48,7 @@ logs/
 *.tmp
 *.bak
 *.7z
+*.txt
 .coverage
 .pytest_cache/
 
