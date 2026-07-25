@@ -11,6 +11,8 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Guia de Contribuição ([CONTRIBUTING.md](CONTRIBUTING.md)):** Documento orientativo detalhando a arquitetura em 5 camadas do Pyeduc, ambiente de desenvolvimento, padrões Flet e diretrizes de preservação de progresso (**IDs >= 1001**).
 - **Exportação e Importação de Progresso em JSON:** Funcionalidade de backup/restauração no `ProgressManager` e botões visuais na barra superior (`top_bar`) integrados via `ft.FilePicker`.
 - **Análise Estática de Código com AST Python no Tutor IA:** Implementado analisador determinístico `analyze_code_ast()` no `EducationalGuardrails` ([src/tutor_guardrails.py](src/tutor_guardrails.py)), capaz de identificar variáveis não utilizadas, sobrescrita de funções nativas (built-ins), funções sem `return`, risco de loop infinito (`while True` sem `break`) e erros de sintaxe detalhados.
+- **Expansão do Currículo Didático (9 Novas Aulas):** Adicionadas as aulas de Tuplas (ID 1003), Dicionários (ID 1004), Conjuntos (ID 1005), Aprofundamento em Funções (ID 1006), Módulos (ID 1007), Tratamento de Erros (ID 1008), Manipulação de Arquivos (ID 1009), Orientação a Objetos (ID 1010) e a Prova Prática Integradora 3 (ID 1011).
+
 
 
 ## [1.1.3] - 2026-07-22
