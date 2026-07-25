@@ -1267,7 +1267,7 @@ def main_app(page: ft.Page):
         for sec in sections:
             if "content" in sec:
                 lesson_container.content.controls.append(
-                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, style_sheet=md_style)
+                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style)
                 )
                 
                 # Injeta a imagem da lição 8 logo abaixo da teoria
