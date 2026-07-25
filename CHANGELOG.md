@@ -16,6 +16,8 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Micro-Animações e Elevação Dinâmica nos Botões:** Adicionados efeitos de hover com transição suave (`animation_duration=200ms`) e elevação dinâmica nos botões "Exportar", "Importar", "Executar Código", "Limpar" e "Responder Quiz da Lição".
 - **Modo Offline Gracioso e Diagnóstico do Ollama:** Adicionado fallback no `OllamaClient` ([src/llm_client.py](src/llm_client.py)) para exibir instruções de inicialização em Markdown no chat quando a IA estiver offline ou desinstalada, além do indicador tri-estado na barra lateral (Verde, Amarelo e Vermelho).
 - **Whitelist de Módulos e Validação de Segurança no Executor REPL:** Implementada inspeção estática via AST no `PersistentPythonShell` ([src/executor.py](src/executor.py)), bloqueando a importação de módulos de sistema inseguros (`os`, `subprocess`, etc.) e chamadas perigosas (`eval()`, `exec()`), preservando `open()` para as lições práticas do currículo.
+- **Sistema de Acessibilidade Visual e Zoom de Fonte (`[ A- ]` `[ 100% ]` `[ A+ ]`):** Adicionados controles de zoom de fonte na barra superior (`top_bar`), aplicando escala dinâmica (11px a 22px) na teoria das aulas via `md_style_sheet`, nos códigos de exemplo, nos títulos, nas descrições de exercícios e no console Python.
+
 
 
 
