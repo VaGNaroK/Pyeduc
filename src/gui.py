@@ -320,10 +320,77 @@ def main_app(page: ft.Page):
         on_click=do_import_progress
     )
 
+    # ---------------------------------------------------------
+    # Sistema de Acessibilidade e Zoom de Fonte (A- / 100% / A+)
+    # ---------------------------------------------------------
+    FONT_SIZES = [11, 13, 15, 18, 22]
+    current_font_idx = 2  # Padrão: 15px
+
+    def get_current_font_size() -> int:
+        return FONT_SIZES[current_font_idx]
+
+    btn_font_minus = ft.OutlinedButton(
+        "A-",
+        tooltip="Diminuir fonte (Acessibilidade)",
+        style=ft.ButtonStyle(
+            color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
+            bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
+        on_click=lambda e: change_font_size(-1)
+    )
+
+    btn_font_reset = ft.OutlinedButton(
+        "100%",
+        tooltip="Tamanho padrão de fonte",
+        style=ft.ButtonStyle(
+            color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
+            bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
+        on_click=lambda e: change_font_size(0, reset=True)
+    )
+
+    btn_font_plus = ft.OutlinedButton(
+        "A+",
+        tooltip="Aumentar fonte (Acessibilidade)",
+        style=ft.ButtonStyle(
+            color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#cbd5e1"},
+            bgcolor={ft.ControlState.HOVERED: "#475569", ft.ControlState.DEFAULT: "transparent"},
+            shape=ft.RoundedRectangleBorder(radius=6),
+            animation_duration=200
+        ),
+        on_click=lambda e: change_font_size(1)
+    )
+
+    def change_font_size(delta: int, reset: bool = False):
+        nonlocal current_font_idx
+        if reset:
+            current_font_idx = 2
+        else:
+            current_font_idx = max(0, min(len(FONT_SIZES) - 1, current_font_idx + delta))
+        
+        btn_font_reset.text = f"{int((FONT_SIZES[current_font_idx] / 15.0) * 100)}%"
+        apply_font_size_ui()
+
+    def apply_font_size_ui():
+        sz = get_current_font_size()
+        console_input.text_size = sz
+        console_output.size = max(10, sz - 1)
+        load_lesson(current_lesson_idx)
+        page.update()
+
     top_bar = ft.Container(visible=False,
         content=ft.Row([
             title_text,
-            ft.Row([btn_export, btn_import], spacing=10)
+            ft.Row([
+                ft.Row([btn_font_minus, btn_font_reset, btn_font_plus], spacing=4),
+                ft.Container(width=1, height=22, bgcolor="#475569"),
+                btn_export,
+                btn_import
+            ], spacing=10)
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
         bgcolor="#1e293b",
         padding=12,
@@ -1168,6 +1235,16 @@ def main_app(page: ft.Page):
         active_exercises_rows.clear()
         lesson_container.content.controls.clear()
         
+        sz = get_current_font_size()
+        md_style = ft.MarkdownStyleSheet(
+            p_text_style=ft.TextStyle(size=sz),
+            h1_text_style=ft.TextStyle(size=sz + 6, weight=ft.FontWeight.BOLD),
+            h2_text_style=ft.TextStyle(size=sz + 4, weight=ft.FontWeight.BOLD),
+            h3_text_style=ft.TextStyle(size=sz + 2, weight=ft.FontWeight.BOLD),
+            code_text_style=ft.TextStyle(size=max(10, sz - 1), font_family="Consolas"),
+            list_bullet_text_style=ft.TextStyle(size=sz)
+        )
+        
         sections = lesson.get("sections")
         if not sections:
             # Fallback para aulas no formato antigo
@@ -1182,7 +1259,7 @@ def main_app(page: ft.Page):
         for sec in sections:
             if "content" in sec:
                 lesson_container.content.controls.append(
-                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, style_sheet=md_style)
                 )
                 
                 # Injeta a imagem da lição 8 logo abaixo da teoria
@@ -1224,7 +1301,7 @@ def main_app(page: ft.Page):
                 ex_text = ft.TextField(
                     value=sec["example"],
                     multiline=True, read_only=True,
-                    text_style=ft.TextStyle(font_family="Consolas", size=13),
+                    text_style=ft.TextStyle(font_family="Consolas", size=max(10, sz - 1)),
                     bgcolor="#f8fafc", border_color="#e2e8f0"
                 )
                 def make_copy_handler(text_val):
