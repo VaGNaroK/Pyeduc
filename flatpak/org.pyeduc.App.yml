@@ -11,6 +11,9 @@ finish-args:
 modules:
   - name: pyeduc
     buildsystem: simple
+    sources:
+      - type: dir
+        path: ..
     build-commands:
       - mkdir -p /app/opt/pyeduc
       - cp -r build/linux/* /app/opt/pyeduc/
