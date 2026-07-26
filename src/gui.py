@@ -148,6 +148,20 @@ def main_app(page: ft.Page):
                     current_lesson_id=lesson.get("id")
                 )
 
+                ex_statuses = []
+                for idx, r in enumerate(active_exercises_rows, 1):
+                    is_done = False
+                    if r.controls and isinstance(r.controls[0], ft.Icon):
+                        is_done = (r.controls[0].icon == ft.Icons.CHECK_CIRCLE)
+                    desc = ""
+                    for ctrl in r.controls:
+                        if isinstance(ctrl, ft.Markdown):
+                            desc = ctrl.value
+                    expected_val = str(getattr(r, "data", "") or "").strip()
+                    expected_str = f" (Saída esperada: \"{expected_val}\")" if expected_val else ""
+                    status_tag = "✅ CONCLUÍDO" if is_done else "⏳ PENDENTE/EM ANDAMENTO"
+                    ex_statuses.append(f"- Exercício {idx} [{status_tag}]: {desc}{expected_str}")
+
                 payload = EducationalGuardrails.prepare_chat_payload(
                     history=ai_chat_history,
                     user_query=text,
@@ -156,7 +170,8 @@ def main_app(page: ft.Page):
                     rag_context=rag_ctx,
                     student_code=console_input.value,
                     console_output=console_output.value,
-                    quick_action=quick_action
+                    quick_action=quick_action,
+                    exercise_status=ex_statuses
                 )
 
                 raw_reply = ollama_client.chat(payload)

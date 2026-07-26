@@ -151,7 +151,11 @@ class OllamaClient:
             "top_p": 0.9,
             "num_ctx": 4096,
             "num_predict": 220,  # Garante espaço completo para os 3 tópicos didáticos
-            "stop": ["\nResposta:", "\nExplicação:", "\nCódigo corrigido", "\nCorrigindo", "\nObservação:", "\nEspero que", "\nVamos corrigir", "\nCONTEXTO DA LIÇÃO", "\nCONTEXTO"]
+            "stop": [
+                "\nResposta:", "\nExplicação:", "\nCódigo corrigido", "\nCorrigindo",
+                "\nObservação:", "\nEspero que", "\nVamos corrigir", "\nCONTEXTO DA LIÇÃO",
+                "\nCONTEXTO", "\n💡 Conceito", "\n**💡 Conceito", "\nConceito:", "\n**Conceito", "\n1. Conceito"
+            ]
         }
 
 

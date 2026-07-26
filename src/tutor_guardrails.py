@@ -127,10 +127,11 @@ CONTEXTO DA LIÇÃO ATUAL:
         user_query: str,
         student_code: Optional[str] = None,
         console_output: Optional[str] = None,
-        quick_action: Optional[str] = None
+        quick_action: Optional[str] = None,
+        exercise_status: Optional[List[str]] = None
     ) -> str:
         """
-        Monta a mensagem estruturada do usuário em 1ª pessoa ("Eu") com diagnóstico determinístico prévio.
+        Monta a mensagem estruturada do usuário em 1ª pessoa ("Eu") com diagnóstico determinístico prévio e status de exercícios.
         """
         parts = []
 
@@ -143,6 +144,10 @@ CONTEXTO DA LIÇÃO ATUAL:
 
         if user_query:
             parts.append(f"Minha dúvida: \"{user_query}\"")
+
+        if exercise_status and len(exercise_status) > 0:
+            status_text = "\n".join(exercise_status)
+            parts.append(f"\n[STATUS DOS EXERCÍCIOS DA LIÇÃO ATUAL:\n{status_text}]")
 
         if student_code and student_code.strip():
             parts.append(f"\nMeu código atual:\n```python\n{student_code.strip()}\n```")
@@ -177,6 +182,21 @@ CONTEXTO DA LIÇÃO ATUAL:
                 elif "ZeroDivisionError" in clean_console:
                     parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um ZeroDivisionError. O aluno tentou realizar uma divisão por zero na matemática do Python.]")
 
+                # Diagnóstico determinístico de divergência de saída para exercícios pendentes (sem exceção Python)
+                if exercise_status and not any(err in clean_console for err in ["NameError", "SyntaxError", "IndentationError", "TypeError", "ZeroDivisionError"]):
+                    for item in exercise_status:
+                        if "PENDENTE" in item and "Saída esperada:" in item:
+                            match_expected = re.search(r'Saída esperada:\s*"([^"]+)"', item)
+                            if match_expected:
+                                expected_out = match_expected.group(1).strip()
+                                actual_out = clean_console.strip()
+                                if expected_out and actual_out != expected_out:
+                                    parts.append(
+                                        f"\n[DIAGNÓSTICO EXATO DO AUTOGRADER PYEDUC: O código do aluno executou sem erros de Python e gerou a saída \"{actual_out}\", porém a saída esperada para o exercício pendente é \"{expected_out}\". "
+                                        f"Existe uma divergência no resultado impresso. Ajude o aluno a perceber o que está faltando ou diferente na saída gerada (ex: itens na lista, elementos esquecidos em passos anteriores) em comparação com a saída esperada, SEM dar o código pronto!]"
+                                    )
+                                    break
+
         return "\n".join(parts)
 
 
@@ -192,13 +212,14 @@ CONTEXTO DA LIÇÃO ATUAL:
         rag_context: str = "",
         student_code: Optional[str] = None,
         console_output: Optional[str] = None,
-        quick_action: Optional[str] = None
+        quick_action: Optional[str] = None,
+        exercise_status: Optional[List[str]] = None
     ) -> List[Dict[str, str]]:
         """
         Prepara a lista de mensagens no formato exigido pela API Ollama /api/chat.
         """
         system_prompt = cls.build_system_prompt(lesson_title, key_concepts or [], rag_context)
-        formatted_user_msg = cls.build_user_message(user_query, student_code, console_output, quick_action)
+        formatted_user_msg = cls.build_user_message(user_query, student_code, console_output, quick_action, exercise_status)
 
         messages = [{"role": "system", "content": system_prompt}]
 
@@ -224,9 +245,9 @@ CONTEXTO DA LIÇÃO ATUAL:
         cleaned = re.split(r"\n*(?:Resposta:|Explicação:|Corrigindo|Código corrigido|Observação:|Nota:|Espero que|Vamos corrigir|CONTEXTO DA LIÇÃO|CONTEXTO|Lição:).*", response, flags=re.IGNORECASE | re.DOTALL)[0]
 
         # Tenta a extração estrita dos 3 tópicos sócráticos (Conceito, Pergunta Guiada e Dica Progressiva)
-        conceito_match = re.search(r"(?:💡\s*)?(?:\*\*)?Conceito:\s*(?:\*\*)?(.*?)(?=(?:❓|Pergunta Guiada:|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
-        pergunta_match = re.search(r"(?:❓\s*)?(?:\*\*)?Pergunta Guiada:\s*(?:\*\*)?(.*?)(?=(?:🔍|Dica Progressiva:|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
-        dica_match = re.search(r"(?:🔍\s*)?(?:\*\*)?Dica Progressiva:\s*(?:\*\*)?(.*?)(?=(?:💡|\*\*💡|Conceito:|Pergunta Guiada:|Dica Progressiva:|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
+        conceito_match = re.search(r"(?:💡\s*)?(?:\*\*)?Conceito:\s*(?:\*\*)?(.*?)(?=(?:❓|Pergunta(?:\s+Guiada)?|Dica(?:\s+Progressiva|\s+Sugerida|\s+de\s+código)?|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
+        pergunta_match = re.search(r"(?:❓\s*)?(?:\*\*)?Pergunta(?:\s+Guiada)?:\s*(?:\*\*)?(.*?)(?=(?:🔍|Dica(?:\s+Progressiva|\s+Sugerida|\s+de\s+código)?|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
+        dica_match = re.search(r"(?:🔍\s*)?(?:\*\*)?Dica(?:\s+Progressiva|\s+Sugerida|\s+de\s+código)?:\s*(?:\*\*)?(.*?)(?=(?:💡|\*\*💡|Conceito:|Pergunta(?:\s+Guiada)?|Dica(?:\s+Progressiva|\s+Sugerida|\s+de\s+código)?|$))", cleaned, flags=re.IGNORECASE | re.DOTALL)
 
         if conceito_match and pergunta_match and dica_match:
             c_text = conceito_match.group(1).strip()
@@ -240,10 +261,15 @@ CONTEXTO DA LIÇÃO ATUAL:
 
             return f"**💡 Conceito**: {c_text}\n\n**❓ Pergunta Guiada**: {p_text}\n\n**🔍 Dica Progressiva**: {d_text}"
 
+        # Trunca repetições de ciclo no fallback
+        second_concept = re.search(r"\n\s*(?:💡\s*)?(?:\*\*)?Conceito:\s*(?:\*\*)?", cleaned[15:], flags=re.IGNORECASE)
+        if second_concept:
+            cleaned = cleaned[:15 + second_concept.start()].strip()
+
         # Fallback de higienização caso a IA não tenha usado a estrutura padrão de 3 tópicos
         cleaned = re.sub(r"(?:💡\s*)?(?:\*\*)?Conceito:\s*(?:\*\*)?", "**💡 Conceito**: ", cleaned, flags=re.IGNORECASE)
-        cleaned = re.sub(r"(?:\n\s*)?(?:❓\s*)?(?:\*\*)?Pergunta Guiada:\s*(?:\*\*)?", "\n\n**❓ Pergunta Guiada**: ", cleaned, flags=re.IGNORECASE)
-        cleaned = re.sub(r"(?:\n\s*)?(?:🔍\s*)?(?:\*\*)?Dica Progressiva:\s*(?:\*\*)?", "\n\n**🔍 Dica Progressiva**: ", cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"(?:\n\s*)?(?:❓\s*)?(?:\*\*)?Pergunta(?:\s+Guiada)?:\s*(?:\*\*)?", "\n\n**❓ Pergunta Guiada**: ", cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"(?:\n\s*)?(?:🔍\s*)?(?:\*\*)?Dica(?:\s+Progressiva|\s+Sugerida|\s+de\s+código)?:\s*(?:\*\*)?", "\n\n**🔍 Dica Progressiva**: ", cleaned, flags=re.IGNORECASE)
 
         def _clean_code_block(match):
             return "*(Aplique a dica no seu editor de código!)*"
