@@ -130,6 +130,8 @@ jobs:
     needs: [build-windows, build-linux-deb, build-linux-flatpak]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
