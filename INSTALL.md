@@ -99,8 +99,10 @@ pip install --upgrade pip
 pip install Flet
 ```
 
-### ❌ Erro "libmpv.so.1" no Linux Mint / Ubuntu
-Ao rodar o Flet pela primeira vez em ecossistemas Debian-like mais novos, o Flet (que puxa binários do motor Flutter) pode buscar por nomes hardcoded de bibliotecas não encontradas. Para corrigir:
+### ❌ Erro "libmpv.so.1" no Linux Mint / Ubuntu (Ubuntu 24.04 / Mint 22)
+> **Nota:** Se você está instalando através do pacote oficial **`.deb`**, as dependências e o link simbólico (`libmpv.so.1`) são configurados **automaticamente** durante a instalação.
+
+Se você está rodando diretamente a partir do código fonte (`python src/main.py`) em distribuições recentes e o Flet reclamar de `libmpv.so.1`, siga os passos:
 
 **1. Instalar as bases necessárias:**
 ```bash
@@ -108,9 +110,9 @@ sudo apt update
 sudo apt install -y libmpv-dev mpv
 ```
 
-**2. Criar o Symlink pra enganar o framework:**
+**2. Criar o Symlink para o framework:**
 ```bash
-sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
+sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/x86_64-linux-gnu/libmpv.so.1
 ```
 
 **3. Instalar bibliotecas gráficas extras comuns do GTK e Clang:**
