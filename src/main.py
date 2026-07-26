@@ -31,9 +31,8 @@ def main():
         import os
         is_serious_python = "serious_python" in __file__ or "serious_python" in sys.prefix or os.environ.get("FLET_SERIOUS_PYTHON") == "true"
         if is_serious_python:
-            ft.app(target=main_app, view=ft.AppView.WEB_SOCKET)
-        else:
-            ft.app(target=main_app)
+            os.environ["FLET_PLATFORM"] = "linux"
+        ft.app(target=main_app)
     except Exception as e:
         logger.error(f"Erro ao iniciar Flet: {e}", exc_info=True)
 

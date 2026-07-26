@@ -16,6 +16,10 @@ exclude = [
     ".agents",
     ".pytest_cache",
     ".coverage",
+    "venv",
+    ".venv",
+    "data",
+    "logs",
     "tests",
     "scripts",
     "flatpak",
@@ -26,3 +30,6 @@ exclude = [
     "*.md",
     "*.7z"
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

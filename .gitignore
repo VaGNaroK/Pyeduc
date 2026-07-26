@@ -56,4 +56,7 @@ ci-cd correction*
 pyeduc_*
 pyeduc.flatpak
 pyeduc_amd64.deb
+.flatpak-builder/
+build-dir/
+repo/
 
