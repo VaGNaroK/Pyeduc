@@ -25,8 +25,10 @@ flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/fl
 
 # 3. Compilar a aplicação Linux via Flet caso build/linux não exista
 if [ ! -d "build/linux" ]; then
+    echo "🧹 Limpando diretórios __pycache__ anteriores..."
+    find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
     echo "📦 Compilando binários Linux via Flet ($FLET_CMD)..."
-    $FLET_CMD build linux --exclude .git .github .agents venv .venv data logs tests scripts flatpak "*.txt" "*.bat" "*.sh" "*.md" --project pyeduc
+    $FLET_CMD build linux --exclude .git .github .agents venv .venv data logs __pycache__ "*.pyc" "*.pyo" tests scripts flatpak "*.txt" "*.bat" "*.sh" "*.md" --project pyeduc
 fi
 
 # 4. Construir a estrutura Flatpak
