@@ -1,114 +1,112 @@
+# Melhorias e Acompanhamento de Progresso - Pyeduc 🚀
+
 1. Arquitetura e Organização do Código (Alta Prioridade)
 
-GUI monolítica: O arquivo gui.py (~770 linhas em uma única função main_app) viola princípios de responsabilidade única.
-Melhoria sugerida: Refatorar para uma abordagem baseada em componentes ou classes. Exemplo:
-LessonView.py (renderização de lições)
-ConsolePanel.py
-TutorPanel.py
-SidebarProgress.py
+[ ] GUI monolítica: O arquivo gui.py (~770 linhas em uma única função main_app) viola princípios de responsabilidade única.
+    Melhoria sugerida: Refatorar para uma abordagem baseada em componentes ou classes. Exemplo:
+    LessonView.py (renderização de lições), ConsolePanel.py, TutorPanel.py, SidebarProgress.py
+    Benefício: Mais fácil testar, manter e reutilizar.
 
-Benefício: Mais fácil testar, manter e reutilizar.
+[PARCIAL] Falta de modularidade em alguns módulos: Lógica de execução, persistência, conteúdo e IA já foram separadas (executor.py, progress_manager.py, content_manager.py, llm_client.py, tutor_guardrails.py), mas a UI permanece centralizada em gui.py.
 
-Falta de modularidade em alguns módulos: Vários arquivos misturam lógica de negócio com detalhes de UI ou I/O.
-Adicionar camadas de abstração: Criar interfaces claras (ex: ExecutorInterface, ContentProvider, TutorService).
 
 2. Testabilidade e Qualidade de Código
 
-Atualmente não há testes visíveis.
-Melhorias recomendadas:
-Testes unitários para executor.py (mock de subprocess), rag_module, tutor_guardrails e progress_manager.
-Testes de integração para fluxo completo de lições (usando pytest + flet testing se disponível).
-Testes de snapshot para estrutura JSON das lições.
-Linting + formatação (ruff + black) e CI com GitHub Actions (já existe workflow, mas pode ser expandido).
+[CONCLUÍDO] Suíte de testes automatizados criada:
+    [X] Testes unitários para executor.py (validação AST, timeout, erros), content_manager.py, progress_manager.py, llm_client.py e tutor_guardrails.py (27 testes passando via pytest).
+    [PARCIAL] Testes de integração e validação de currículo.
+    [CONCLUÍDO] Integração Contínua (CI) via GitHub Actions (.github/workflows/build.yml).
+    [ ] Linting + formatação rígida no CI (ruff + black).
 
 
 3. Conteúdo Didático e Currículo
 
-Cobertura ainda muito básica (apenas variáveis, tipos primitivos, operadores e listas).
-Sugestões de expansão:
-Módulos intermediários: Funções, Loops avançados, Dicionários, Manipulação de arquivos, Introdução a OOP, Módulos e pacotes.
-Lições com dificuldade progressiva e projetos integradores (ex: mini-jogo, calculadora, gerenciador de tarefas).
-Suporte a multi-linguagem no JSON (português + inglês).
-Exercícios com dicas adaptativas baseadas no histórico do aluno.
+[CONCLUÍDO] Expansão significativa do currículo (Aulas 0 a 32 + Provas Práticas):
+    [X] Módulos intermediários implementados: Tuplas, Dicionários, Conjuntos (Sets), Aprofundamento em Funções (parâmetros/escopo), Módulos Nativos (math, random, datetime), Tratamento de Erros (try/except), Manipulação de Arquivos (open/read/write) e Introdução a OOP.
+    [X] Lições com dificuldade progressiva e projetos integradores: Prova Prática 1 (Lógica de Calculadora), Prova Prática 2 (Gerador de Nicknames e Senhas) e Prova Prática 3 (Gerenciador de Tarefas e Cadastro).
+    [ ] Suporte a multi-linguagem no JSON (português + inglês).
+    [ ] Exercícios com dicas adaptativas baseadas no histórico do aluno.
 
 
 4. Experiência do Usuário (UX/UI)
 
-Divisor arrastável é bom, mas pode ser aprimorado com limites mínimos/máximos e persistência de posição.
-Feedback visual: Melhorar indicadores de progresso, animações suaves no Flet, temas (dark/light).
-Acessibilidade: Suporte a leitores de tela, navegação por teclado, tamanhos de fonte ajustáveis.
-Onboarding: Tutorial interativo inicial + tour guiado.
-Modo offline-first mais robusto (melhor mensagem quando Ollama não está rodando).
+[PARCIAL] Aprimoramento de UX/UI:
+    [X] Divisor arrastável (drag_splitter e sidebar_splitter no Flet).
+    [X] Feedback visual e temas de alto contraste no console (Slate, Azul Ciano, Verde Esmeralda).
+    [X] Modo offline-first robusto para Ollama com diagnóstico do SO e instruções passo a passo (get_offline_help_message).
+    [PARCIAL] Onboarding com aula inicial de apresentação (Aula 0).
+    [ ] Acessibilidade (leitores de tela, suporte avançado a teclado, tamanhos de fonte ajustáveis).
+
 
 5. Inteligência Artificial e Tutor
 
-Dependência forte de um único modelo (qwen2.5-coder:3b).
-Melhorias:
-Suporte a múltiplos modelos e fallback.
-Sistema de avaliação de respostas da IA (evitar alucinações ou spoilers).
-Memória de conversa por lição (histórico contextual).
-Análise mais avançada de código do aluno (usar AST Python + ferramentas como pyright ou pylint leve).
-Métricas de engajamento do tutor (quantas dúvidas por lição, etc.).
+[CONCLUÍDO] Aprimoramentos do Tutor IA (Ollama REST + Guardrails):
+    [X] Suporte a múltiplos modelos e fallback automático (resolve_best_model prioriza qwen2.5-coder:1.5b, 3b, deepseek-coder, codellama, etc.).
+    [X] Sistema de guardrails sócraticos (tutor_guardrails.py) com respostas estritamente em 3 tópicos e proibição de entregar código pronto.
+    [X] Memória de conversa isolada por lição com reset automático ao trocar de aula.
+    [X] Análise estática avançada via AST Python antes do prompt (detecta SyntaxError, NameError, variáveis não usadas, sobreescrita de builtins, loops infinitos sem break).
+    [X] Descarregamento inteligente da VRAM (keep_alive: 0 via unload_model) ao fechar o app.
+    [ ] Métricas de engajamento do tutor (quantas dúvidas por lição, etc.).
 
 
 6. Segurança e Execução de Código
 
-O executor atual é bom, mas pode evoluir:
-Sandbox mais rígido (usar restrictedpython ou containerização leve para execuções avançadas).
-Limites de memória/CPU por execução.
-Prevenção de imports perigosos (os, subprocess, sys etc.) com whitelist.
-Logging seguro de tentativas maliciosas (para análise futura).
+[CONCLUÍDO] Segurança no REPL e execução:
+    [X] Prevenção de imports perigosos (os, subprocess, sys, shutil, socket, etc.) e chamadas inseguras (eval, exec, __import__) via validação de AST (validate_security).
+    [X] Limites de timeout por execução (5s) com reinicialização automática do subprocesso em caso de loop infinito.
+    [X] Logging de tentativas maliciosas e erros de E/S via logger.py.
+    [ ] Containerização leve ou isolamento em sandbox de sistema (docker/bubblewrap/restrictedpython).
 
 
 7. Persistência e Dados
 
-SQLite é adequado, mas pode melhorar:
-Migrações de schema (usando Alembic).
-Export/Import de progresso (JSON ou backup).
-Estatísticas mais ricas (tempo gasto por lição, taxa de acerto, heatmap de erros).
+[CONCLUÍDO] Banco de dados e gerenciamento de progresso:
+    [X] Persistência em SQLite (data/pyeduc.db com tabelas users, progress, user_state).
+    [X] Exportação e Importação de progresso em formato JSON (export_progress e import_progress em ProgressManager).
+    [ ] Migrações de schema (usando Alembic).
+    [ ] Estatísticas avançadas do aluno (tempo por lição, taxa de acertos, heatmap).
 
 
 8. Distribuição e Instalação
 
-Melhorias:
-Pacotes prontos para Windows (.msi ou .exe com instalador), macOS e Linux (AppImage/Flatpak).
-Versão web (Flet já suporta) para acesso fácil sem instalação.
-Configurador automático de Ollama (download + instalação do modelo sugerido).
-Suporte a Python embutido (PyInstaller + Flet) para usuários sem Python instalado.
+[CONCLUÍDO] Automação de pacotes e compilação:
+    [X] Pacotes para Linux (DEB via scripts/build_deb.sh e Flatpak via org.pyeduc.App.yml).
+    [X] Binários de compilação para Windows (.exe via Flet CLI no GitHub Actions).
+    [ ] Versão web (Flet Web).
+    [ ] Configurador/instalador automático do Ollama em background.
 
 
 9. Documentação e Comunidade
 
-Boa documentação técnica, mas faltam:
-Guia de contribuição (CONTRIBUTING.md).
-Roadmap público.
-Exemplos de como adicionar novos tipos de exercícios.
-Documentação de API interna (Sphinx ou MkDocs).
+[PARCIAL] Documentação do projeto:
+    [X] Guia de contribuição completo (CONTRIBUTING.md) detalhando arquitetura, testes, regras da GUI Flet e tutor IA.
+    [X] Exemplos de como criar e modificar aulas no CONTRIBUTING.md.
+    [ ] Roadmap público interativo.
+    [ ] Documentação de API interna (Sphinx ou MkDocs).
 
 
 10. Performance e Manutenibilidade
 
-Otimizar carregamento inicial (especialmente com Ollama).
-Cache de conteúdo JSON.
-Lazy loading de componentes Flet.
-Refatoração gradual para Type Hints completos.
+[PARCIAL] Otimizações implementadas:
+    [X] Liberação imediata da memória GPU/VRAM ao fechar a aplicação (keep_alive: 0).
+    [X] Uso de page.run_thread no Flet para evitar travamentos da UI em chamadas de I/O / IA.
+    [ ] Refatoração gradual para Type Hints completos em todo o projeto.
+    [ ] Cache de conteúdo JSON e lazy loading de componentes Flet.
 
 
-Priorização Recomendada (Roadmap Sugerido)
-Fase 1 (Curto prazo):
+---
 
-Refatoração da GUI
-Adição de testes básicos
-Melhoria na documentação de contribuição
+## Resumo do Status de Implementação
 
-Fase 2 (Médio prazo):
-
-Expansão significativa do currículo
-Melhorias no Tutor IA
-Pacotes de distribuição mais amigáveis
-
-Fase 3 (Longo prazo):
-
-Sandbox avançado
-Modo multi-usuário / sala de aula
-Versão web + analytics
+| Categoria | Status Geral |
+| :--- | :--- |
+| **1. Arquitetura** | 🟡 Parcial (UI monolítica pendente) |
+| **2. Testabilidade** | 🟢 Concluído (27 testes + CI) |
+| **3. Conteúdo Didático** | 🟢 Concluído (32 Aulas + 3 Provas Práticas) |
+| **4. UX/UI** | 🟡 Parcial (Offline-first & Temas OK) |
+| **5. IA e Tutor** | 🟢 Concluído (Guardrails, AST & Fallback OK) |
+| **6. Segurança** | 🟢 Concluído (Validação AST & Timeout OK) |
+| **7. Persistência** | 🟢 Concluído (SQLite + Import/Export JSON OK) |
+| **8. Distribuição** | 🟢 Concluído (DEB, Flatpak & Windows CI OK) |
+| **9. Documentação** | 🟡 Parcial (CONTRIBUTING.md OK) |
+| **10. Performance** | 🟡 Parcial (VRAM & Threading OK) |

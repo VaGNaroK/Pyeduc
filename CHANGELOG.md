@@ -4,6 +4,17 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.2.1] - 2026-07-25
+
+### Adicionado
+- **Diagnóstico Estático do Autograder no Tutor IA (`src/tutor_guardrails.py` & `src/gui.py`):** Injeção automática da comparação de saída esperada versus saída real gerada pelo aluno no prompt do Tutor IA quando o código executa sem exceções Python mas diverge no resultado do exercício pendente.
+- **Novos Stop Tokens no Cliente Ollama (`src/llm_client.py`):** Inclusão de tokens de parada adicionais (`\n💡 Conceito`, `\n**💡 Conceito`, `\nConceito:`) para prevenir regeneração em loop de cabeçalhos pela IA.
+
+### Corrigido
+- **Pipeline de CI/CD no GitHub Actions (`.github/workflows/build.yml`):** Adicionado `subosito/flutter-action@v2` para pré-instalar o Flutter SDK nos jobs de build (Windows, Linux DEB e Linux Flatpak), e configuradas variáveis de ambiente UTF-8 (`PYTHONUTF8=1` e `PYTHONIOENCODING=utf-8`) no runner Windows.
+- **Higienização e Parsing Flexível de Respostas da IA (`src/tutor_guardrails.py`):** Regex expandida para capturar variações de nomenclatura de cabeçalhos da IA e truncar ciclos repetidos de repetição no fallback.
+- **Acompanhamento do Roadmap (`melhorias.txt`):** Atualização completa e auditoria dos itens concluídos, parciais e pendentes.
+
 ## [1.2.0] - 2026-07-25
 
 ### Adicionado
