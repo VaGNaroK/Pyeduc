@@ -7,8 +7,24 @@ from typing import List, Optional, Dict, Any
 
 
 class ContentManager:
-    def __init__(self, content_file: str = "content/lessons.json"):
-        self.content_file = Path(content_file)
+    def __init__(self, content_file: Optional[str] = None):
+        if content_file:
+            self.content_file = Path(content_file)
+        else:
+            base_dir = Path(__file__).resolve().parent.parent
+            possible_paths = [
+                base_dir / "content" / "lessons.json",
+                Path("content/lessons.json"),
+                Path.cwd() / "content" / "lessons.json",
+                base_dir / "app" / "content" / "lessons.json"
+            ]
+            target_path = possible_paths[0]
+            for p in possible_paths:
+                if p.exists():
+                    target_path = p
+                    break
+            self.content_file = target_path
+
         self.lessons = self._load_lessons()
 
     def _load_lessons(self) -> List[Dict[str, Any]]:

@@ -8,8 +8,14 @@ from pathlib import Path
 from typing import List, Optional
 
 class ProgressManager:
-    def __init__(self, data_dir: str = "data"):
-        self.data_dir = Path(data_dir)
+    def __init__(self, data_dir: Optional[str] = None):
+        if data_dir:
+            self.data_dir = Path(data_dir)
+        else:
+            user_data = Path.home() / ".pyeduc"
+            user_data.mkdir(exist_ok=True)
+            self.data_dir = user_data
+
         self.data_dir.mkdir(exist_ok=True)
         self.db_path = self.data_dir / "pyeduc.db"
         self.current_user_id: Optional[int] = None

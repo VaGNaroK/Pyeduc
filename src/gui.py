@@ -1251,6 +1251,10 @@ def main_app(page: ft.Page):
     # ---------------------------------------------------------
     def load_lesson(target):
         nonlocal current_lesson_idx
+        if not all_lessons:
+            logger.warning("Nenhuma lição carregada em all_lessons.")
+            return
+
         # Mapeamento seguro de índice ou ID de aula para índice válido da lista
         index = 0
         if isinstance(target, int):
