@@ -1250,7 +1250,9 @@ def main_app(page: ft.Page):
     # Lógica de Carregamento de Lição
     # ---------------------------------------------------------
     def load_lesson(target):
-        nonlocal current_lesson_idx
+        nonlocal current_lesson_idx, all_lessons
+        if not all_lessons:
+            all_lessons = content_manager.get_all_lessons()
         if not all_lessons:
             logger.warning("Nenhuma lição carregada em all_lessons.")
             return

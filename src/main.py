@@ -29,7 +29,14 @@ def main():
     
     try:
         import os
-        is_serious_python = "serious_python" in __file__ or "serious_python" in sys.prefix or os.environ.get("FLET_SERIOUS_PYTHON") == "true"
+        is_serious_python = (
+            "FLATPAK_ID" in os.environ
+            or "/opt/pyeduc" in str(Path(__file__).resolve())
+            or "/opt/pyeduc" in sys.executable
+            or "serious_python" in str(Path(__file__).resolve())
+            or os.environ.get("FLET_SERIOUS_PYTHON") == "true"
+            or (not sys.executable.endswith("python") and not sys.executable.endswith("python3"))
+        )
         if is_serious_python:
             os.environ["FLET_PLATFORM"] = "linux"
         ft.app(target=main_app)

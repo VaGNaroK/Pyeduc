@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import List, Optional, Dict, Any
 
 
+from logger import logger
+
+
 class ContentManager:
     def __init__(self, content_file: Optional[str] = None):
         if content_file:
@@ -32,21 +35,30 @@ class ContentManager:
     def _load_lessons(self) -> List[Dict[str, Any]]:
         """Carrega as lições do arquivo JSON"""
         if not self.content_file.exists():
+            logger.error(f"Arquivo de lições não encontrado em: {self.content_file}")
             return []
         
-        with open(self.content_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data.get("lessons", [])
+        try:
+            with open(self.content_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                lessons = data.get("lessons", [])
+                logger.info(f"Carregadas {len(lessons)} lições de {self.content_file}")
+                return lessons
+        except Exception as e:
+            logger.error(f"Erro ao ler arquivo de lições {self.content_file}: {e}", exc_info=True)
+            return []
 
     def get_lesson(self, lesson_id: int) -> Optional[Dict[str, Any]]:
         """Retorna uma lição pelo ID"""
-        for lesson in self.lessons:
+        for lesson in self.get_all_lessons():
             if lesson["id"] == lesson_id:
                 return lesson
         return None
 
     def get_all_lessons(self) -> List[Dict[str, Any]]:
         """Retorna todas as lições"""
+        if not self.lessons:
+            self.lessons = self._load_lessons()
         return self.lessons
 
     def get_lesson_count(self) -> int:
