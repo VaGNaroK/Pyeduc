@@ -7,6 +7,11 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 ## [1.2.1] - 2026-07-25
 
 ### Adicionado
+- **Novo Ícone do Projeto (`content/icons/pyeduc.svg`):** Atualização da identidade visual do aplicativo em todas as camadas da interface e empacotamento:
+  - **Interface Flet (`src/gui.py` & `src/config.py`):** Configurado `page.window.icon = config.APP_ICON`, marca visual adicionada na barra superior (`top_bar`), na tela de login (`welcome_container`) e na lição de boas-vindas.
+  - **Configuração de Build Flet ([pyproject.toml](pyproject.toml)):** Criado o manifesto declarando `[tool.flet] icon = "content/icons/pyeduc.svg"`, garantindo a aplicação do ícone oficial em compilações Windows (`.exe`) e Linux.
+  - **Pacote Linux DEB ([scripts/build_deb.sh](scripts/build_deb.sh)):** Atualizado para instalar o ícone em `/usr/share/icons/hicolor/scalable/apps/pyeduc.svg` e `/usr/share/pixmaps/pyeduc.svg` para exibição no menu de aplicativos do SO.
+  - **Pacote Linux Flatpak ([flatpak/org.pyeduc.App.yml](flatpak/org.pyeduc.App.yml)):** Atualizado o manifesto de build para instalar o ícone e o atalho `.desktop` no sandbox Flatpak.
 - **Diagnóstico Estático do Autograder no Tutor IA (`src/tutor_guardrails.py` & `src/gui.py`):** Injeção automática da comparação de saída esperada versus saída real gerada pelo aluno no prompt do Tutor IA quando o código executa sem exceções Python mas diverge no resultado do exercício pendente.
 - **Novos Stop Tokens no Cliente Ollama (`src/llm_client.py`):** Inclusão de tokens de parada adicionais (`\n💡 Conceito`, `\n**💡 Conceito`, `\nConceito:`) para prevenir regeneração em loop de cabeçalhos pela IA.
 
@@ -28,10 +33,6 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Modo Offline Gracioso e Diagnóstico do Ollama:** Adicionado fallback no `OllamaClient` ([src/llm_client.py](src/llm_client.py)) para exibir instruções de inicialização em Markdown no chat quando a IA estiver offline ou desinstalada, além do indicador tri-estado na barra lateral (Verde, Amarelo e Vermelho).
 - **Whitelist de Módulos e Validação de Segurança no Executor REPL:** Implementada inspeção estática via AST no `PersistentPythonShell` ([src/executor.py](src/executor.py)), bloqueando a importação de módulos de sistema inseguros (`os`, `subprocess`, etc.) e chamadas perigosas (`eval()`, `exec()`), preservando `open()` para as lições práticas do currículo.
 - **Sistema de Acessibilidade Visual e Zoom de Fonte (`[ A- ]` `[ 100% ]` `[ A+ ]`):** Adicionados controles de zoom de fonte na barra superior (`top_bar`), aplicando escala dinâmica (11px a 22px) na teoria das aulas via `md_style_sheet`, nos códigos de exemplo, nos títulos, nas descrições de exercícios e no console Python.
-
-
-
-
 
 
 

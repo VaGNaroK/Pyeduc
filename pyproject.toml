@@ -1,0 +1,11 @@
+[project]
+name = "pyeduc"
+version = "1.0.0"
+description = "App Educacional Python com Flet"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.flet]
+icon = "content/icons/pyeduc.svg"
+product = "Pyeduc"
+org = "org.pyeduc"

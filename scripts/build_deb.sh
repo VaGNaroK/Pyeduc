@@ -21,6 +21,12 @@ EOF
 # Copiar binarios gerados pelo flet
 cp -r build/linux/* ${DIR_NAME}/opt/pyeduc/
 
+# Copiar ícone do projeto para o sistema de ícones do Linux
+mkdir -p ${DIR_NAME}/usr/share/icons/hicolor/scalable/apps
+mkdir -p ${DIR_NAME}/usr/share/pixmaps
+cp content/icons/pyeduc.svg ${DIR_NAME}/usr/share/icons/hicolor/scalable/apps/pyeduc.svg
+cp content/icons/pyeduc.svg ${DIR_NAME}/usr/share/pixmaps/pyeduc.svg
+
 # Criar link simbolico no bin
 ln -s /opt/pyeduc/pyeduc ${DIR_NAME}/usr/bin/pyeduc
 

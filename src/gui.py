@@ -22,6 +22,7 @@ def main_app(page: ft.Page):
     page.padding = 0
     page.spacing = 0
     page.bgcolor = "#e2e8f0"
+    page.window.icon = config.APP_ICON
     
     # Propriedades da Janela (Evita bug de minimizar no Linux/Wayland)
     page.window.min_width = 800
@@ -405,9 +406,10 @@ def main_app(page: ft.Page):
             load_lesson(current_lesson_idx)
         page.update()
 
+    app_logo_icon = ft.Image(src=config.APP_ICON, width=24, height=24)
     top_bar = ft.Container(visible=False,
         content=ft.Row([
-            title_text,
+            ft.Row([app_logo_icon, title_text], spacing=10, alignment=ft.MainAxisAlignment.START),
             ft.Row([
                 ft.Row([btn_font_minus, btn_font_reset, btn_font_plus], spacing=4),
                 ft.Container(width=1, height=22, bgcolor="#475569"),
@@ -746,7 +748,7 @@ def main_app(page: ft.Page):
 
     welcome_container = ft.Container(
         content=ft.Column([
-            ft.Image(src="content/images/PyeducLOGO.png", width=250),
+            ft.Image(src=config.APP_ICON, width=250),
             ft.Text("Pyeduc", size=32, weight="bold", color="#1e293b"),
             ft.Text("Faça login para continuar de onde parou.", size=14, color="#64748b"),
             ft.Container(height=20),
@@ -1396,7 +1398,7 @@ def main_app(page: ft.Page):
         if lesson.get("id") == 0:
             lesson_container.content.controls.append(
                 ft.Container(
-                    content=ft.Image(src="content/images/PyeducLOGO.png", width=600),
+                    content=ft.Image(src=config.APP_ICON, width=600),
                     alignment=ft.Alignment.CENTER,
                     margin=ft.Margin(top=30, bottom=20, left=0, right=0)
                 )
