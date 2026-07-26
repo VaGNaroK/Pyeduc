@@ -2,6 +2,13 @@
 Camada de Interface Gráfica (GUI) usando Flet
 """
 # pyrefly: ignore [missing-import]
+import os
+import sys
+from pathlib import Path
+
+if "FLATPAK_ID" in os.environ or "container" in os.environ or "/opt/pyeduc" in str(Path(__file__).resolve()) or "serious_python" in str(Path(__file__).resolve()) or not sys.executable.endswith("python3"):
+    os.environ["FLET_PLATFORM"] = "linux"
+
 import flet as ft
 from content_manager import ContentManager
 from progress_manager import ProgressManager
@@ -1305,7 +1312,7 @@ def main_app(page: ft.Page):
         for sec in sections:
             if "content" in sec:
                 lesson_container.content.controls.append(
-                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style)
+                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
                 )
                 
                 # Injeta a imagem da lição 8 logo abaixo da teoria
@@ -1390,7 +1397,7 @@ def main_app(page: ft.Page):
                 ])
                 if sec.get("exercise"):
                     coding_controls.append(
-                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style)
+                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
                     )
                 if sec.get("exercises"):
                     sec_ex_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
@@ -1399,11 +1406,11 @@ def main_app(page: ft.Page):
                         if expected_out:
                             row = ft.Row([
                                 ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=max(16, sz + 2)),
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, expand=True)
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         else:
                             row = ft.Row([
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, expand=True)
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         row.data = expected_out
                         sec_ex_col.controls.append(row)
