@@ -56,6 +56,8 @@ chmod +x ${DIR_NAME}/DEBIAN/postrm
 
 # Copiar binarios gerados pelo flet
 cp -r build/linux/* ${DIR_NAME}/opt/pyeduc/
+mkdir -p ${DIR_NAME}/opt/pyeduc/app/assets/content/icons
+cp content/icons/pyeduc.svg ${DIR_NAME}/opt/pyeduc/app/assets/content/icons/pyeduc.svg
 
 # Copiar ícone do projeto para o sistema de ícones do Linux
 mkdir -p ${DIR_NAME}/usr/share/icons/hicolor/scalable/apps

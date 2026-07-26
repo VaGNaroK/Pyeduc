@@ -17,6 +17,8 @@ modules:
     build-commands:
       - mkdir -p /app/opt/pyeduc
       - cp -r build/linux/* /app/opt/pyeduc/
+      - mkdir -p /app/opt/pyeduc/app/assets/content/icons
+      - cp content/icons/pyeduc.svg /app/opt/pyeduc/app/assets/content/icons/pyeduc.svg
       - mkdir -p /app/bin
       - ln -s /app/opt/pyeduc/pyeduc /app/bin/pyeduc
       - mkdir -p /app/share/icons/hicolor/scalable/apps

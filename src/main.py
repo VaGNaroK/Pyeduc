@@ -28,7 +28,7 @@ def main():
     project_root = str(Path(__file__).parent.parent)
     
     try:
-        ft.run(main_app, assets_dir=project_root)
+        ft.app(target=main_app, assets_dir=project_root)
     except Exception as e:
         logger.error(f"Erro ao iniciar Flet: {e}", exc_info=True)
 

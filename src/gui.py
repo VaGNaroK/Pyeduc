@@ -1249,11 +1249,23 @@ def main_app(page: ft.Page):
     # ---------------------------------------------------------
     # Lógica de Carregamento de Lição
     # ---------------------------------------------------------
-    def load_lesson(index):
+    def load_lesson(target):
         nonlocal current_lesson_idx
+        # Mapeamento seguro de índice ou ID de aula para índice válido da lista
+        index = 0
+        if isinstance(target, int):
+            if 0 <= target < len(all_lessons):
+                index = target
+            else:
+                for i, les in enumerate(all_lessons):
+                    if les.get("id") == target:
+                        index = i
+                        break
+
         current_lesson_idx = index
-        progress_manager.set_current_lesson(index)
         lesson = all_lessons[index]
+        lesson_id = lesson.get("id", index)
+        progress_manager.set_current_lesson(lesson_id)
         title_text.value = lesson["title"]
         
         # Reconstrói a área de conteúdo da aula

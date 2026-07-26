@@ -7,6 +7,7 @@ requires-python = ">=3.10"
 
 [tool.flet]
 icon = "content/icons/pyeduc.svg"
+assets_dir = "."
 product = "Pyeduc"
 org = "org.pyeduc"
 exclude = [
