@@ -1609,12 +1609,15 @@ def main_app(page: ft.Page):
     # ---------------------------------------------------------
     def go_prev(e):
         nonlocal current_lesson_idx
-        if current_lesson_idx > 0:
-            current_lesson_idx -= 1
-            load_lesson(current_lesson_idx)
+        if not all_lessons or current_lesson_idx <= 0:
+            return
+        current_lesson_idx -= 1
+        load_lesson(current_lesson_idx)
             
     def go_next(e):
         nonlocal current_lesson_idx
+        if not all_lessons or current_lesson_idx >= len(all_lessons):
+            return
         current_lesson_id = all_lessons[current_lesson_idx]["id"]
         if not progress_manager.is_lesson_completed(current_lesson_id) and not admin_mode_enabled:
             snack = ft.SnackBar(ft.Text("Complete os exercícios desta lição para poder avançar! 🔒"), bgcolor="#f59e0b")

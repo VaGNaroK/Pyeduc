@@ -13,6 +13,8 @@ class ContentManager:
         else:
             base_dir = Path(__file__).resolve().parent.parent
             possible_paths = [
+                Path("/app/opt/pyeduc/content/lessons.json"),
+                Path("/opt/pyeduc/content/lessons.json"),
                 base_dir / "content" / "lessons.json",
                 Path("content/lessons.json"),
                 Path.cwd() / "content" / "lessons.json",
