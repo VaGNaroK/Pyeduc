@@ -16,7 +16,9 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Novos Stop Tokens no Cliente Ollama (`src/llm_client.py`):** Inclusão de tokens de parada adicionais (`\n💡 Conceito`, `\n**💡 Conceito`, `\nConceito:`) para prevenir regeneração em loop de cabeçalhos pela IA.
 
 ### Corrigido
-- **Pipeline de CI/CD no GitHub Actions (`.github/workflows/build.yml`):** Adicionado `subosito/flutter-action@v2` para pré-instalar o Flutter SDK nos jobs de build (Windows, Linux DEB e Linux Flatpak), e configuradas variáveis de ambiente UTF-8 (`PYTHONUTF8=1` e `PYTHONIOENCODING=utf-8`) no runner Windows.
+- **Pipeline de CI/CD no GitHub Actions ([.github/workflows/build.yml](.github/workflows/build.yml)):** Configurado o repositório Flathub (`flatpak remote-add`) e a flag `--install-deps-from=flathub` no `flatpak-builder` para resolução e download automático da SDK `org.freedesktop.Sdk/23.08`. Adicionados também `libmpv-dev` e `mpv` nas dependências dos runners Linux.
+- **Empacotamento Linux DEB ([scripts/build_deb.sh](scripts/build_deb.sh)):** Atualizado o campo `Depends:` no `DEBIAN/control` com dependências alternativas (`libmpv2 | libmpv1 | mpv | libmpv-dev`), resolvendo a falha *"A dependência não é contentável: libmpv1"* no Ubuntu 24.04 LTS e Linux Mint 22. Adicionado o script `DEBIAN/postinst` para automação do link simbólico `libmpv.so.1` e `DEBIAN/postrm` para remoção limpa.
+- **Guia de Instalação ([INSTALL.md](INSTALL.md)):** Atualizadas as instruções do troubleshooting do `libmpv.so.1` para refletir o empacotamento automatizado via `.deb` e o procedimento manual para execução via código fonte.
 - **Higienização e Parsing Flexível de Respostas da IA (`src/tutor_guardrails.py`):** Regex expandida para capturar variações de nomenclatura de cabeçalhos da IA e truncar ciclos repetidos de repetição no fallback.
 - **Acompanhamento do Roadmap (`melhorias.txt`):** Atualização completa e auditoria dos itens concluídos, parciais e pendentes.
 
