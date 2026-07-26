@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Windows Executable
         run: |
-          flet build windows --module-name src/main.py --project pyeduc
+          flet build windows --project pyeduc
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Linux Binary
         run: |
-          flet build linux --module-name src/main.py --project pyeduc
+          flet build linux --project pyeduc
 
       - name: Create DEB Package
         run: |
@@ -110,7 +110,7 @@ jobs:
 
       - name: Build Linux Binary
         run: |
-          flet build linux --module-name src/main.py --project pyeduc
+          flet build linux --project pyeduc
 
       - name: Build Flatpak
         run: |
