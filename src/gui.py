@@ -1215,6 +1215,9 @@ def main_app(page: ft.Page):
     )
     
     def update_progress_ui():
+        nonlocal all_lessons
+        if not all_lessons:
+            all_lessons = content_manager.get_all_lessons()
         prog_col.controls.clear()
         for i, les in enumerate(all_lessons):
             is_done = progress_manager.is_lesson_completed(les["id"])
