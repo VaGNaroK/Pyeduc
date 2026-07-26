@@ -5,17 +5,9 @@ import os
 import sys
 from pathlib import Path
 
-# Configura FLET_PLATFORM no topo antes de importar flet se estiver em ambiente empacotado
-is_serious_python = (
-    "FLATPAK_ID" in os.environ
-    or "/opt/pyeduc" in str(Path(__file__).resolve())
-    or "/opt/pyeduc" in sys.executable
-    or "serious_python" in str(Path(__file__).resolve())
-    or os.environ.get("FLET_SERIOUS_PYTHON") == "true"
-    or (not sys.executable.endswith("python") and not sys.executable.endswith("python3"))
-)
-if is_serious_python:
-    os.environ["FLET_PLATFORM"] = "linux"
+# Injeção incondicional para garantir ambiente embarcado no Flet
+os.environ["FLET_PLATFORM"] = "linux"
+os.environ["FLET_EMBEDDED"] = "true"
 
 import flet as ft
 
