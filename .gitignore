@@ -44,11 +44,16 @@ data/pyeduc.db
 logs/
 *.log
 
-# Arquivos temporários
+# Arquivos temporários e de desenvolvimento
 *.tmp
 *.bak
 *.7z
-*.txt
 .coverage
 .pytest_cache/
+melhorias.txt
+correções no CI.txt
+ci-cd correction*
+pyeduc_*
+pyeduc.flatpak
+pyeduc_amd64.deb
 
