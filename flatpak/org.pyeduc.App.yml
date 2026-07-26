@@ -1,6 +1,6 @@
 app-id: org.pyeduc.App
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: pyeduc
 finish-args:
@@ -30,4 +30,22 @@ modules:
         Icon=org.pyeduc.App
         Type=Application
         Categories=Education;Development;
+        EOF
+      - mkdir -p /app/share/metainfo
+      - |
+        cat << 'EOF' > /app/share/metainfo/org.pyeduc.App.metainfo.xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <component type="desktop-application">
+          <id>org.pyeduc.App</id>
+          <metadata_license>CC0-1.0</metadata_license>
+          <project_license>MIT</project_license>
+          <name>Pyeduc</name>
+          <summary>App Educacional Python com Flet</summary>
+          <description>
+            <p>
+              Pyeduc é uma aplicação educacional interativa para aprender programação em Python com Flet e um Tutor IA integrado.
+            </p>
+          </description>
+          <launchable type="desktop-id">org.pyeduc.App.desktop</launchable>
+        </component>
         EOF
