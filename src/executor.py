@@ -71,9 +71,16 @@ class PersistentPythonShell:
         if self.process:
             self.close()
 
+        import os
+        executable = sys.executable
+        if os.environ.get("FLET_EMBEDDED") == "true":
+            # Em pacotes serious_python, sys.executable aponta para o binário Flutter C++ (ex: /app/bin/pyeduc).
+            # Usá-lo criava uma SEGUNDA JANELA (o bug fantasma)! Forçamos o uso do python3 real do sistema.
+            executable = "python3"
+
         # Inicia o interpretador interativo (-i) em modo unbuffered (-u) e silencioso (-q)
         self.process = subprocess.Popen(
-            [sys.executable, "-i", "-q", "-u"],
+            [executable, "-i", "-q", "-u"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

@@ -47,7 +47,7 @@ def main_app(page: ft.Page):
 
     
     # Gerenciadores
-    content_manager = ContentManager("content/lessons.json")
+    content_manager = ContentManager()
     progress_manager = ProgressManager("data")
     console_controller = ConsoleController()
     
