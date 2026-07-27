@@ -3,8 +3,19 @@ Ponto de entrada do aplicativo Pyeduc.
 """
 import os
 import sys
+import ssl
 from pathlib import Path
 
+# Correção para o erro SSL: CERTIFICATE_VERIFY_FAILED restrita ao Windows
+# Necessário porque o urllib interno do Python no Windows às vezes falha ao
+# verificar o certificado ao baixar o flet-desktop (cliente do Flet).
+if sys.platform == "win32":
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
 
 import flet as ft
 
@@ -32,7 +43,7 @@ def main():
     project_root = str(Path(__file__).parent.parent)
     
     try:
-        ft.app(target=main_app)
+        ft.run(main=main_app, assets_dir=project_root)
     except Exception as e:
         logger.error(f"Erro ao iniciar Flet: {e}", exc_info=True)
 

@@ -52,11 +52,9 @@ class LessonView(ft.Container):
             content=ft.Column([
                 ft.Text("Atividade de Fixação", size=14, color="#64748b", weight="bold"),
                 self.theory_question,
-                ft.Container(height=5),
                 self.theory_feedback,
-                ft.Container(height=10),
                 self.theory_options_col
-            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10, scroll=ft.ScrollMode.AUTO),
+            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20, scroll=ft.ScrollMode.AUTO),
             bgcolor="#f8fafc",
             padding=30,
             expand=50,
@@ -212,6 +210,8 @@ class LessonView(ft.Container):
         
         self.render_theory_quiz(lesson, sz)
         self.update()
+        if self.activity_container.page:
+            self.activity_container.update()
 
     def render_theory_quiz(self, lesson, sz):
         is_theory = lesson.get("type") == "theory"
@@ -222,6 +222,7 @@ class LessonView(ft.Container):
             self.theory_question.size = max(18, sz + 3)
             self.theory_feedback.value = ""
             self.theory_feedback.size = max(16, sz + 1)
+            self.theory_feedback.visible = False
             self.theory_options_col.controls.clear()
             
             is_multi = isinstance(lesson["quiz"]["answer"], list)
@@ -233,6 +234,7 @@ class LessonView(ft.Container):
                     if selected_indices == correct_answers:
                         self.theory_feedback.value = "Correto! Excelente!"
                         self.theory_feedback.color = "#16a34a"
+                        self.theory_feedback.visible = True
                         self.state.progress_manager.mark_lesson_completed(lesson["id"])
                         self.state.notify_progress_changed()
                         for btn in self.theory_options_col.controls[:-1]:
@@ -253,7 +255,9 @@ class LessonView(ft.Container):
                     else:
                         self.theory_feedback.value = "Incorreto. Verifique suas opções!"
                         self.theory_feedback.color = "#dc2626"
-                    self.update()
+                        self.theory_feedback.visible = True
+                    if self.activity_container.page:
+                        self.activity_container.update()
 
                 def toggle_option(idx):
                     def on_click(e):
@@ -265,7 +269,8 @@ class LessonView(ft.Container):
                             selected_indices.add(idx)
                             e.control.bgcolor = "#bfdbfe"
                             e.control.color = "#1e3a8a"
-                        self.update()
+                        if self.activity_container.page:
+                            self.activity_container.update()
                     return on_click
 
                 for i, opt in enumerate(lesson["quiz"]["options"]):
@@ -297,11 +302,13 @@ class LessonView(ft.Container):
                         if is_correct:
                             self.theory_feedback.value = "Correto! Excelente!"
                             self.theory_feedback.color = "#16a34a"
+                            self.theory_feedback.visible = True
                             self.state.progress_manager.mark_lesson_completed(lesson["id"])
                             self.state.notify_progress_changed()
                         else:
                             self.theory_feedback.value = "Incorreto. Tente novamente!"
                             self.theory_feedback.color = "#dc2626"
+                            self.theory_feedback.visible = True
                         
                         if is_correct:
                             for i, btn in enumerate(self.theory_options_col.controls):
@@ -321,7 +328,8 @@ class LessonView(ft.Container):
                         else:
                             e.control.bgcolor = "#ef4444"
                             e.control.color = "white"
-                        self.update()
+                        if self.activity_container.page:
+                            self.activity_container.update()
                     return on_click
                 
                 for i, opt in enumerate(lesson["quiz"]["options"]):
