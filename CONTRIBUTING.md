@@ -2,6 +2,8 @@
 
 Obrigado por seu interesse em contribuir com o **Pyeduc**! Este documento orienta desenvolvedores e instrutores sobre a arquitetura do projeto, ambiente de desenvolvimento, padrões de código e diretrizes para criação de novas lições.
 
+**Toda e qualquer forma de contribuição é muito bem-vinda!** Sejam ideias, correções ou códigos enviados por desenvolvedores iniciantes, experientes ou até mesmo gerados por agentes de Inteligência Artificial (desde que o código seja previamente testado e validado antes do envio).
+
 ---
 
 ## 🏗️ 1. Arquitetura do Projeto
