@@ -156,9 +156,15 @@ class PyeducApp:
         self.zoom_modal = ft.AlertDialog(content=ft.Container(content=self.zoom_viewer, width=800, height=600), actions=[ft.TextButton("Fechar", on_click=lambda e: self.page.pop_dialog())])
 
     def setup_callbacks(self):
-        self.state.console_controller.on_start = self.on_exec_start
-        self.state.console_controller.on_result = self.on_exec_result
-        self.state.console_controller.on_error = self.on_exec_error
+        self.state.console_controller.on_execution_start = self.on_exec_start
+        self.state.console_controller.on_execution_finish = self.on_execution_finish_wrapper
+
+    def on_execution_finish_wrapper(self, stdout, stderr, returncode):
+        if returncode == 0 and not stderr:
+            self.on_exec_result(stdout)
+        else:
+            error_msg = stderr.strip() if stderr else stdout.strip()
+            self.on_exec_error(error_msg)
 
     def on_lesson_select(self, idx):
         self.state.notify_lesson_changed(idx)
