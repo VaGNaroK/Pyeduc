@@ -9,6 +9,8 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 ### Corrigido
 - **Bug da Dupla Janela no Flatpak (`src/executor.py`):** Corrigido o erro crítico onde o `sys.executable` apontava para o binário C++ do Flutter dentro do pacote `serious_python`. Isso causava a abertura de uma segunda janela fantasma e travamentos de renderização (erro `kInvalidArguments`) ao inicializar o interpretador interativo em background. Agora, o ambiente detecta se está empacotado (`FLET_EMBEDDED`) e força a invocação do `python3` do sistema base do Linux.
 - **Falha de Carregamento de Lições no Flatpak (`src/gui.py`):** Removido o argumento de string absoluto `"content/lessons.json"` na inicialização do `ContentManager`. Isso reativou o sistema inteligente de roteamento de caminhos da classe, permitindo que a aplicação ache corretamente os dados em `/app/opt/pyeduc/content/lessons.json` dentro do sandbox do Flatpak.
+- **Bloqueio de Execução Local no Venv (`src/main.py`):** Removida a injeção incondicional da variável `FLET_EMBEDDED="true"`. Essa injeção travava a execução local no desktop forçando o Flet a tentar escutar via soquete invisível (Dart bridge) em vez de abrir a janela. A variável agora é injetada nativamente apenas no Flatpak.
+- **Falha de Escalonamento de Fonte na Interface (`src/gui.py`):** Corrigido o bug onde os botões de Acessibilidade ("A+" e "A-") redimensionavam apenas o console interativo. Agora, a folha de estilos do Markdown (`md_style_sheet`) foi injetada corretamente no carregamento dinâmico das lições. Toda a área teórica, textos descritivos de exercícios, títulos e opções de Atividades de Fixação (Quiz) escalonam o tamanho de suas fontes harmoniosamente e de maneira reativa.
 
 ## [1.2.1] - 2026-07-25
 

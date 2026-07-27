@@ -1312,7 +1312,7 @@ def main_app(page: ft.Page):
         for sec in sections:
             if "content" in sec:
                 lesson_container.content.controls.append(
-                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                    ft.Markdown(sec["content"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, on_tap_link=handle_markdown_link)
                 )
                 
                 # Injeta a imagem da lição 8 logo abaixo da teoria
@@ -1397,7 +1397,7 @@ def main_app(page: ft.Page):
                 ])
                 if sec.get("exercise"):
                     coding_controls.append(
-                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED)
+                        ft.Markdown(sec["exercise"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, on_tap_link=handle_markdown_link)
                     )
                 if sec.get("exercises"):
                     sec_ex_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
@@ -1406,11 +1406,12 @@ def main_app(page: ft.Page):
                         if expected_out:
                             row = ft.Row([
                                 ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=max(16, sz + 2)),
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, on_tap_link=handle_markdown_link, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         else:
                             row = ft.Row([
-                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, expand=True)
+                                ft.Icon(ft.Icons.SUBDIRECTORY_ARROW_RIGHT, color="#94a3b8", size=max(16, sz + 2)),
+                                ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, on_tap_link=handle_markdown_link, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         row.data = expected_out
                         sec_ex_col.controls.append(row)
@@ -1475,7 +1476,9 @@ def main_app(page: ft.Page):
         # Lógica da Aula Teórica
         if is_theory:
             theory_question.value = lesson["quiz"]["question"]
+            theory_question.size = max(18, sz + 3)
             theory_feedback.value = ""
+            theory_feedback.size = max(16, sz + 1)
             theory_options_col.controls.clear()
             
             is_multi = isinstance(lesson["quiz"]["answer"], list)
@@ -1524,7 +1527,7 @@ def main_app(page: ft.Page):
 
                 for i, opt in enumerate(lesson["quiz"]["options"]):
                     btn = ft.ElevatedButton(
-                        content=opt,
+                        content=ft.Text(opt, size=sz),
                         data=i,
                         width=400,
                         height=50,
@@ -1536,7 +1539,7 @@ def main_app(page: ft.Page):
                     theory_options_col.controls.append(btn)
                 
                 btn_confirm = ft.ElevatedButton(
-                    content="Confirmar Respostas",
+                    content=ft.Text("Confirmar Respostas", size=sz),
                     width=400,
                     height=50,
                     bgcolor="#8b5cf6",
@@ -1581,7 +1584,7 @@ def main_app(page: ft.Page):
                 
                 for i, opt in enumerate(lesson["quiz"]["options"]):
                     btn = ft.ElevatedButton(
-                        content=opt,
+                        content=ft.Text(opt, size=sz),
                         width=400,
                         height=50,
                         bgcolor="white",
@@ -1591,7 +1594,7 @@ def main_app(page: ft.Page):
                     )
                     theory_options_col.controls.append(btn)
         
-        tips_col.controls = [ft.Text(f"• {t}", size=12, color="#451a03") for t in lesson.get("tips", [])]
+        tips_col.controls = [ft.Text(f"• {t}", size=max(12, sz - 2), color="#451a03") for t in lesson.get("tips", [])]
         update_progress_ui()
 
         

@@ -5,9 +5,6 @@ import os
 import sys
 from pathlib import Path
 
-# Injeção incondicional para garantir ambiente embarcado no Flet
-os.environ["FLET_PLATFORM"] = "linux"
-os.environ["FLET_EMBEDDED"] = "true"
 
 import flet as ft
 
@@ -26,6 +23,7 @@ sys.excepthook = exception_handler
 
 def main():
     logger.info("Aplicativo Pyeduc iniciado.")
+    logger.info("FLET ENV VARS: %s", {k: v for k, v in os.environ.items() if "FLET" in k})
     # Verifica dependências (banco de dados)
     pm = ProgressManager()
     
