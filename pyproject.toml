@@ -36,3 +36,5 @@ exclude = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+[tool.flet.app]
+module = "main"
