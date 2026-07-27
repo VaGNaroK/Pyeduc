@@ -8,6 +8,7 @@ class Sidebar(ft.Container):
         self.state = state
         self.on_lesson_select = on_lesson_select
         self.on_open_ai = on_open_ai
+        self.expand = 3
         
         self.progress_bar = ft.ProgressBar(value=0.0, color="#10b981", bgcolor="#e2e8f0", border_radius=5)
         self.progress_text = ft.Text("Progresso: 0%", size=12, weight="bold", color="#64748b")
