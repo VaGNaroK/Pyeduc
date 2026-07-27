@@ -485,7 +485,7 @@ class PyeducApp:
     def on_pan_update_sidebar_splitter(self, e):
         delta = e.local_delta.x if e.local_delta else 0
         if abs(delta) > 2:
-            change = 1 if delta < 0 else -1
+            change = 1 if delta > 0 else -1
             new_exp = max(2, min(4, self.sidebar.expand + change))
             self.sidebar.expand = new_exp
             self.left_panel.expand = 10 - new_exp
