@@ -305,38 +305,168 @@ class PyeducApp:
         self.editor_console.update()
 
     def on_exec_result(self, result):
+        import re
         self.editor_console.btn_execute.disabled = False
         self.editor_console.console_output.value += result + "\n"
         self.editor_console.btn_ask_ai_err.visible = False
         self.editor_console.smart_messages_panel.visible = True
         
-        # Auto-grader (Verify active exercises)
-        lesson_completed = True
-        for row in self.lesson_view.active_exercises_rows:
-            expected = getattr(row, "data", "")
-            if expected:
-                if str(expected).strip() in result.strip():
-                    if row.controls: row.controls[0].icon = ft.Icons.CHECK_CIRCLE; row.controls[0].color = "#10b981"
-                else:
-                    if row.controls: row.controls[0].icon = ft.Icons.RADIO_BUTTON_UNCHECKED; row.controls[0].color = "#94a3b8"
-                    lesson_completed = False
-            else:
-                if row.controls: row.controls[0].icon = ft.Icons.CHECK_CIRCLE; row.controls[0].color = "#10b981"
+        self.editor_console.smart_messages_panel.content = ft.Column([
+            ft.Text("Tudo certo por enquanto!", weight="bold", size=14, color="white"),
+            ft.Text("Continue o bom trabalho.", color="#94a3b8", size=13, italic=True)
+        ], spacing=6)
+        self.editor_console.smart_messages_panel.bgcolor = "#1e293b"
+        
+        active_rows = self.lesson_view.active_exercises_rows
+        pending_exercises = [
+            r for r in active_rows 
+            if str(getattr(r, "data", "")).strip() and r.controls and isinstance(r.controls[0], ft.Icon) and r.controls[0].icon != ft.Icons.CHECK_CIRCLE
+        ]
+        
+        if result and result.strip():
+            output_lines = [line.strip() for line in result.split('\n') if line.strip()]
+            
+            def fuzzy_clean(text):
+                return re.sub(r'[\.,;:\!\?]+$', '', text.strip()).strip().lower()
+            
+            available_lines = list(output_lines)
+            available_fuzzy = [fuzzy_clean(l) for l in available_lines]
+            
+            any_exact_match = False
+            any_fuzzy_match = False
+            
+            # 1ª Passada: EXATA
+            for row in active_rows:
+                expected = str(getattr(row, "data", "")).strip()
+                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
+                    continue
+                icon = row.controls[0]
+                if icon.icon == ft.Icons.CHECK_CIRCLE:
+                    continue
+                
+                expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
+                n = len(expected_lines)
+                
+                is_match = False
+                if n == 1:
+                    exp = expected_lines[0]
+                    if exp in available_lines:
+                        idx = available_lines.index(exp)
+                        available_lines.pop(idx)
+                        available_fuzzy.pop(idx)
+                        is_match = True
+                elif n > 1:
+                    for i in range(len(available_lines) - n + 1):
+                        if available_lines[i:i+n] == expected_lines:
+                            for _ in range(n):
+                                available_lines.pop(i)
+                                available_fuzzy.pop(i)
+                            is_match = True
+                            break
+                
+                if is_match:
+                    icon.icon = ft.Icons.CHECK_CIRCLE
+                    icon.color = "#10b981"
+                    any_exact_match = True
 
-        if lesson_completed and self.lesson_view.active_exercises_rows:
-            lid = self.state.current_lesson.get("id")
-            if lid is not None:
-                self.state.progress_manager.mark_lesson_completed(lid)
-                self.state.notify_progress_changed()
+            # 2ª Passada: FUZZY
+            for row in active_rows:
+                expected = str(getattr(row, "data", "")).strip()
+                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
+                    continue
+                icon = row.controls[0]
+                if icon.icon == ft.Icons.CHECK_CIRCLE:
+                    continue
+                
+                expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
+                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
+                n = len(expected_lines)
+                
+                if n == 1:
+                    f_exp = fuzzy_expected_lines[0]
+                    if f_exp in available_fuzzy:
+                        idx = available_fuzzy.index(f_exp)
+                        available_lines.pop(idx)
+                        available_fuzzy.pop(idx)
+                        any_fuzzy_match = True
+                elif n > 1:
+                    for i in range(len(available_fuzzy) - n + 1):
+                        if available_fuzzy[i:i+n] == fuzzy_expected_lines:
+                            for _ in range(n):
+                                available_lines.pop(i)
+                                available_fuzzy.pop(i)
+                            any_fuzzy_match = True
+                            break
+
+            if any_exact_match:
+                gradable_rows = [r for r in active_rows if str(getattr(r, "data", "")).strip() and r.controls and isinstance(r.controls[0], ft.Icon)]
+                all_done = gradable_rows and all(r.controls[0].icon == ft.Icons.CHECK_CIRCLE for r in gradable_rows)
+                if all_done:
+                    lid = self.state.current_lesson.get("id")
+                    if lid is not None:
+                        self.state.progress_manager.mark_lesson_completed(lid)
+                        self.state.notify_progress_changed()
+                    self.editor_console.smart_messages_panel.content = ft.Text("🎉 Parabéns! Todos os exercícios desta aula foram concluídos!", color="white", size=13, weight="bold")
+                    self.editor_console.smart_messages_panel.bgcolor = "#15803d"
+                else:
+                    self.editor_console.smart_messages_panel.content = ft.Text("✅ Muito bem! Exercício concluído com sucesso.", color="white", size=13, weight="bold")
+                    self.editor_console.smart_messages_panel.bgcolor = "#15803d"
+            elif any_fuzzy_match:
+                self.editor_console.smart_messages_panel.content = ft.Text("💡 Quase lá!\n\nSeu código imprimiu quase o valor esperado. Verifique se você não colocou um ponto final, espaço a mais, ou errou uma letra maiúscula/minúscula na saída.", color="white", size=13)
+                self.editor_console.smart_messages_panel.bgcolor = "#b45309"
+            elif pending_exercises:
+                self.editor_console.smart_messages_panel.content = ft.Column([
+                    ft.Text("⚠️ Saída não corresponde ao exercício:", weight="bold", size=14, color="white"),
+                    ft.Text("Seu código imprimiu um resultado, mas a saída não atende ao esperado pelos exercícios pendentes.", size=13, color="white")
+                ], spacing=6)
+                self.editor_console.smart_messages_panel.bgcolor = "#b45309"
+        elif pending_exercises:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("⚠️ Nenhum resultado impresso na tela:", weight="bold", size=14, color="white"),
+                ft.Text("Seu código foi executado sem erros, mas não imprimiu nada. Lembre-se de usar a função print(...) para exibir o resultado.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#b45309"
 
         self.editor_console.update()
         self.lesson_view.update()
 
     def on_exec_error(self, error):
         self.editor_console.btn_execute.disabled = False
-        self.editor_console.console_output.value += f"ERRO: {error}\n"
+        self.editor_console.console_output.value += f"ERRO:\n{error}\n"
         self.editor_console.btn_ask_ai_err.visible = True
-        self.editor_console.smart_messages_panel.visible = False
+        self.editor_console.smart_messages_panel.visible = True
+        
+        if "SyntaxError" in error:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("Erro de Sintaxe (SyntaxError):", weight="bold", size=14, color="white"),
+                ft.Text("Parece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
+        elif "NameError" in error:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("Erro de Nome (NameError):", weight="bold", size=14, color="white"),
+                ft.Text("Você tentou usar uma variável ou função inexistente.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
+        elif "IndentationError" in error:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("Erro de Indentação (IndentationError):", weight="bold", size=14, color="white"),
+                ft.Text("Verifique os espaços no começo das linhas.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
+        elif "TypeError" in error:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("Erro de Tipo (TypeError):", weight="bold", size=14, color="white"),
+                ft.Text("Você tentou misturar tipos incompatíveis.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
+        else:
+            self.editor_console.smart_messages_panel.content = ft.Column([
+                ft.Text("Erro de Execução:", weight="bold", size=14, color="white"),
+                ft.Text("Verifique o erro retornado no console.", size=13, color="white")
+            ], spacing=6)
+            self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
+
         self.editor_console.update()
 
     def on_pan_update_splitter(self, e):
