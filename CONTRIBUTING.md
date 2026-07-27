@@ -12,7 +12,8 @@ O Pyeduc utiliza uma arquitetura em 5 camadas com a interface desktop em **Flet*
 
 | Camada | Arquivo Principal | Responsabilidade |
 | :--- | :--- | :--- |
-| **GUI** | `src/gui.py` | Componentes visuais Flet (closure `main_app`) |
+| **GUI Orquestrador** | `src/main_window.py` | Classe `PyeducApp` que gerencia layouts, splitters e integra os componentes visuais |
+| **Componentes UI** | `src/ui/` | Classes Flet independentes (`app_state.py`, `editor_console.py`, `lesson_view.py`, etc.) |
 | **Comunicação** | `src/communication.py` | Callbacks que conectam a GUI ao Executor |
 | **Execução** | `src/executor.py` | REPL Python persistente em subprocesso (`PersistentPythonShell`) |
 | **Conteúdo** | `src/content_manager.py` | Leitor e gerenciador de `content/lessons.json` |
