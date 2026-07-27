@@ -72,5 +72,5 @@ Lessons live in `content/lessons.json`. Each lesson has:
 - **ProgressManager Username (`src/progress_manager.py`)**: Use `progress_manager.get_current_username()` to fetch current logged-in username.
 - **High Contrast Console UI**: `console_input` uses `#38bdf8` (Cyan) border, `console_output_container` uses `#10b981` (Emerald) border with `#0f172a` outer container.
 - **Popup Modal Responsiveness**: Inner Columns inside `ft.AlertDialog` must declare `tight=True` (`ft.Column([..., tight=True])`) to fit content height dynamically.
-
-
+- **Flatpak/serious_python Subprocess Bug (Phantom Double Window)**: When spawning background Python REPLs (like in `executor.py`), **DO NOT** use `sys.executable` if `os.environ.get("FLET_EMBEDDED") == "true"`. In a `serious_python` bundle, `sys.executable` points to the C++ Flutter app itself. Using it will spawn a second instance of the GUI and cause `kInvalidArguments` crashes on exit. Fallback to `"python3"` manually.
+- **ContentManager Instantiation (Flatpak Path Resolution)**: Never pass hardcoded relative paths like `ContentManager("content/lessons.json")` in `gui.py`. This disables the internal fallback path mechanism required to find the JSON inside the Flatpak sandbox (`/app/opt/pyeduc/...`). Always instantiate with `ContentManager()` without arguments.
