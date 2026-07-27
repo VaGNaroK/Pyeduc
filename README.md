@@ -37,7 +37,8 @@ Para ver o passo a passo de como configurar seu ambiente virtual, instalar depen
 
 ## 📁 Estrutura Principal do Projeto
 
-- `src/gui.py`: Camada de Interface Flet (`main_app`).
+- `src/main_window.py`: Orquestrador principal da interface (Flet).
+- `src/ui/`: Módulos da Interface separados por componentes (`app_state.py`, `editor_console.py`, `lesson_view.py`, etc.).
 - `src/llm_client.py`: Cliente REST nativo para integração com a API local do **Ollama** (gerenciamento inteligente de modelos e VRAM).
 - `src/tutor_guardrails.py`: Diagnóstico estático de erros e guardrails educacionais sócraticos.
 - `src/rag_module.py`: Mecanismo RAG leve para busca de contexto e conceitos no conteúdo das lições.

@@ -14,7 +14,7 @@ Flet (Flutter-based GUI) educational app. 5-layer structure:
 
 | Layer | File | Role |
 |-------|------|------|
-| GUI | `src/gui.py` | Flet widgets, all UI in one function (`main_app`) |
+| GUI | `src/main_window.py` | PyeducApp class orchestrates UI components in `src/ui/` |
 | Communication | `src/communication.py` | Callbacks bridging GUI ↔ Executor |
 | Execution | `src/executor.py` | Persistent Python subprocess (`PersistentPythonShell`) |
 | Content | `src/content_manager.py` | Loads `content/lessons.json` |
@@ -25,12 +25,12 @@ Entry point: `src/main.py` → `flet.app(target=main_app)`
 
 ## Key Quirks
 
-- **Single-file GUI**: `gui.py` is ~770 lines, all UI logic in one `main_app()` closure. No classes.
+- **Componentized GUI**: `main_window.py` orchestrates OOP classes from `src/ui/` instead of a monolithic file.
 - **Persistent subprocess**: `executor.py` keeps a running Python REPL subprocess with custom delimiters (`---CMD-BOUND-OUT---`) to capture output. Not a fresh subprocess per execution.
 - **SQLite, not JSON**: `progress_manager.py` uses SQLite (`data/pyeduc.db`), despite ARCHITECTURE.md saying JSON. `data/progress.json` is a stale artifact.
-- **Admin mode**: Login with `admin`/`admin` toggles admin mode (hardcoded in `gui.py:209`). Admin can navigate freely without completing lessons.
-- **Auto-grader**: `gui.py:316-353` checks exercise output against expected values using line-by-line matching.
-- **No tests**: No test framework, no test files. `verify.bat` only checks file structure existence.
+- **Admin mode**: Login with `admin`/`admin` toggles admin mode (handled in `main_window.py`). Admin can navigate freely without completing lessons.
+- **Auto-grader**: `main_window.py` (`on_exec_result`) checks exercise output against expected values using line-by-line matching.
+- **UI Tests**: Pytest suite exists in `tests/test_ui_components.py` ensuring UI and state stability.
 - **No lint/typecheck**: No mypy, ruff, flake8, or pyproject.toml configured.
 
 ## Running & Building
@@ -67,10 +67,10 @@ Lessons live in `content/lessons.json`. Each lesson has:
 - **Ollama AI Tutor (`src/llm_client.py`)**: Local REST API integration, `OLLAMA_KEEP_ALIVE="-1m"` while open, auto-unloads from VRAM (`keep_alive: 0` via `unload_model()`) when app closes. Recommended models: `qwen2.5-coder:3b` / `1.5b`.
 
 - **Educational Guardrails (`src/tutor_guardrails.py`)**: Deterministic static error analysis for `NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`, strictly 3 Socratic topics with bold markdown, no code leakage.
-- **Flet Threading (`src/gui.py`)**: Use `page.run_thread(fn)` instead of `threading.Thread(...)` for real-time background UI updates.
-- **Tutor IA Chat Reset (`src/gui.py`)**: `load_lesson()` must run `ai_chat_history.clear()`, `ai_chat_list.controls.clear()`, and `ai_input_field.value = ""` on lesson transitions to prevent stale context.
+- **Flet Threading (`src/ui/*`)**: Use `page.run_thread(fn)` instead of `threading.Thread(...)` for real-time background UI updates.
+- **Tutor IA Chat Reset (`src/ui/tutor_panel.py`)**: `clear_chat()` must clear chat history on lesson transitions to prevent stale context.
 - **ProgressManager Username (`src/progress_manager.py`)**: Use `progress_manager.get_current_username()` to fetch current logged-in username.
 - **High Contrast Console UI**: `console_input` uses `#38bdf8` (Cyan) border, `console_output_container` uses `#10b981` (Emerald) border with `#0f172a` outer container.
 - **Popup Modal Responsiveness**: Inner Columns inside `ft.AlertDialog` must declare `tight=True` (`ft.Column([..., tight=True])`) to fit content height dynamically.
 - **Flatpak/serious_python Subprocess Bug (Phantom Double Window)**: When spawning background Python REPLs (like in `executor.py`), **DO NOT** use `sys.executable` if `os.environ.get("FLET_EMBEDDED") == "true"`. In a `serious_python` bundle, `sys.executable` points to the C++ Flutter app itself. Using it will spawn a second instance of the GUI and cause `kInvalidArguments` crashes on exit. Fallback to `"python3"` manually.
-- **ContentManager Instantiation (Flatpak Path Resolution)**: Never pass hardcoded relative paths like `ContentManager("content/lessons.json")` in `gui.py`. This disables the internal fallback path mechanism required to find the JSON inside the Flatpak sandbox (`/app/opt/pyeduc/...`). Always instantiate with `ContentManager()` without arguments.
+- **ContentManager Instantiation (Flatpak Path Resolution)**: Never pass hardcoded relative paths like `ContentManager("content/lessons.json")` in `app_state.py`. This disables the internal fallback path mechanism required to find the JSON inside the Flatpak sandbox (`/app/opt/pyeduc/...`). Always instantiate with `ContentManager()` without arguments.

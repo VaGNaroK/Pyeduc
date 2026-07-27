@@ -37,10 +37,10 @@ O Pyeduc é um aplicativo educacional estruturado em **5 camadas de arquitetura*
 
 ## Módulos e Responsabilidades
 
-### 1. **gui.py** - Camada de Interface (Flet)
-Trabalha como o cérebro visual da aplicação. Ao contrário do paradigma tradicional de POO de GUIs, ele foca em uma abordagem mais declarativa do Flutter encapsulada numa grande função `main_app`.
-- **Flet Components**: Utiliza caixas (`ft.Container`), colunas e linhas que esticam dinamicamente.
-- **Divisor Arrastável**: Implementa um `ft.GestureDetector` (drag_splitter) que varia o `expand` (peso de layout) para ajustar proporções de tela dinamicamente dependendo do tipo da aula.
+### 1. **main_window.py** & **src/ui/** - Camada de Interface Modular (Flet)
+Trabalha como o cérebro visual da aplicação. Ao contrário da antiga arquitetura monolítica, o Flet agora opera de forma modular Orientada a Objetos:
+- **`PyeducApp`**: Orquestra o layout global, modais e o "Drag Splitter".
+- **Componentes Independentes (`src/ui/`)**: Aulas (`LessonView`), terminal interativo (`EditorConsole`), navegação lateral (`Sidebar`), barra superior (`TopBar`) e IA (`TutorPanel`).
 - **Auto-Grader**: Faz checagem de exercícios através de line-by-line matching com resultados previstos pela aula.
 - **Tutor IA Sócratico Integrado**: Painel de inteligência artificial acoplado para sanar dúvidas do aluno sem fornecer spoilers de código.
 
