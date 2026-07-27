@@ -126,7 +126,7 @@ class PyeducApp:
             self.editor_console,
             self.lesson_view.activity_container,
             self.welcome_container
-        ], expand=7, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+        ], expand=70, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
         self.main_row = ft.Row([
             self.sidebar,
@@ -484,11 +484,11 @@ class PyeducApp:
 
     def on_pan_update_sidebar_splitter(self, e):
         delta = e.local_delta.x if e.local_delta else 0
-        if abs(delta) > 2:
-            change = 1 if delta > 0 else -1
-            new_exp = max(2, min(4, self.sidebar.expand + change))
+        change = int(delta * 0.5)
+        if change != 0:
+            new_exp = max(15, min(45, self.sidebar.expand + change))
             self.sidebar.expand = new_exp
-            self.left_panel.expand = 10 - new_exp
+            self.left_panel.expand = 100 - new_exp
             self.page.update()
 
     def on_hover_sidebar_splitter(self, e):
