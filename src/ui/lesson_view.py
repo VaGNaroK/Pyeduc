@@ -72,7 +72,7 @@ class LessonView(ft.Container):
         self.content = self.content_column
         self.bgcolor = "white"
         self.padding = 20
-        self.expand = 50
+        self.expand = 50000
         
         self.state.on_lesson_changed_callbacks.append(self.render_lesson)
         self.state.on_font_size_changed_callbacks.append(self.render_lesson)

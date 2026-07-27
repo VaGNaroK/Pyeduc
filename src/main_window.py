@@ -76,7 +76,7 @@ class PyeducApp:
             ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
             bgcolor="#f8fafc",
             padding=40,
-            expand=50,
+            expand=50000,
             visible=True
         )
 
@@ -105,7 +105,7 @@ class PyeducApp:
             animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT)
         )
         self.drag_splitter = ft.GestureDetector(
-            mouse_cursor=ft.MouseCursor.RESIZE_UP_DOWN, drag_interval=10,
+            mouse_cursor=ft.MouseCursor.RESIZE_UP_DOWN,
             on_pan_update=self.on_pan_update_splitter, on_hover=self.on_hover_splitter,
             content=self.drag_splitter_container
         )
@@ -115,7 +115,7 @@ class PyeducApp:
             animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT)
         )
         self.sidebar_splitter = ft.GestureDetector(
-            mouse_cursor=ft.MouseCursor.RESIZE_LEFT_RIGHT, drag_interval=10,
+            mouse_cursor=ft.MouseCursor.RESIZE_LEFT_RIGHT,
             on_pan_update=self.on_pan_update_sidebar_splitter, on_hover=self.on_hover_sidebar_splitter,
             content=self.sidebar_splitter_container
         )
@@ -126,7 +126,7 @@ class PyeducApp:
             self.editor_console,
             self.lesson_view.activity_container,
             self.welcome_container
-        ], expand=70, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+        ], expand=70000, spacing=0, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
         self.main_row = ft.Row([
             self.sidebar,
@@ -189,11 +189,11 @@ class PyeducApp:
             self.drag_splitter.visible = True
 
         if is_theory:
-            self.lesson_view.expand = 40
-            self.lesson_view.activity_container.expand = 60
+            self.lesson_view.expand = 40000
+            self.lesson_view.activity_container.expand = 60000
         else:
-            self.lesson_view.expand = 50
-            self.editor_console.expand = 50
+            self.lesson_view.expand = 50000
+            self.editor_console.expand = 50000
             
         self.page.update()
 
@@ -470,13 +470,14 @@ class PyeducApp:
         self.editor_console.update()
 
     def on_pan_update_splitter(self, e):
-        change = int((e.local_delta.y if e.local_delta else 0) * 0.5)
-        new_expand = max(20, min(80, self.lesson_view.expand + change))
-        self.lesson_view.expand = new_expand
-        self.editor_console.expand = 100 - new_expand
-        self.lesson_view.activity_container.expand = 100 - new_expand
-        self.welcome_container.expand = 100 - new_expand
-        self.page.update()
+        change = int((e.local_delta.y if e.local_delta else 0) * 100)
+        if change != 0:
+            new_expand = max(20000, min(80000, self.lesson_view.expand + change))
+            self.lesson_view.expand = new_expand
+            self.editor_console.expand = 100000 - new_expand
+            self.lesson_view.activity_container.expand = 100000 - new_expand
+            self.welcome_container.expand = 100000 - new_expand
+            self.page.update()
 
     def on_hover_splitter(self, e):
         self.drag_splitter_container.bgcolor = "#38bdf8" if e.data == "true" else "#cbd5e1"
@@ -484,11 +485,11 @@ class PyeducApp:
 
     def on_pan_update_sidebar_splitter(self, e):
         delta = e.local_delta.x if e.local_delta else 0
-        change = int(delta * 0.5)
+        change = int(delta * 80)
         if change != 0:
-            new_exp = max(15, min(45, self.sidebar.expand + change))
+            new_exp = max(15000, min(45000, self.sidebar.expand + change))
             self.sidebar.expand = new_exp
-            self.left_panel.expand = 100 - new_exp
+            self.left_panel.expand = 100000 - new_exp
             self.page.update()
 
     def on_hover_sidebar_splitter(self, e):
