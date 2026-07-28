@@ -78,6 +78,10 @@ class PersistentPythonShell:
             # Usá-lo criava uma SEGUNDA JANELA (o bug fantasma)! Forçamos o uso do python3 real do sistema.
             executable = "python3"
 
+        env = os.environ.copy()
+        env["TERM"] = "dumb"
+        env["PYTHON_BASIC_REPL"] = "1"
+
         # Inicia o interpretador interativo (-i) em modo unbuffered (-u) e silencioso (-q)
         self.process = subprocess.Popen(
             [executable, "-i", "-q", "-u"],
@@ -85,7 +89,8 @@ class PersistentPythonShell:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            bufsize=0
+            bufsize=0,
+            env=env
         )
         logger.info("Interpretador Python interativo iniciado.")
         

@@ -46,7 +46,7 @@ class PyeducApp:
 
     def setup_ui(self):
         # Initialize components
-        self.sidebar = Sidebar(self.state, self.on_lesson_select, self.open_ai_drawer)
+        self.sidebar = Sidebar(self.state, self.on_lesson_select, self.toggle_ai_sidebar)
         self.top_bar = TopBar(self.state, self.do_export_progress, self.do_import_progress)
         self.lesson_view = LessonView(self.state, self.on_copy_example)
         self.editor_console = EditorConsole(self.state, self.execute_code, self.ask_ai_error)
@@ -120,6 +120,25 @@ class PyeducApp:
             content=self.sidebar_splitter_container
         )
 
+        self.ai_splitter_container = ft.Container(
+            width=6, bgcolor="#cbd5e1", border_radius=3, margin=ft.Margin.symmetric(vertical=10, horizontal=2),
+            animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT),
+            visible=False
+        )
+        self.ai_splitter = ft.GestureDetector(
+            mouse_cursor=ft.MouseCursor.RESIZE_LEFT_RIGHT,
+            on_pan_update=self.on_pan_update_ai_splitter, on_hover=self.on_hover_ai_splitter,
+            content=self.ai_splitter_container,
+            visible=False
+        )
+
+        self.ai_sidebar_container = ft.Container(
+            content=self.tutor_panel,
+            expand=30000,
+            visible=False,
+            bgcolor="#f8fafc"
+        )
+
         self.left_panel = ft.Column([
             self.lesson_view,
             self.drag_splitter,
@@ -131,7 +150,9 @@ class PyeducApp:
         self.main_row = ft.Row([
             self.sidebar,
             self.sidebar_splitter,
-            self.left_panel
+            self.left_panel,
+            self.ai_splitter,
+            self.ai_sidebar_container
         ], expand=True, spacing=0, vertical_alignment=ft.CrossAxisAlignment.STRETCH)
 
         # Build Page
@@ -143,9 +164,7 @@ class PyeducApp:
             ], expand=True, spacing=0)
         )
         
-        # AI Drawer
-        self.ai_drawer = ft.NavigationDrawer(controls=[self.tutor_panel])
-        self.page.end_drawer = self.ai_drawer
+        # AI Drawer removed in favor of side panel
 
         # Modals
         self.file_picker = ft.FilePicker()
@@ -154,6 +173,15 @@ class PyeducApp:
         self.zoom_image = ft.Image(src="", fit=ft.BoxFit.CONTAIN)
         self.zoom_viewer = ft.InteractiveViewer(content=self.zoom_image, min_scale=0.5, max_scale=5.0, boundary_margin=ft.Margin.all(20), expand=True)
         self.zoom_modal = ft.AlertDialog(content=ft.Container(content=self.zoom_viewer, width=800, height=600), actions=[ft.TextButton("Fechar", on_click=lambda e: self.page.pop_dialog())])
+        
+        self.page.on_keyboard_event = self.on_keyboard_event
+
+    def on_keyboard_event(self, e: ft.KeyboardEvent):
+        if e.alt:
+            if e.key in ("Page Down", "PageDown"):
+                self.lesson_view.content_column.scroll_to(delta=400, duration=150)
+            elif e.key in ("Page Up", "PageUp"):
+                self.lesson_view.content_column.scroll_to(delta=-400, duration=150)
 
     def setup_callbacks(self):
         self.state.console_controller.on_execution_start = self.on_exec_start
@@ -180,6 +208,11 @@ class PyeducApp:
         self.editor_console.visible = not is_theory and not is_presentation
         self.lesson_view.coding_elements_container.visible = not is_theory and not is_presentation
         self.sidebar.sidebar_ai_container.visible = not is_theory and not is_presentation
+        if is_theory or is_presentation:
+            self.ai_sidebar_container.visible = False
+            self.ai_splitter.visible = False
+            self.ai_splitter_container.visible = False
+            self.left_panel.expand = 100000 - self.sidebar.expand
 
         if is_presentation:
             self.state.progress_manager.mark_lesson_completed(lesson["id"])
@@ -258,9 +291,15 @@ class PyeducApp:
         else:
             self.show_snack("Usuário já existe!", "#dc2626")
 
-    def open_ai_drawer(self):
+    def toggle_ai_sidebar(self):
         self.tutor_panel.update_ollama_status()
-        self.ai_drawer.open = True
+        self.ai_sidebar_container.visible = not self.ai_sidebar_container.visible
+        self.ai_splitter_container.visible = self.ai_sidebar_container.visible
+        self.ai_splitter.visible = self.ai_sidebar_container.visible
+        if self.ai_sidebar_container.visible:
+            self.left_panel.expand = 100000 - self.sidebar.expand - self.ai_sidebar_container.expand
+        else:
+            self.left_panel.expand = 100000 - self.sidebar.expand
         self.page.update()
 
     def do_export_progress(self, e):
@@ -297,7 +336,7 @@ class PyeducApp:
         self.state.console_controller.execute_code(code)
 
     def ask_ai_error(self):
-        self.open_ai_drawer()
+        self.toggle_ai_sidebar()
         self.tutor_panel.send_to_ai(quick_action="error_help")
 
     def on_exec_start(self):
@@ -335,19 +374,22 @@ class PyeducApp:
             any_exact_match = False
             any_fuzzy_match = False
             
-            # 1ª Passada: EXATA
-            for row in active_rows:
+            # Verificação Sequencial: processa exercícios pendentes em ordem
+            pending_exercises = [
+                r for r in active_rows 
+                if str(getattr(r, "data", "")).strip() and r.controls and isinstance(r.controls[0], ft.Icon) and r.controls[0].icon != ft.Icons.CHECK_CIRCLE
+            ]
+
+            for row in pending_exercises:
                 expected = str(getattr(row, "data", "")).strip()
-                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
-                    continue
-                icon = row.controls[0]
-                if icon.icon == ft.Icons.CHECK_CIRCLE:
-                    continue
-                
                 expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
+                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
                 n = len(expected_lines)
                 
                 is_match = False
+                is_fuzzy = False
+                
+                # Tentativa Exata
                 if n == 1:
                     exp = expected_lines[0]
                     if exp in available_lines:
@@ -364,39 +406,36 @@ class PyeducApp:
                             is_match = True
                             break
                 
-                if is_match:
-                    icon.icon = ft.Icons.CHECK_CIRCLE
-                    icon.color = "#10b981"
-                    any_exact_match = True
+                # Tentativa Fuzzy
+                if not is_match:
+                    if n == 1:
+                        exp_fuzz = fuzzy_expected_lines[0]
+                        if exp_fuzz in available_fuzzy:
+                            idx = available_fuzzy.index(exp_fuzz)
+                            available_lines.pop(idx)
+                            available_fuzzy.pop(idx)
+                            is_match = True
+                            is_fuzzy = True
+                    elif n > 1:
+                        for i in range(len(available_fuzzy) - n + 1):
+                            if available_fuzzy[i:i+n] == fuzzy_expected_lines:
+                                for _ in range(n):
+                                    available_lines.pop(i)
+                                    available_fuzzy.pop(i)
+                                is_match = True
+                                is_fuzzy = True
+                                break
 
-            # 2ª Passada: FUZZY
-            for row in active_rows:
-                expected = str(getattr(row, "data", "")).strip()
-                if not expected or not (row.controls and isinstance(row.controls[0], ft.Icon)):
-                    continue
-                icon = row.controls[0]
-                if icon.icon == ft.Icons.CHECK_CIRCLE:
-                    continue
-                
-                expected_lines = [line.strip() for line in expected.split('\n') if line.strip()]
-                fuzzy_expected_lines = [fuzzy_clean(line) for line in expected_lines]
-                n = len(expected_lines)
-                
-                if n == 1:
-                    f_exp = fuzzy_expected_lines[0]
-                    if f_exp in available_fuzzy:
-                        idx = available_fuzzy.index(f_exp)
-                        available_lines.pop(idx)
-                        available_fuzzy.pop(idx)
+                if is_match:
+                    row.controls[0].icon = ft.Icons.CHECK_CIRCLE
+                    row.controls[0].color = "#10b981"
+                    if is_fuzzy:
                         any_fuzzy_match = True
-                elif n > 1:
-                    for i in range(len(available_fuzzy) - n + 1):
-                        if available_fuzzy[i:i+n] == fuzzy_expected_lines:
-                            for _ in range(n):
-                                available_lines.pop(i)
-                                available_fuzzy.pop(i)
-                            any_fuzzy_match = True
-                            break
+                    else:
+                        any_exact_match = True
+                else:
+                    # Enforça ordem sequencial: se o atual não bateu, ignora os próximos!
+                    break
 
             if any_exact_match:
                 gradable_rows = [r for r in active_rows if str(getattr(r, "data", "")).strip() and r.controls and isinstance(r.controls[0], ft.Icon)]
@@ -489,9 +528,23 @@ class PyeducApp:
         if change != 0:
             new_exp = max(15000, min(45000, self.sidebar.expand + change))
             self.sidebar.expand = new_exp
-            self.left_panel.expand = 100000 - new_exp
+            ai_exp = self.ai_sidebar_container.expand if self.ai_sidebar_container.visible else 0
+            self.left_panel.expand = 100000 - new_exp - ai_exp
             self.page.update()
 
     def on_hover_sidebar_splitter(self, e):
         self.sidebar_splitter_container.bgcolor = "#38bdf8" if e.data == "true" else "#cbd5e1"
         self.sidebar_splitter_container.update()
+
+    def on_pan_update_ai_splitter(self, e):
+        delta = e.local_delta.x if e.local_delta else 0
+        change = int(delta * -80)
+        if change != 0:
+            new_exp = max(15000, min(50000, self.ai_sidebar_container.expand + change))
+            self.ai_sidebar_container.expand = new_exp
+            self.left_panel.expand = 100000 - self.sidebar.expand - new_exp
+            self.page.update()
+
+    def on_hover_ai_splitter(self, e):
+        self.ai_splitter_container.bgcolor = "#38bdf8" if e.data == "true" else "#cbd5e1"
+        self.ai_splitter_container.update()

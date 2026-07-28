@@ -602,7 +602,7 @@
           "expected_output": "3"
         },
         {
-          "description": "11. **(Dica: Crie variáveis para armazenar os números primeiro)** Calcule a expressão mista (10 + 5) * 2 e imprima o resultado.",
+          "description": "11. Calcule a expressão mista (10 + 5) * 2 e imprima o resultado.",
           "expected_output": "30"
         }
       ]
@@ -636,7 +636,7 @@
       },
       "exercises": [
         {
-          "description": "1. Crie uma lista chamada `frutas` contendo exatamente as palavras 'maçã' e 'banana' e a imprima. (Dica: o print mostrará algo como `['maçã', 'banana']`).",
+          "description": "1. Crie uma lista chamada `frutas` contendo exatamente as palavras 'maçã' e 'banana' e a imprima. (Aviso: Nas próximas atividades, mantenha seu código no editor e apenas adicione novas linhas no final!)",
           "expected_output": "['maçã', 'banana']"
         },
         {
@@ -648,7 +648,7 @@
           "expected_output": "maçã"
         },
         {
-          "description": "4. Remova a 'banana' da lista usando `frutas.remove('banana')` e imprima a lista para ver como ficou.",
+          "description": "4. Mantendo as frutas anteriores (com a 'uva' recém adicionada), remova a 'banana' da lista usando `frutas.remove('banana')` e imprima a lista.",
           "expected_output": "['maçã', 'uva']"
         },
         {

@@ -52,7 +52,8 @@ class TutorPanel(ft.Container):
         self.state.ai_chat_history.clear()
         self.ai_chat_list.controls.clear()
         self.ai_input_field.value = ""
-        self.update()
+        if self.page:
+            self.update()
 
     def update_ollama_status(self):
         def _check():

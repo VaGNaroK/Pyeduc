@@ -14,7 +14,12 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Responsividade e Espaçamento do Quiz (`src/ui/lesson_view.py`):** Corrigido o bug onde as Atividades de Fixação não atualizavam visualmente a fonte ao clicar em `A+`/`A-` nem mostravam estado instantâneo de correção. Também foram removidos contêineres de espaçamento redundantes, enxugando áreas vazias no layout.
 - **Bloqueio de Execução Local no Venv (`src/main.py`):** Removida a injeção incondicional da variável `FLET_EMBEDDED="true"`. Essa injeção travava a execução local no desktop forçando o Flet a tentar escutar via soquete invisível (Dart bridge) em vez de abrir a janela. A variável agora é injetada nativamente apenas no Flatpak.
 - **Falha de Escalonamento de Fonte na Interface (`src/gui.py`):** Corrigido o bug onde os botões de Acessibilidade ("A+" e "A-") redimensionavam apenas o console interativo. Agora, a folha de estilos do Markdown (`md_style_sheet`) foi injetada corretamente no carregamento dinâmico das lições. Toda a área teórica, textos descritivos de exercícios, títulos e opções de Atividades de Fixação (Quiz) escalonam o tamanho de suas fontes harmoniosamente e de maneira reativa.
-
+- **Falso Positivo no Corretor Automático (`src/main_window.py`)**: Resolvido o "Falso Positivo de Colisão" onde o console avaliava exercícios aleatórios fora de ordem. A checagem agora é estritamente sequencial, exigindo conclusão ordenada.
+- **Atalho de Rolagem Teórica (`src/main_window.py`)**: Adicionado o recurso para rolar a visão da aula atual usando `Alt + Page Down` e `Alt + Page Up`, permitindo navegação teórica fluida sem perder o foco do teclado no terminal.
+- **Tutor IA - Regex de SyntaxError (`src/tutor_guardrails.py`)**: Ajustado o regex de diagnóstico estático que confundia erroneamente variáveis/expressões matemáticas (ex: `print(a + b)`) com strings não envelopadas por aspas.
+- **Tutor IA - Alucinação de Prompt (`src/tutor_guardrails.py`)**: Removidos exemplos hardcoded do prompt do sistema, evitando que modelos locais menores papagaiem instruções do sistema ao invés de responder o aluno de fato.
+- **Tutor IA - Precisão no TypeError (`src/tutor_guardrails.py`)**: Expandida a lógica de detecção de erros de tipo. O Tutor agora entende corretamente quando o aluno confunde métodos baseados em índice vs string (ex: `.pop('uva')` vs `.remove('uva')`).
+- **Poluição Visual de Terminal (`src/executor.py`)**: Filtrados os códigos de terminal (OSC Escape `]633;...`) que novas versões do Python (3.13+) injetam silenciosamente no REPL, o que estava corrompendo a leitura da saída e sujando o console de erros.
 ## [1.2.1] - 2026-07-25
 
 ### Adicionado

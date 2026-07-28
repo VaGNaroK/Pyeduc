@@ -25,11 +25,11 @@ REGRAS OBRIGATÓRIAS:
 
 
 EXEMPLO DE RESPOSTA QUE VOCÊ DEVE SEGUIR:
-**💡 Conceito**: Em Python, textos e frases são chamados de Strings e precisam obrigatoriamente estar entre aspas para que a linguagem não confunda com variáveis.
+**💡 Conceito**: [Explique a regra geral da linguagem relacionada ao erro ou dúvida, de forma simples e direta.]
 
-**❓ Pergunta Guiada**: Você verificou se envolveu toda a sua frase em aspas dentro do print?
+**❓ Pergunta Guiada**: [Faça uma pergunta que faça o aluno refletir sobre o seu próprio código.]
 
-**🔍 Dica Progressiva**: Tente colocar aspas simples ou duplas no começo e no final da frase.
+**🔍 Dica Progressiva**: [Dê uma pequena dica acionável de sintaxe ou de lógica que o coloque no caminho certo, sem dar a resposta.]
 
 CONTEXTO DA LIÇÃO ATUAL:
 - Lição: {lesson_title}
@@ -173,12 +173,15 @@ CONTEXTO DA LIÇÃO ATUAL:
                         suggestion = f" (você quis dizer '{did_you_mean.group(1)}'?)" if did_you_mean else ""
                         parts.append(f"\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um NameError. O aluno tentou usar a variável '{var_used}', mas ela não foi definida ou seu nome foi digitado incorretamente{suggestion}. NÃO é falta de aspas em texto; oriente sobre a digitação ou definição do nome da variável.]")
                 elif "SyntaxError" in clean_console:
-                    if re.search(r"print\s*\(\s*[^'\"0-9\(\)]+\s+[^'\"0-9\(\)]+.*?\)", student_code):
+                    if re.search(r"print\s*\(\s*[a-zA-ZÀ-ÿ_]+(?:\s+[a-zA-ZÀ-ÿ_]+)+\s*\)", student_code):
                         parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um SyntaxError por frase/texto sem aspas no print(). É obrigatoriamente ausência de aspas ao redor do texto.]")
                 elif "IndentationError" in clean_console:
                     parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um IndentationError. O erro é de recuo/espaçamento no início da linha (faltou dar TAB/espaço ou colocou espaços extras). Oriente o aluno sobre a indentação em Python.]")
                 elif "TypeError" in clean_console:
-                    parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um TypeError. O aluno tentou operar ou concatenar tipos incompatíveis (ex: somar texto com número). Oriente sobre a conversão de tipos como str(), int() ou float().]")
+                    if "cannot be interpreted as an integer" in clean_console and "str" in clean_console:
+                        parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um TypeError. O aluno passou um texto (string) para uma função ou método que esperava uma posição numérica (índice inteiro). Exemplo comum: usar .pop('texto') em vez de .remove('texto') ou usar string como índice. Oriente a remover o texto pelo nome usando a função apropriada, ou passar um número.]")
+                    else:
+                        parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um TypeError. O aluno tentou operar ou usar tipos incompatíveis (ex: somar texto com número). Oriente sobre o uso correto dos tipos ou conversão (str, int, float).]")
                 elif "ZeroDivisionError" in clean_console:
                     parts.append("\n[DIAGNÓSTICO EXATO DO SISTEMA PYEDUC: Trata-se de um ZeroDivisionError. O aluno tentou realizar uma divisão por zero na matemática do Python.]")
 
