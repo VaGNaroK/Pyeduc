@@ -41,9 +41,10 @@ def main():
     # Inicia a interface gráfica do Flet
     from gui import main_app
     project_root = str(Path(__file__).parent.parent)
+    assets_path = str(Path(project_root) / "content")
     
     try:
-        ft.run(main=main_app, assets_dir=project_root)
+        ft.run(main=main_app, assets_dir=assets_path)
     except Exception as e:
         logger.error(f"Erro ao iniciar Flet: {e}", exc_info=True)
 

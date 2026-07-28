@@ -21,6 +21,7 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Tutor IA - Alucinação de Prompt (`src/tutor_guardrails.py`)**: Removidos exemplos hardcoded do prompt do sistema, evitando que modelos locais menores papagaiem instruções do sistema ao invés de responder o aluno de fato.
 - **Tutor IA - Precisão no TypeError (`src/tutor_guardrails.py`)**: Expandida a lógica de detecção de erros de tipo. O Tutor agora entende corretamente quando o aluno confunde métodos baseados em índice vs string (ex: `.pop('uva')` vs `.remove('uva')`).
 - **Poluição Visual de Terminal (`src/executor.py`)**: Filtrados os códigos de terminal (OSC Escape `]633;...`) que novas versões do Python (3.13+) injetam silenciosamente no REPL, o que estava corrompendo a leitura da saída e sujando o console de erros.
+
 ## [1.2.1] - 2026-07-25
 
 ### Adicionado

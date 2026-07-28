@@ -15,7 +15,7 @@ PYTHON_EXECUTOR_TIMEOUT = 5  # segundos
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 WINDOW_TITLE = "Pyeduc - App Educacional Python"
-APP_ICON = "content/icons/pyeduc.svg"
+APP_ICON = "icons/pyeduc.svg"
 
 # Proporções do QSplitter (vertical)
 SPLITTER_RATIO_TOP = 3  # Conteúdo da lição (60%)

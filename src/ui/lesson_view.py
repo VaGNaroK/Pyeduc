@@ -132,13 +132,13 @@ class LessonView(ft.Container):
                 
                 # Hardcoded image injections from gui.py
                 if lesson.get("id") == 8:
-                    self.content_column.controls.append(ft.Container(content=ft.Image(src="content/images/variavel_exemple.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    self.content_column.controls.append(ft.Container(content=ft.Image(src="images/variavel_exemple.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 elif lesson.get("id") == 11:
-                    self.content_column.controls.append(ft.Container(content=ft.Image(src="content/images/boolean.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    self.content_column.controls.append(ft.Container(content=ft.Image(src="images/boolean.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 elif lesson.get("id") == 12:
-                    self.content_column.controls.append(ft.Container(content=ft.Image(src="content/images/aritmetics.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    self.content_column.controls.append(ft.Container(content=ft.Image(src="images/aritmetics.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 elif lesson.get("id") == 13:
-                    self.content_column.controls.append(ft.Container(content=ft.Image(src="content/images/list.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    self.content_column.controls.append(ft.Container(content=ft.Image(src="images/list.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
             
             coding_controls = []
             if sec.get("example"):
@@ -160,9 +160,9 @@ class LessonView(ft.Container):
                 ])
                 
                 if lesson.get("id") == 20 and "quadrados = " in sec["example"]:
-                    coding_controls.append(ft.Container(content=ft.Image(src="content/images/list2.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    coding_controls.append(ft.Container(content=ft.Image(src="images/list2.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 elif lesson.get("id") == 21 and "# Gerando a sequência de Fibonacci" in sec["example"]:
-                    coding_controls.append(ft.Container(content=ft.Image(src="content/images/atribuition.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
+                    coding_controls.append(ft.Container(content=ft.Image(src="images/atribuition.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 
             if sec.get("exercises") or sec.get("exercise"):
                 coding_controls.extend([
