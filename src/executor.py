@@ -72,11 +72,12 @@ class PersistentPythonShell:
             self.close()
 
         import os
+        import platform
         executable = sys.executable
         if os.environ.get("FLET_EMBEDDED") == "true":
             # Em pacotes serious_python, sys.executable aponta para o binário Flutter C++ (ex: /app/bin/pyeduc).
             # Usá-lo criava uma SEGUNDA JANELA (o bug fantasma)! Forçamos o uso do python3 real do sistema.
-            executable = "python3"
+            executable = "python" if platform.system() == "Windows" else "python3"
 
         env = os.environ.copy()
         env["TERM"] = "dumb"

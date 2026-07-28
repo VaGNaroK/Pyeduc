@@ -42,7 +42,7 @@ Para ver o passo a passo de como configurar seu ambiente virtual, instalar depen
 - `src/llm_client.py`: Cliente REST nativo para integração com a API local do **Ollama** (gerenciamento inteligente de modelos e VRAM).
 - `src/tutor_guardrails.py`: Diagnóstico estático de erros e guardrails educacionais sócraticos.
 - `src/rag_module.py`: Mecanismo RAG leve para busca de contexto e conceitos no conteúdo das lições.
-- `src/communication.py`: Callbacks fazendo a ponte entre GUI e o Executor.
+- `src/communication.py`: Callbacks fazendo a ponte entre a Interface (Flet) e o Executor.
 - `src/executor.py`: Subprocesso persistente do Python em que os códigos rodam (`PersistentPythonShell`).
 - `src/content_manager.py`: Controlador de conteúdo (carrega o `lessons.json`).
 - `src/progress_manager.py`: Sistema de gravação e gerenciamento do histórico SQLite em `data/pyeduc.db`.

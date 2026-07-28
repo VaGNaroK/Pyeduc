@@ -7,6 +7,7 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 ## [1.2.2] - 2026-07-27
 
 ### Corrigido
+- **Falha de Inicialização no Windows (`src/executor.py`):** Corrigido o erro `FileNotFoundError: [WinError 2]` ao iniciar o subprocesso Python interativo em ambientes empacotados (`FLET_EMBEDDED`). Adicionada verificação de plataforma para invocar corretamente o executável `python` no Windows, mantendo o `python3` para Linux/Flatpak.
 - **Bug da Dupla Janela no Flatpak (`src/executor.py`):** Corrigido o erro crítico onde o `sys.executable` apontava para o binário C++ do Flutter dentro do pacote `serious_python`. Isso causava a abertura de uma segunda janela fantasma e travamentos de renderização (erro `kInvalidArguments`) ao inicializar o interpretador interativo em background. Agora, o ambiente detecta se está empacotado (`FLET_EMBEDDED`) e força a invocação do `python3` do sistema base do Linux.
 - **Falha de Carregamento de Lições no Flatpak (`src/gui.py`):** Removido o argumento de string absoluto `"content/lessons.json"` na inicialização do `ContentManager`. Isso reativou o sistema inteligente de roteamento de caminhos da classe, permitindo que a aplicação ache corretamente os dados em `/app/opt/pyeduc/content/lessons.json` dentro do sandbox do Flatpak.
 - **Certificado SSL no Windows (`src/main.py`):** Adicionado um bypass condicional (`_create_unverified_context`) exclusivo para o Windows para evitar o erro `CERTIFICATE_VERIFY_FAILED` ao inicializar o download do motor do Flet.

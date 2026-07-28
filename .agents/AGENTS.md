@@ -5,7 +5,7 @@ Este arquivo contém as regras arquiteturais, padrões de design e histórico de
 ## 1. Tecnologia de Interface (GUI)
 - O projeto foi **migrado do PySide6 para Flet**.
 - **Jamais reintegre ou sugira bibliotecas do PyQt/PySide**. Flet é a tecnologia oficial para renderização responsiva web-like em Desktop.
-- Os callbacks não utilizam QThread ou Signals/Slots. O controle de processos subprocess (para execução de código Python do usuário) é feito via threading padrão do Python no arquivo `src/executor.py` e se comunica via callbacks com a interface no `src/gui.py`.
+- Os callbacks não utilizam QThread ou Signals/Slots. O controle de processos subprocess (para execução de código Python do usuário) é feito via threading padrão do Python no arquivo `src/executor.py` e se comunica via callbacks com a interface orquestrada em `src/main_window.py`.
 
 ## 2. Padrões de Layout Flet (Prevenção de Quebras)
 O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for criar ou modificar Colunas e Linhas, lembre-se destas regras que consertaram bugs graves de responsividade no passado:
@@ -53,7 +53,7 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 
 ## 11. Injeção de Imagens Ilustrativas nas Aulas
 - Quando necessário adicionar imagens para ilustrar conceitos teóricos (como tabelas de variáveis ou diagramas de booleanos), elas não vêm diretamente do JSON.
-- O padrão do projeto é realizar a **injeção via hardcode** no `src/gui.py`, logo após a renderização do markdown (`ft.Markdown`).
+- O padrão do projeto é realizar a **injeção via hardcode** em `src/main_window.py` (ou nos componentes visuais em `src/ui/`), logo após a renderização do markdown (`ft.Markdown`).
 - A injeção deve ser feita validando o ID da lição (`if lesson.get("id") == X:`) e fazendo um `.append` na lista de `controls` do `lesson_container.content`. O container da imagem deve ter largura (`width=1200`), alinhamento centralizado (`alignment=ft.Alignment.CENTER`) e margens apropriadas.
 
 ## 12. Arquitetura do Tutor IA Sócratico (Ollama REST Integration)
@@ -68,7 +68,7 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 - **Diagnóstico Estático Pré-Prompt**: Antes de chamar a IA, o `build_user_message` analisa o console (`NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`) e o código do aluno, injetando a causa verdadeira no contexto do prompt. Isso impede alucinações comuns de modelos compactos (ex: sugerir vírgulas em vez de aspas ou erro de espaço).
 - **Sanitização de Resposta e Stop Tokens**: O `sanitize_response` trunca seções extras (`Resposta:`, `Explicação:`), stop tokens (`num_predict: 200`, `stop: [...]`), previne repetições de `Conceito:` em loop e aplica a formatação em negrito nos cabeçalhos.
 
-## 14. Gerenciamento de Threads e Renderização Flet (`src/gui.py`)
+## 14. Gerenciamento de Threads e Renderização Flet (`src/main_window.py` e `src/ui/`)
 - **Evitar `threading.Thread` Direto para Atualizações de UI**: **NUNCA** invoque `threading.Thread(target=...).start()` diretamente para atualizar a interface Flet sem usar o despachante nativo do Flet. O uso de `threading.Thread` simples faz com que a interface do Flet Desktop no Linux/Windows congele até que ocorra um evento manual de janela (focar/minimizar).
 - **Usar `page.run_thread(fn)`**: Todas as chamadas assíncronas em segundo plano (como requisições da IA em `send_to_ai` e health check em `update_ollama_status`) DEVEM utilizar **`page.run_thread(fn)`**, que faz a notificação direta ao barramento de mensagens do Flutter C++ e força a renderização visual da tela e roleta em tempo real.
 - **Divisor Lateral Arrastável (`sidebar_splitter`)**: O redimensionamento do chat da IA na barra lateral direita é controlado por um `ft.GestureDetector` vertical (`sidebar_splitter`) posicionado na `main_row`.

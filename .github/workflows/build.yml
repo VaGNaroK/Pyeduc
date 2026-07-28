@@ -153,19 +153,25 @@ jobs:
           name: pyeduc-linux-flatpak
           path: .
 
-      - name: Package Windows Zip
+      - name: Package and Rename Artifacts
         run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          
+          mv pyeduc_amd64.deb pyeduc-${VERSION}_amd64.deb
+          mv pyeduc.flatpak pyeduc-${VERSION}.flatpak
+          
           cd build/windows
-          zip -r ../../pyeduc-windows.zip .
+          zip -r ../../pyeduc-${VERSION}-windows.zip .
           cd ../..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            pyeduc-windows.zip
-            pyeduc_amd64.deb
-            pyeduc.flatpak
+            pyeduc-${{ env.VERSION }}-windows.zip
+            pyeduc-${{ env.VERSION }}_amd64.deb
+            pyeduc-${{ env.VERSION }}.flatpak
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
