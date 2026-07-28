@@ -49,9 +49,16 @@ class ProgressManager:
                 CREATE TABLE IF NOT EXISTS user_state (
                     user_id INTEGER PRIMARY KEY,
                     current_lesson INTEGER DEFAULT 0,
+                    language TEXT DEFAULT 'pt',
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )
             ''')
+            # Migração silenciosa para adicionar coluna language se não existir
+            cursor.execute("PRAGMA table_info(user_state)")
+            columns = [col[1] for col in cursor.fetchall()]
+            if 'language' not in columns:
+                cursor.execute("ALTER TABLE user_state ADD COLUMN language TEXT DEFAULT 'pt'")
+            
             conn.commit()
 
     def register(self, username: str, password: str) -> bool:
@@ -108,6 +115,43 @@ class ProgressManager:
             ''', (self.current_user_id, lesson_id))
             conn.commit()
             logger.info(f"Usuário {self.current_username} concluiu a lição {lesson_id}")
+
+    def update_user_state(self, lesson_id: int):
+        """Atualiza a última lição acessada pelo usuário"""
+        if not self.current_user_id:
+            return
+            
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO user_state (user_id, current_lesson)
+                VALUES (?, ?)
+                ON CONFLICT(user_id) DO UPDATE SET current_lesson=excluded.current_lesson
+            ''', (self.current_user_id, lesson_id))
+            conn.commit()
+
+    def get_user_language(self) -> str:
+        """Retorna o idioma preferido do usuário ativo"""
+        if not self.current_user_id:
+            return 'pt'
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT language FROM user_state WHERE user_id = ?', (self.current_user_id,))
+            row = cursor.fetchone()
+            return row[0] if row and row[0] else 'pt'
+
+    def set_user_language(self, language: str):
+        """Atualiza o idioma preferido do usuário ativo"""
+        if not self.current_user_id:
+            return
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO user_state (user_id, language)
+                VALUES (?, ?)
+                ON CONFLICT(user_id) DO UPDATE SET language=excluded.language
+            ''', (self.current_user_id, language))
+            conn.commit()
 
     def set_current_lesson(self, lesson_id: int) -> None:
         """Define a lição atual para o usuário logado"""

@@ -10,43 +10,93 @@ from logger import logger
 
 
 class ContentManager:
-    def __init__(self, content_file: Optional[str] = None):
-        if content_file:
-            self.content_file = Path(content_file)
+    def __init__(self, content_dir: Optional[str] = None, lang: str = "pt"):
+        self.lang = lang
+        self.data = {}
+        self.ui_strings = {}
+        self.lessons = []
+        
+        if content_dir:
+            self.content_dir = Path(content_dir)
         else:
             base_dir = Path(__file__).resolve().parent.parent
             possible_paths = [
-                Path("/app/opt/pyeduc/content/lessons.json"),
-                Path("/opt/pyeduc/content/lessons.json"),
-                base_dir / "content" / "lessons.json",
-                Path("content/lessons.json"),
-                Path.cwd() / "content" / "lessons.json",
-                base_dir / "app" / "content" / "lessons.json"
+                Path("/app/opt/pyeduc/content"),
+                Path("/opt/pyeduc/content"),
+                base_dir / "content",
+                Path("content"),
+                Path.cwd() / "content",
+                base_dir / "app" / "content"
             ]
             target_path = possible_paths[0]
             for p in possible_paths:
-                if p.exists():
+                if p.exists() and p.is_dir():
                     target_path = p
                     break
-            self.content_file = target_path
+            self.content_dir = target_path
 
-        self.lessons = self._load_lessons()
+        self._load_data()
 
-    def _load_lessons(self) -> List[Dict[str, Any]]:
-        """Carrega as lições do arquivo JSON"""
-        if not self.content_file.exists():
-            logger.error(f"Arquivo de lições não encontrado em: {self.content_file}")
-            return []
+    def get_available_languages(self) -> List[Dict[str, str]]:
+        """Escaneia a pasta content/ em busca de lessons_*.json e extrai os idiomas disponíveis."""
+        languages = []
+        if not self.content_dir.exists():
+            return languages
+            
+        for file_path in self.content_dir.glob("lessons_*.json"):
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    meta = data.get("_meta", {})
+                    if "lang_code" in meta and "lang_name" in meta:
+                        languages.append({
+                            "code": meta["lang_code"],
+                            "name": meta["lang_name"]
+                        })
+            except Exception as e:
+                logger.error(f"Erro ao ler metadata de {file_path}: {e}")
+        
+        # Sort so 'pt' comes first, then others alphabetically
+        languages.sort(key=lambda x: (x["code"] != "pt", x["name"]))
+        return languages
+
+    def _load_data(self):
+        """Carrega os dados completos do arquivo JSON correspondente ao idioma"""
+        if not self.content_dir.exists():
+            logger.error(f"Diretório de lições não encontrado em: {self.content_dir}")
+            return
+            
+        target_file = self.content_dir / f"lessons_{self.lang}.json"
+        if not target_file.exists():
+            logger.warning(f"Arquivo para idioma '{self.lang}' não encontrado. Fazendo fallback para 'pt'.")
+            self.lang = "pt"
+            target_file = self.content_dir / "lessons_pt.json"
+            
+        if not target_file.exists():
+            logger.error(f"Nenhum arquivo de lições encontrado no diretório {self.content_dir}")
+            return
         
         try:
-            with open(self.content_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                lessons = data.get("lessons", [])
-                logger.info(f"Carregadas {len(lessons)} lições de {self.content_file}")
-                return lessons
+            with open(target_file, "r", encoding="utf-8") as f:
+                self.data = json.load(f)
+                logger.info(f"Dados carregados de {target_file}")
+                
+                # Update current references
+                self.ui_strings = self.data.get("ui", {})
+                self.lessons = self.data.get("lessons", [])
         except Exception as e:
-            logger.error(f"Erro ao ler arquivo de lições {self.content_file}: {e}", exc_info=True)
-            return []
+            logger.error(f"Erro ao ler arquivo de lições {target_file}: {e}", exc_info=True)
+
+    def set_language(self, lang: str):
+        """Atualiza a linguagem e recarrega as referências de UI e lessons lendo o arquivo correspondente"""
+        if self.lang != lang:
+            self.lang = lang
+            self._load_data()
+            logger.info(f"Idioma do ContentManager alterado para: {self.lang}")
+
+    def get_ui_string(self, key: str, default: str = "") -> str:
+        """Retorna a string da UI correspondente à chave no idioma atual"""
+        return self.ui_strings.get(key, default or key)
 
     def get_lesson(self, lesson_id: int) -> Optional[Dict[str, Any]]:
         """Retorna uma lição pelo ID"""
@@ -58,7 +108,7 @@ class ContentManager:
     def get_all_lessons(self) -> List[Dict[str, Any]]:
         """Retorna todas as lições"""
         if not self.lessons:
-            self.lessons = self._load_lessons()
+            self._load_data()
         return self.lessons
 
     def get_lesson_count(self) -> int:

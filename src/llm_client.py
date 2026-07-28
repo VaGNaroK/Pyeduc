@@ -33,11 +33,14 @@ class OllamaClient:
             return True
         return False
 
-    def check_health(self) -> Tuple[bool, str]:
+    def check_health(self, get_ui_string=None) -> Tuple[bool, str]:
         """
         Verifica a instalação no SO e a acessibilidade da API REST do Ollama.
         Retorna (online, mensagem).
         """
+        def tr(key, default):
+            return get_ui_string(key, default) if get_ui_string else default
+
         installed = self.is_ollama_installed()
         try:
             req = urllib.request.Request(f"{self.base_url}/api/tags", method="GET")
@@ -46,17 +49,17 @@ class OllamaClient:
                     data = json.loads(response.read().decode("utf-8"))
                     models = [m.get("name") for m in data.get("models", [])]
                     if not models:
-                        return True, f"Ollama rodando no {self.os_name}, mas nenhum modelo encontrado."
-                    return True, f"Ollama online no {self.os_name} ({len(models)} modelo(s))."
-                return False, f"Resposta inesperada do Ollama: HTTP {response.status}"
+                        return True, tr("msg_ollama_running_no_models", f"Ollama rodando no {{}}, mas nenhum modelo encontrado.").format(self.os_name)
+                    return True, tr("msg_ollama_online", f"Ollama online no {{}} ({{}} modelo(s)).").format(self.os_name, len(models))
+                return False, tr("msg_ollama_unexpected", f"Resposta inesperada do Ollama: HTTP {{}}").format(response.status)
         except urllib.error.URLError:
             if not installed:
-                return False, f"Sem suporte a Tutor IA (Ollama não instalado no {self.os_name})"
-            return False, f"Ollama instalado no {self.os_name}, mas serviço está offline em {self.base_url}"
+                return False, tr("msg_ollama_not_installed", f"Sem suporte a Tutor IA (Ollama não instalado no {{}})").format(self.os_name)
+            return False, tr("msg_ollama_offline", f"Ollama instalado no {{}}, mas serviço está offline em {{}}").format(self.os_name, self.base_url)
         except Exception as e:
             if not installed:
-                return False, f"Sem suporte a Tutor IA (Ollama não instalado no {self.os_name})"
-            return False, f"Erro ao conectar com o Ollama: {str(e)}"
+                return False, tr("msg_ollama_not_installed", f"Sem suporte a Tutor IA (Ollama não instalado no {{}})").format(self.os_name)
+            return False, tr("msg_ollama_error", f"Erro ao conectar com o Ollama: {{}}").format(str(e))
 
 
     def list_models(self) -> List[str]:
@@ -104,41 +107,44 @@ class OllamaClient:
         # Retorna o primeiro modelo instalado se nenhum preferencial for encontrado
         return installed[0]
 
-    def get_offline_help_message(self) -> str:
+    def get_offline_help_message(self, get_ui_string=None) -> str:
         """
         Retorna uma mensagem formatada didaticamente em Markdown orientando o aluno sobre como ativar o Ollama.
         """
+        def tr(key, default):
+            return get_ui_string(key, default) if get_ui_string else default
+
         installed = self.is_ollama_installed()
         models = self.list_models()
 
         if not installed:
-            return (
+            return tr("msg_offline_help_not_installed",
                 "**💡 Conceito**: O Tutor IA do Pyeduc funciona localmente no seu computador através do **Ollama**, garantindo privacidade total e uso sem internet.\n\n"
                 "**❓ Pergunta Guiada**: Você gostaria de ativar o assistente de IA no seu sistema?\n\n"
                 "**🔍 Dica Progressiva**: Siga os passos para ativar:\n"
                 "1. Baixe o Ollama em [https://ollama.com](https://ollama.com)\n"
-                f"2. Abra o terminal ({self.os_name}) e execute:\n"
-                f"   `ollama run {self.default_model}`\n"
+                "2. Abra o terminal ({}) e execute:\n"
+                "   `ollama run {}`\n"
                 "3. Reenvie sua pergunta no Pyeduc!"
-            )
+            ).format(self.os_name, self.default_model)
         elif not models:
-            return (
+            return tr("msg_offline_help_no_models",
                 "**💡 Conceito**: O serviço Ollama está rodando no seu computador, porém ainda não possui nenhum modelo de código baixado.\n\n"
                 "**❓ Pergunta Guiada**: Vamos baixar o modelo recomendado para o Pyeduc?\n\n"
                 "**🔍 Dica Progressiva**: Execute no seu terminal:\n"
-                f"```bash\nollama pull {self.default_model}\n```\n"
+                "```bash\nollama pull {}\n```\n"
                 "Após o término do download, envie sua dúvida novamente!"
-            )
+            ).format(self.default_model)
         else:
-            return (
+            return tr("msg_offline_help_offline",
                 "**💡 Conceito**: O serviço do Ollama está instalado no seu sistema, mas o servidor local está desligado no momento.\n\n"
                 "**❓ Pergunta Guiada**: O serviço do Ollama foi iniciado no seu sistema?\n\n"
                 "**🔍 Dica Progressiva**: Para ligar o serviço local do Ollama, execute no terminal:\n"
-                f"```bash\nollama run {self.default_model}\n```\n"
+                "```bash\nollama run {}\n```\n"
                 "Assim que a mensagem de boas-vindas aparecer, pergunte novamente ao Tutor IA!"
-            )
+            ).format(self.default_model)
 
-    def chat(self, messages: List[Dict[str, str]], model: Optional[str] = None, keep_alive: Optional[str] = None, options: Optional[Dict] = None) -> str:
+    def chat(self, messages: List[Dict[str, str]], model: Optional[str] = None, keep_alive: Optional[str] = None, options: Optional[Dict] = None, get_ui_string=None) -> str:
         """
         Envia um histórico de mensagens para a API /api/chat do Ollama.
         messages = [{"role": "system"|"user"|"assistant", "content": "..."}]
@@ -188,11 +194,15 @@ class OllamaClient:
                     msg = res_body.get("message", {})
                     return msg.get("content", "").strip()
                 else:
-                    return f"[Erro Ollama HTTP {response.status}]"
+                    def tr(key, default):
+                        return get_ui_string(key, default) if get_ui_string else default
+                    return tr("msg_ollama_http_error", f"[Erro Ollama HTTP {{}}]").format(response.status)
         except (urllib.error.URLError, ConnectionError, OSError):
-            return self.get_offline_help_message()
+            return self.get_offline_help_message(get_ui_string)
         except Exception as e:
-            return f"Erro na geração da resposta pela IA: {str(e)}"
+            def tr(key, default):
+                return get_ui_string(key, default) if get_ui_string else default
+            return tr("msg_ai_generation_error", f"Erro na geração da resposta pela IA: {{}}").format(str(e))
 
     def unload_model(self, model: Optional[str] = None) -> bool:
         """

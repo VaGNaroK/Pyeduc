@@ -4,6 +4,24 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [1.2.3] - 2026-07-28
+
+### Adicionado
+- **Suporte Multi-Idioma Modular (`content/lessons_*.json`)**: O sistema foi reestruturado para não depender mais de um único e gigante arquivo `lessons.json`. A pasta `content/` agora pode abrigar arquivos de idiomas separados (como `lessons_pt.json` e `lessons_en.json`).
+- **Detecção Dinâmica de Idiomas (`src/content_manager.py`)**: O menu dropdown de seleção de idioma na tela de Login não é mais chumbado. Ele escaneia ativamente a pasta `content/` em busca de arquivos que contenham o cabeçalho mágico `_meta` e carrega as opções automaticamente (facilitando a inclusão de futuros idiomas como o Espanhol sem precisar alterar o código Python).
+
+### Corrigido
+- **Flet Component Bugfix (Compatibilidade >= 0.22)**: O Flet em suas versões modernas passou a ignorar a alteração via setter (`.text = ...`) para componentes `ft.ElevatedButton` inicializados pelo antigo argumento posicional `text`. Toda a interface (`sidebar.py`, `top_bar.py`, `lesson_view.py` e `main_window.py`) foi refatorada para utilizar a propriedade correta nativa `.content = ft.Text(...)`.
+- **Posicionamento Relativo do Login (`src/main_window.py`)**: Corrigido o erro onde o seletor de idiomas ficava afundado sob o layout de login quando o app rodava em tela cheia (fullscreen). Ele agora flutua no topo direito isolado na raiz do componente genérico (`Stack`).
+- **Inconsistência de Atividades (Auto-Grader)**: Corrigido o bug onde as traduções dinâmicas dos exercícios no `lessons_en.json` exigiam preenchimento textual em inglês (ex: `my_name = 'Student'`), porém a expectativa oculta do sistema (`expected_output`) continuava aguardando respostas em português (`Estudante`). A chave `expected_output` foi traduzida para os 170 campos refletindo as diretrizes originais.
+- **Crash na Mudança de Idioma (Quick Actions)**: Resolvido o erro crítico `AttributeError: 'TutorPanel' object has no attribute 'quick_actions'` no painel lateral do Tutor IA durante a re-renderização linguística de botões ausentes.
+- **Tutor IA Multi-Linguagem (`src/tutor_guardrails.py`)**: O `ContentManager.lang` foi injetado nas requisições da IA, formatando dinamicamente os cabeçalhos das respostas (`**💡 Conceito**:`, `**❓ Pergunta Guiada**:`) e as regex de extração estrita de acordo com o idioma nativo ativado.
+- **Diagnósticos Ocultos do Tutor IA (`src/tutor_guardrails.py`)**: Traduzido todo o motor interno de Diagnósticos AST (SyntaxError, IndentationError, etc.) e verificações do Auto-Grader para acompanhar o idioma da interface. Isso evita vazamento/alucinações linguísticas em modelos menores quando o prompt pedia respostas em inglês, mas recebia injeções ocultas de contexto em português.
+- **Painel de Feedback do Console (`src/ui/editor_console.py`)**: Corrigido o bug onde as mensagens de feedback dinâmico (como "Tudo certo por enquanto!" e "Muito bem! Exercício concluído com sucesso.") não atualizavam o idioma durante a inicialização do app devido à falta de injeção no método `update_strings`.
+- **Botões de Ação do Tutor IA (`src/ui/tutor_panel.py`)**: Corrigido o bug de tradução dos botões "Dica", "Erro" e "Conceito" que ignoravam a mudança de idioma, adaptando a atribuição da propriedade `.content` compatível com Flet.
+- **Tradução de Exemplos Aninhados (`content/lessons_en.json`)**: Resolvido o problema de vazamento de idioma nas Aulas 8, 9 e 10, onde os códigos de exemplo (que estavam aninhados dentro do sub-array `sections`) permaneciam em português, atualizando o script de tradução para varrer toda a árvore do JSON.
+- **Alinhamento do Menu Deslizante**: Corrigido crash invisível devido ao typo (`ft.alignment.center` para `ft.Alignment.CENTER`) que matava a inicialização da tela.
+
 ## [1.2.2] - 2026-07-27
 
 ### Corrigido

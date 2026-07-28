@@ -10,8 +10,10 @@ class Sidebar(ft.Container):
         self.on_open_ai = on_open_ai
         self.expand = 30000
         
+        cm = self.state.content_manager
+        
         self.progress_bar = ft.ProgressBar(value=0.0, color="#10b981", bgcolor="#e2e8f0", border_radius=5)
-        self.progress_text = ft.Text("Progresso: 0%", size=12, weight="bold", color="#64748b")
+        self.progress_text = ft.Text(f"{cm.get_ui_string('lbl_progress', 'Progresso:')} 0%", size=12, weight="bold", color="#64748b")
         
         self.lesson_list = ft.ListView(expand=True, spacing=5, padding=10)
         
@@ -33,8 +35,10 @@ class Sidebar(ft.Container):
             visible=False
         )
 
+        self.lbl_modules = ft.Text(cm.get_ui_string("tab_theory", "Módulos"), size=18, weight="bold", color="#1e293b")
+
         self.content = ft.Column([
-            ft.Text("Módulos", size=18, weight="bold", color="#1e293b"),
+            self.lbl_modules,
             ft.Column([
                 ft.Row([self.progress_text], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                 self.progress_bar
@@ -61,7 +65,8 @@ class Sidebar(ft.Container):
         total_lessons = len(self.state.all_lessons)
         progress_val = len(completed_lessons) / total_lessons if total_lessons > 0 else 0
         self.progress_bar.value = progress_val
-        self.progress_text.value = f"Progresso: {int(progress_val * 100)}%"
+        cm = self.state.content_manager
+        self.progress_text.value = f"{cm.get_ui_string('lbl_progress', 'Progresso:')} {int(progress_val * 100)}%"
 
         # Rebuild lesson list
         self.lesson_list.controls.clear()
@@ -116,3 +121,11 @@ class Sidebar(ft.Container):
             self.lesson_list.controls.append(btn)
             
         self.update()
+
+    def update_strings(self):
+        cm = self.state.content_manager
+        self.btn_open_ai.content = cm.get_ui_string("btn_ask_ai")
+        # Modules text
+        if hasattr(self, "lbl_modules"):
+            self.lbl_modules.value = cm.get_ui_string("tab_theory", "Módulos")
+        self.update_ui()

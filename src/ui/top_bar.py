@@ -9,7 +9,8 @@ class TopBar(ft.Container):
         self.on_export = on_export
         self.on_import = on_import
         
-        self.title_text = ft.Text("Aula de Exemplo", size=20, weight="bold", color="white")
+        cm = self.state.content_manager
+        self.title_text = ft.Text(cm.get_ui_string("top_bar_title", "Aula de Exemplo"), size=20, weight="bold", color="white")
         
         self.btn_font_reset_text = ft.Text("100%", size=14, color="#cbd5e1", weight="bold")
         self.btn_font_minus = ft.IconButton(ft.Icons.TEXT_DECREASE, on_click=lambda e: self.change_font_size(-1), tooltip="Diminuir Fonte", icon_color="#cbd5e1")
@@ -51,4 +52,10 @@ class TopBar(ft.Container):
         percent = int((self.state.current_font_size / 15.0) * 100)
         self.btn_font_reset_text.value = f"{percent}%"
         self.state.notify_font_size_changed()
+        self.update()
+
+    def update_strings(self):
+        cm = self.state.content_manager
+        self.btn_export.content = cm.get_ui_string("btn_export")
+        self.btn_import.content = cm.get_ui_string("btn_import")
         self.update()

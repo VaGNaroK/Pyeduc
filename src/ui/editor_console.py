@@ -17,7 +17,7 @@ class EditorConsole(ft.Container):
             border_color="#38bdf8",
             border_radius=6,
             content_padding=12,
-            hint_text="# Digite seu código Python aqui...",
+            hint_text=self.state.content_manager.get_ui_string("lbl_type_code", "# Digite seu código Python aqui..."),
             hint_style=ft.TextStyle(color="#94a3b8")
         )
         
@@ -41,8 +41,11 @@ class EditorConsole(ft.Container):
             expand=True
         )
 
+        cm = self.state.content_manager
+        self.lbl_console_title = ft.Text(cm.get_ui_string("console_title", "Console Python"), color="white", weight="bold", size=14)
+
         self.btn_execute = ft.ElevatedButton(
-            content="Executar Código",
+            content=cm.get_ui_string("btn_run", "Executar Código"),
             icon=ft.Icons.PLAY_ARROW_ROUNDED,
             style=ft.ButtonStyle(
                 color={ft.ControlState.DEFAULT: "white"},
@@ -58,7 +61,7 @@ class EditorConsole(ft.Container):
         )
 
         self.btn_clear = ft.OutlinedButton(
-            content="Limpar",
+            content=cm.get_ui_string("btn_clear", "Limpar"),
             icon=ft.Icons.DELETE_OUTLINE,
             style=ft.ButtonStyle(
                 color={ft.ControlState.HOVERED: "white", ft.ControlState.DEFAULT: "#ef4444"},
@@ -97,7 +100,10 @@ class EditorConsole(ft.Container):
 
         self.content = ft.Column([
             ft.Row([
-                ft.Text("Console Python", color="white", weight="bold", size=14),
+                ft.Row([
+                    ft.Icon(ft.Icons.TERMINAL, color="#10b981", size=18),
+                    self.lbl_console_title,
+                ]),
                 ft.Row([self.btn_execute, self.btn_clear])
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
             
@@ -132,4 +138,21 @@ class EditorConsole(ft.Container):
         sz = self.state.current_font_size
         self.console_input.text_size = sz
         self.console_output.size = max(10, sz - 1)
+        self.update()
+
+    def update_strings(self):
+        cm = self.state.content_manager
+        self.btn_execute.content = cm.get_ui_string("btn_run")
+        self.btn_clear.content = cm.get_ui_string("btn_clear")
+        self.console_input.hint_text = cm.get_ui_string("lbl_type_code")
+        if hasattr(self, 'lbl_console_title'):
+            self.lbl_console_title.value = cm.get_ui_string("console_title", "Console Python")
+        self.btn_ask_ai_err.content = cm.get_ui_string("lbl_ask_ai_err")
+        
+        # Update default smart messages panel text
+        if hasattr(self, 'smart_messages_panel') and isinstance(self.smart_messages_panel.content, ft.Column):
+            if len(self.smart_messages_panel.content.controls) >= 2:
+                self.smart_messages_panel.content.controls[0].value = cm.get_ui_string("msg_all_good_title", "Tudo certo por enquanto!")
+                self.smart_messages_panel.content.controls[1].value = cm.get_ui_string("msg_all_good_desc", "Continue o bom trabalho.")
+                
         self.update()

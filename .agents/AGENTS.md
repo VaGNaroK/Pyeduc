@@ -1,83 +1,79 @@
-# Speckit / Project Guidelines: Pyeduc
+# AGENTS.md
 
-Este arquivo contém as regras arquiteturais, padrões de design e histórico de bugs importantes do projeto Pyeduc. Qualquer assistente de IA que modificar este código no futuro deve ler estas regras para evitar quebrar o layout e a arquitetura.
+## Quick Start
 
-## 1. Tecnologia de Interface (GUI)
-- O projeto foi **migrado do PySide6 para Flet**.
-- **Jamais reintegre ou sugira bibliotecas do PyQt/PySide**. Flet é a tecnologia oficial para renderização responsiva web-like em Desktop.
-- Os callbacks não utilizam QThread ou Signals/Slots. O controle de processos subprocess (para execução de código Python do usuário) é feito via threading padrão do Python no arquivo `src/executor.py` e se comunica via callbacks com a interface orquestrada em `src/main_window.py`.
+```bash
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python src/main.py
+```
 
-## 2. Padrões de Layout Flet (Prevenção de Quebras)
-O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for criar ou modificar Colunas e Linhas, lembre-se destas regras que consertaram bugs graves de responsividade no passado:
-- Ao criar um layout 70/30 (Esquerda/Direita) dentro de uma `ft.Row(expand=True)`:
-  - Adicione `vertical_alignment=ft.CrossAxisAlignment.STRETCH` na `Row` principal para forçar a altura total da tela.
-  - Na Coluna da esquerda (`left_panel`), use `expand=7` E OBRIGATORIAMENTE `horizontal_alignment=ft.CrossAxisAlignment.STRETCH`. Se esquecer o alinhamento horizontal, a caixa não irá esticar para encostar no painel lateral direito, deixando vãos cinzas vazios caso o texto seja curto.
-  - **Evite envolver Flex containers (Colunas) com Containers invisíveis** apenas para aplicar o `expand`. Isso quebra o repasse da expansão vertical para os filhos (`lesson_container`, `console_container`, etc).
+## Architecture
 
-## 3. Dinâmica das Aulas (Tipos Teóricos vs Práticos)
-- O arquivo `content/lessons.json` possui um array de aulas.
-- Cada aula DEVE TER a propriedade `"type"`. Pode ser `"theory"` ou `"coding"`.
-  - **Theory (Teórica)**: Não apresenta o terminal Python (`console_container`). Em vez disso, exibe a propriedade `"quiz"` da aula num componente visual interativo (`activity_container`) bem grande e centralizado na área de baixo. A sidebar não deve exibir a caixa secundária de "Mini Quiz".
-  - **Coding (Prática)**: Exibe o editor de texto superior e o terminal Python interativo inferior, ocultando o quiz interativo central. O "Mini Quiz" deve aparecer normalmente na barra lateral.
-  - **Estruturação de Conteúdo Coding Avançado**: Para maior aprofundamento prático (ex: aulas 18 a 24), a aula deve usar a propriedade `"sections"`, que é um array de objetos onde cada um contém `content` (texto teórico), `example` (código de exemplo) e `exercises` (lista de exercícios daquela seção). O sistema da GUI irá renderizá-los sequencialmente de forma intercalada. Lições mais simples podem continuar usando as propriedades `"content"`, `"example"` e `"exercises"` na raiz.
+Flet (Flutter-based GUI) educational app. 5-layer structure:
 
-## 4. Estado da Aplicação (ProgressManager)
-- O progresso do usuário é salvo localmente num arquivo `data/progress.json`.
-- A interface chama `progress_manager.mark_lesson_completed(id)` e depois invoca `update_progress_ui()` para atualizar os marcadores verdes/vermelhos (checks) no painel lateral.
+| Layer | File | Role |
+|-------|------|------|
+| GUI | `src/main_window.py` | PyeducApp class orchestrates UI components in `src/ui/` |
+| Communication | `src/communication.py` | Callbacks bridging GUI ↔ Executor |
+| Execution | `src/executor.py` | Persistent Python subprocess (`PersistentPythonShell`) |
+| Content | `src/content_manager.py` | Loads `content/lessons.json` |
+| Persistence | `src/progress_manager.py` | SQLite at `data/pyeduc.db` |
+| Config | `src/config.py` | Constants (window size, timeout, admin flag) |
 
-## 5. Armadilhas de Estilos e Estados no Flet (Crashes Silenciosos)
-- O Flet converte Python para Dart/Flutter internamente. Se você errar a sintaxe de um dicionário de estilo (ex: em `ButtonStyle`), o front-end (Dart) quebra e aborta o render da tela silenciosamente, sem emitir exceções no console Python.
-- **Regra de Ouro:** Ao definir dicionários de estados como `bgcolor={...}`, **NUNCA** use uma string vazia `""` para definir o estado normal do botão. Use estritamente o enum oficial `ft.ControlState.DEFAULT`. O uso de `""` interrompe a atualização de `page.update()` inteira e congela o aplicativo de forma invisível.
+Entry point: `src/main.py` → `flet.app(target=main_app)`
 
-## 6. Divisor Arrastável (Splitter) Customizado
-- Como o Flet não possui um `QSplitter` nativo, utilizamos um `ft.GestureDetector` (nomeado `drag_splitter`) entre os painéis superior (`lesson_container`) e inferiores.
-- Ele ajusta a altura utilizando a propriedade `.expand` (peso) que varia de 10 a 90, somando ou subtraindo o `e.delta_y` capturado pelo cursor.
+## Key Quirks
 
-## 7. Auto-Organização do Layout
-- Dependendo do tipo de aula, o peso do layout (`expand`) é reajustado automaticamente na função `load_lesson`:
-  - **Aulas Teóricas**: Distribuem 65% do espaço para baixo (`activity_container`) para não cortar os múltiplos botões de quiz (o scroll do container superior assume se o texto for grande).
-  - **Aulas Práticas**: Retornam ao padrão 50/50.
-  - **Aulas Welcome**: Ocultam o `drag_splitter` completamente, pois não há atividade inferior para o usuário redimensionar.
+- **Componentized GUI**: `main_window.py` orchestrates OOP classes from `src/ui/` instead of a monolithic file.
+- **Persistent subprocess**: `executor.py` keeps a running Python REPL subprocess with custom delimiters (`---CMD-BOUND-OUT---`) to capture output. Not a fresh subprocess per execution.
+- **SQLite, not JSON**: `progress_manager.py` uses SQLite (`data/pyeduc.db`), despite ARCHITECTURE.md saying JSON. `data/progress.json` is a stale artifact.
+- **Admin mode**: Login with `admin`/`admin` toggles admin mode (handled in `main_window.py`). Admin can navigate freely without completing lessons.
+- **Auto-grader**: `main_window.py` (`on_exec_result`) checks exercise output against expected values using line-by-line matching.
+- **UI Tests**: Pytest suite exists in `tests/test_ui_components.py` ensuring UI and state stability.
+- **No lint/typecheck**: No mypy, ruff, flake8, or pyproject.toml configured.
 
-## 8. Limpeza de Estado nas Transições (Prevenção de Vazamento e KeyErrors)
-- Ao trocar de lição (dentro de `load_lesson`), é mandatório **zerar o estado completo do terminal**. Isso significa limpar não apenas o código do usuário (`console_input.value = ""`), mas também os logs de resultados da aula anterior (`console_output.value = ""`), evitando a confusão visual de "vazamento" de estado.
-- **Prevenção de dicionários rasos**: Para componentes secundários (como o `quiz_question` na barra lateral), nunca presuma a existência de chaves no dicionário `lesson`. Sempre tente extrair chaves de forma defensiva usando `.get("quiz", {})` para não disparar um `KeyError` na tela quando lições exclusivas (como `"type": "welcome"`) omitirem essas informações no JSON.
+## Running & Building
 
-## 9. Tratamento de Chaves Vazias nas Aulas (Layout Condicional)
-- **Cuidado ao renderizar o JSON na GUI**: Ao processar as chaves `"example"`, `"exercise"` ou `"exercises"` (seja na raiz da `lesson` ou dentro de objetos do array `"sections"`), sempre verifique se o valor não é vazio (ex: use `if sec.get("example"):` em vez de apenas `if "example" in sec:`).
-- Caso você use `in` em vez de `.get()`, a GUI renderizará contêineres vazios, divisórias (Dividers) e botões "Copiar Exemplo" desnecessariamente nas Aulas Teóricas, pois o JSON muitas vezes declara essas propriedades como strings vazias `""` em vez de omiti-las por completo.
+```bash
+# Development
+python src/main.py
 
-## 10. Inserção de Aulas e Provas Intermediárias
-- **Preservação de Progresso**: Se precisar inserir uma nova aula ou Prova Prática (ex: Projeto Calculadora) no meio do currículo atual (arquivo `lessons.json`), **NÃO USE IDs sequenciais pequenos** (ex: não mova a aula 14 para o ID 15 para encaixar a Prova). Isso corrompe o progresso dos usuários no banco de dados SQLite.
-- **Solução**: Sempre atribua **IDs altos (a partir de 1001)** para aulas inseridas no meio. Assim, o banco rastreará a nova lição como `1001` e os usuários veteranos manterão seu histórico inalterado nas lições originais.
+# Production build (Flet)
+flet build windows --project pyeduc   # Windows
+flet build linux --project pyeduc    # Linux
 
-## 11. Injeção de Imagens Ilustrativas nas Aulas
-- Quando necessário adicionar imagens para ilustrar conceitos teóricos (como tabelas de variáveis ou diagramas de booleanos), elas não vêm diretamente do JSON.
-- O padrão do projeto é realizar a **injeção via hardcode** em `src/main_window.py` (ou nos componentes visuais em `src/ui/`), logo após a renderização do markdown (`ft.Markdown`).
-- A injeção deve ser feita validando o ID da lição (`if lesson.get("id") == X:`) e fazendo um `.append` na lista de `controls` do `lesson_container.content`. O container da imagem deve ter largura (`width=1200`), alinhamento centralizado (`alignment=ft.Alignment.CENTER`) e margens apropriadas.
+# DEB package
+./scripts/build_deb.sh
+```
 
-## 12. Arquitetura do Tutor IA Sócratico (Ollama REST Integration)
-- A comunicação com o Ollama (`http://localhost:11434`) é feita via cliente REST nativo (`src/llm_client.py`), sem utilizar bibliotecas externas pesadas (como `langchain` ou `ollama-python`).
-- **Verificação de Saúde & SO**: O método `check_health()` usa `platform.system()` e `shutil.which("ollama")` para verificar o executável no SO (Linux/Windows/macOS), exibindo mensagens de status amigáveis no topo da barra lateral.
-- **Residência em VRAM & Descarregamento no Fechamento**: Todas as chamadas POST para a API REST usam a opção `"keep_alive": "-1m"` para manter o modelo pré-carregado em VRAM/RAM continuamente durante o uso do aluno. Ao fechar o aplicativo (`on_window_event("close")` ou `on_disconnect`), o Pyeduc dispara `ollama_client.unload_model()`, enviando `"keep_alive": 0` para descarregar o modelo da VRAM imediatamente e liberar toda a memória GPU/RAM.
+CI (`.github/workflows/build.yml`) triggers on `v*` tags or manual dispatch. Builds Windows, Linux DEB, and Linux Flatpak.
 
-- **Modelos Recomendados**: O sistema prioriza modelos leves especializados em código (`qwen2.5-coder:3b` e `qwen2.5-coder:1.5b`), resolvendo dinamicamente o melhor modelo instalado na máquina do usuário via `resolve_best_model()`.
+## Content System
 
-## 13. Guardrails Educacionais & Diagnóstico Determinístico (`src/tutor_guardrails.py`)
-- **Diálogo Didático e Sócratico**: A IA responde obrigatoriamente em 2ª pessoa ("você"), organizada em 3 tópicos Markdown com quebras de linha duplas (`**💡 Conceito**:`, `**❓ Pergunta Guiada**:`, `**🔍 Dica Progressiva**:`). É terminantemente proibido entregar soluções ou blocos de código com a resposta pronta.
-- **Diagnóstico Estático Pré-Prompt**: Antes de chamar a IA, o `build_user_message` analisa o console (`NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`) e o código do aluno, injetando a causa verdadeira no contexto do prompt. Isso impede alucinações comuns de modelos compactos (ex: sugerir vírgulas em vez de aspas ou erro de espaço).
-- **Sanitização de Resposta e Stop Tokens**: O `sanitize_response` trunca seções extras (`Resposta:`, `Explicação:`), stop tokens (`num_predict: 200`, `stop: [...]`), previne repetições de `Conceito:` em loop e aplica a formatação em negrito nos cabeçalhos.
+Lessons live in `content/lessons.json`. Each lesson has:
+- `type`: `"presentation"` | `"theory"` | `"coding"` — controls which UI panels are visible
+- `quiz`: Object with `question`, `options`, `answer` (index or list for multi-select)
+- `exercises`: Array with `description` and `expected_output` for auto-grading
+- Lessons are locked sequentially unless admin mode is on
 
-## 14. Gerenciamento de Threads e Renderização Flet (`src/main_window.py` e `src/ui/`)
-- **Evitar `threading.Thread` Direto para Atualizações de UI**: **NUNCA** invoque `threading.Thread(target=...).start()` diretamente para atualizar a interface Flet sem usar o despachante nativo do Flet. O uso de `threading.Thread` simples faz com que a interface do Flet Desktop no Linux/Windows congele até que ocorra um evento manual de janela (focar/minimizar).
-- **Usar `page.run_thread(fn)`**: Todas as chamadas assíncronas em segundo plano (como requisições da IA em `send_to_ai` e health check em `update_ollama_status`) DEVEM utilizar **`page.run_thread(fn)`**, que faz a notificação direta ao barramento de mensagens do Flutter C++ e força a renderização visual da tela e roleta em tempo real.
-- **Divisor Lateral Arrastável (`sidebar_splitter`)**: O redimensionamento do chat da IA na barra lateral direita é controlado por um `ft.GestureDetector` vertical (`sidebar_splitter`) posicionado na `main_row`.
+## File Structure Gotchas
 
-## 15. Regras de Interface, Limpeza do Chat IA e Método Username
-- **Limpeza de Estado do Tutor IA em `load_lesson()`**: Ao trocar de lição, é mandatório executar `ai_chat_history.clear()`, `ai_chat_list.controls.clear()` e `ai_input_field.value = ""` para zerar o contexto do chat e impedir vazamento de mensagens da aula anterior.
-- **Nome de Usuário em `ProgressManager`**: Para recuperar o nome do usuário ativo na sessão, use estritamente `progress_manager.get_current_username()` (não tente invocar `get_current_user`, que causará um `AttributeError`).
-- **Alto Contraste no Console Python**: O container principal do console usa fundo `#0f172a` (Slate Escuro). O editor de código (`console_input`) utiliza borda brilhante **Azul Ciano (`#38bdf8`)** (`min_lines=4`), enquanto a caixa do terminal de saída (`console_output_container`) utiliza borda brilhante **Verde Esmeralda (`#10b981`)** (`min_lines=5`).
-- **Responsividade do Popup Modal (`ft.AlertDialog`)**: Qualquer coluna interna dentro de contêineres de Popup Modal (como `quiz_modal`) DEVE obrigatoriamente declarar `tight=True` (`ft.Column([..., tight=True])`) para que a janela envolva dinamicamente a altura exata do seu conteúdo, evitando espaços cinzas vazios verticais.
+- Two venvs exist: `venv/` and `.venv/` — prefer `venv/`
+- `old_chunk.txt` is stale/leftover
+- `Pyeduc.7z` is a distributable archive
+- `.gitignore` excludes `data/progress.json` but NOT `data/pyeduc.db` (add if committing)
+- `ARCHITECTURE.md` references PyQt signals — outdated, app uses Flet callbacks
+- **Ollama AI Tutor (`src/llm_client.py`)**: Local REST API integration, `OLLAMA_KEEP_ALIVE="-1m"` while open, auto-unloads from VRAM (`keep_alive: 0` via `unload_model()`) when app closes. Recommended models: `qwen2.5-coder:3b` / `1.5b`.
+
+- **Educational Guardrails (`src/tutor_guardrails.py`)**: Deterministic static error analysis for `NameError`, `SyntaxError`, `IndentationError`, `TypeError`, `ZeroDivisionError`, strictly 3 Socratic topics with bold markdown, no code leakage.
+- **Flet Threading (`src/ui/*`)**: Use `page.run_thread(fn)` instead of `threading.Thread(...)` for real-time background UI updates.
+- **Tutor IA Chat Reset (`src/ui/tutor_panel.py`)**: `clear_chat()` must clear chat history on lesson transitions to prevent stale context.
+- **ProgressManager Username (`src/progress_manager.py`)**: Use `progress_manager.get_current_username()` to fetch current logged-in username.
+- **High Contrast Console UI**: `console_input` uses `#38bdf8` (Cyan) border, `console_output_container` uses `#10b981` (Emerald) border with `#0f172a` outer container.
+- **Popup Modal Responsiveness**: Inner Columns inside `ft.AlertDialog` must declare `tight=True` (`ft.Column([..., tight=True])`) to fit content height dynamically.
+- **Flatpak/serious_python Subprocess Bug (Phantom Double Window)**: When spawning background Python REPLs (like in `executor.py`), **DO NOT** use `sys.executable` if `os.environ.get("FLET_EMBEDDED") == "true"`. In a `serious_python` bundle, `sys.executable` points to the C++ Flutter app itself. Using it will spawn a second instance of the GUI and cause `kInvalidArguments` crashes on exit. Fallback to `"python3"` manually.
+- **ContentManager Instantiation (Flatpak Path Resolution)**: Never pass hardcoded relative paths like `ContentManager("content/lessons.json")` in `app_state.py`. This disables the internal fallback path mechanism required to find the JSON inside the Flatpak sandbox (`/app/opt/pyeduc/...`). Always instantiate with `ContentManager()` without arguments.
 - **Visibilidade Condicional da Sidebar IA**: O painel do Tutor IA (`sidebar_ai_container`) deve ser visível exclusivamente em lições práticas (`sidebar_ai_container.visible = not is_theory and not is_presentation`), sendo ocultado em aulas teóricas e apresentações.
 
 ## 16. Prevenção de Falsos Positivos no Auto-Grader e Tutor IA
@@ -85,3 +81,6 @@ O layout do Flet pode ser traiçoeiro com expansões em eixos opostos. Se for cr
 - **Tutor IA - Regex de SyntaxError (`src/tutor_guardrails.py`)**: Para identificar strings sem aspas no `print()`, NÃO utilize regex negadas (`[^'"]`). Use grupos restritivos de caracteres (`[a-zA-ZÀ-ÿ_]+`) separados por espaços. A regex negada gera falsos positivos com expressões matemáticas válidas (ex: `print(a + b)`).
 - **Tutor IA - Prompt Socrático (`src/tutor_guardrails.py`)**: NUNCA coloque exemplos hardcoded no *System Prompt*. Modelos compactos tendem a papagaiar/replicar a string do template. Utilize sempre placeholders dinâmicos (ex: `[Explique a regra...]`).
 - **Tutor IA - Filtro de ANSI Escape (`src/executor.py`)**: Novas versões do Python (3.13+) injetam códigos OSC (`]633;...`) no terminal interativo. Ao invocar `subprocess.Popen` para o REPL, sempre injete as variáveis de ambiente `TERM="dumb"` e `PYTHON_BASIC_REPL="1"` para neutralizar essas decorações.
+
+## 17. Tradução de Arquivos de Lições e Auto-Grader
+- **Sincronia de `expected_output`**: Ao traduzir ou modularizar as lições (como `lessons_pt.json` para `lessons_en.json`), nunca preserve cegamente os campos `expected_output` se as descrições dos exercícios (`description`) sofrerem traduções de strings literais (ex: "Crie a variável com o valor 'Estudante'" -> "Create the variable with the value 'Student'"). O Auto-Grader usa `expected_output` para validar a saída no console do aluno. Se a string na descrição mudar, o `expected_output` DEVE ser ajustado para corresponder exatamente à nova expectativa em inglês, evitando quebras lógicas e falsos positivos no sistema de avaliação.

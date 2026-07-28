@@ -59,33 +59,75 @@ class PyeducApp:
         self.state.on_zoom_image = self.on_zoom_image
 
         # Welcome Container
-        self.tf_username = ft.TextField(label="Nome de Usuário", width=300, bgcolor="white", color="black", border_color="#cbd5e1")
-        self.tf_password = ft.TextField(label="Senha", password=True, can_reveal_password=True, width=300, bgcolor="white", color="black", border_color="#cbd5e1")
-        btn_login = ft.ElevatedButton("Entrar", bgcolor="#3b82f6", color="white", on_click=self.on_login, width=140)
-        btn_register = ft.ElevatedButton("Cadastrar", bgcolor="#10b981", color="white", on_click=self.on_register, width=140)
+        cm = self.state.content_manager
         
-        self.welcome_container = ft.Container(
+        # Obter linguagens disponíveis no diretório
+        available_langs = cm.get_available_languages()
+        options = []
+        for l in available_langs:
+            options.append(ft.dropdown.Option(l["code"], l["name"]))
+            
+        # Fallback if somehow no files are found yet
+        if not options:
+            options = [ft.dropdown.Option("pt", "Português")]
+            
+        current_lang = self.state.progress_manager.get_user_language()
+        if not any(opt.key == current_lang for opt in options):
+            current_lang = options[0].key
+            
+        self.lang_dropdown = ft.Dropdown(
+            options=options,
+            value=current_lang,
+            width=150,
+            on_select=self.on_lang_changed,
+            border_color="#cbd5e1",
+            color="black"
+        )
+        
+        self.tf_username = ft.TextField(label=cm.get_ui_string("lbl_username"), width=300, bgcolor="white", color="black", border_color="#cbd5e1")
+        self.tf_password = ft.TextField(label=cm.get_ui_string("lbl_password"), password=True, can_reveal_password=True, width=300, bgcolor="white", color="black", border_color="#cbd5e1")
+        self.btn_login = ft.ElevatedButton(cm.get_ui_string("btn_login"), bgcolor="#3b82f6", color="white", on_click=self.on_login, width=140)
+        self.btn_register = ft.ElevatedButton(cm.get_ui_string("btn_register"), bgcolor="#10b981", color="white", on_click=self.on_register, width=140)
+        
+        self.welcome_title = ft.Text(cm.get_ui_string("lbl_welcome"), size=32, weight="bold", color="#1e293b")
+        self.welcome_subtitle = ft.Text(cm.get_ui_string("lbl_login_msg"), size=14, color="#64748b")
+        
+        login_content = ft.Container(
             content=ft.Column([
                 ft.Image(src=config.APP_ICON, width=250),
-                ft.Text("Pyeduc", size=32, weight="bold", color="#1e293b"),
-                ft.Text("Faça login para continuar de onde parou.", size=14, color="#64748b"),
+                self.welcome_title,
+                self.welcome_subtitle,
                 ft.Container(height=20),
                 self.tf_username,
                 self.tf_password,
-                ft.Row([btn_login, btn_register], alignment=ft.MainAxisAlignment.CENTER)
+                ft.Row([self.btn_login, self.btn_register], alignment=ft.MainAxisAlignment.CENTER)
             ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            alignment=ft.Alignment.CENTER,
+            left=0, right=0, top=0, bottom=0
+        )
+        
+        lang_selector_container = ft.Container(
+            content=self.lang_dropdown,
+            top=20,
+            right=20
+        )
+        
+        self.welcome_container = ft.Container(
+            content=ft.Stack([
+                login_content,
+                lang_selector_container
+            ]),
             bgcolor="#f8fafc",
-            padding=40,
             expand=50000,
             visible=True
         )
 
         # Footer
-        self.footer_status_text = ft.Text("👤 Aluno: ---", color="white", size=12)
+        self.footer_status_text = ft.Text("...", color="white", size=12)
         self.admin_switch = ft.Switch(label="Modo Admin", value=self.state.admin_mode_enabled, on_change=self.on_admin_toggle, label_position=ft.LabelPosition.LEFT)
         self.admin_switch_container = ft.Container(content=self.admin_switch, visible=False)
-        self.btn_prev = ft.OutlinedButton("Aula Anterior", icon=ft.Icons.ARROW_BACK, on_click=self.on_prev_lesson, style=ft.ButtonStyle(color="white"))
-        self.btn_next = ft.ElevatedButton("Próxima Aula", icon=ft.Icons.ARROW_FORWARD, bgcolor="#10b981", color="white", on_click=self.on_next_lesson)
+        self.btn_prev = ft.OutlinedButton(cm.get_ui_string("btn_prev"), icon=ft.Icons.ARROW_BACK, on_click=self.on_prev_lesson, style=ft.ButtonStyle(color="white"))
+        self.btn_next = ft.ElevatedButton(cm.get_ui_string("btn_next"), icon=ft.Icons.ARROW_FORWARD, bgcolor="#10b981", color="white", on_click=self.on_next_lesson)
         
         self.footer = ft.Container(
             content=ft.Row([
@@ -183,6 +225,40 @@ class PyeducApp:
             elif e.key in ("Page Up", "PageUp"):
                 self.lesson_view.content_column.scroll_to(delta=-400, duration=150)
 
+    def on_lang_changed(self, e):
+        lang = self.lang_dropdown.value
+        self.state.progress_manager.set_user_language(lang)
+        self.state.content_manager.set_language(lang)
+        self.state.all_lessons = self.state.content_manager.get_all_lessons()
+        from rag_module import LessonRAG
+        self.state.lesson_rag = LessonRAG(self.state.all_lessons)
+        self.update_ui_strings()
+        self.page.update()
+
+    def update_ui_strings(self):
+        cm = self.state.content_manager
+        self.tf_username.label = cm.get_ui_string("lbl_username")
+        self.tf_password.label = cm.get_ui_string("lbl_password")
+        self.btn_login.content = cm.get_ui_string("btn_login")
+        self.btn_register.content = cm.get_ui_string("btn_register")
+        self.welcome_title.value = cm.get_ui_string("lbl_welcome")
+        self.welcome_subtitle.value = cm.get_ui_string("lbl_login_msg")
+        self.btn_prev.content = cm.get_ui_string("btn_prev")
+        self.btn_next.content = cm.get_ui_string("btn_next")
+        
+        # Dispatch to other components
+        if hasattr(self.sidebar, 'update_strings'): self.sidebar.update_strings()
+        if hasattr(self.top_bar, 'update_strings'): self.top_bar.update_strings()
+        if hasattr(self.lesson_view, 'update_strings'): self.lesson_view.update_strings()
+        if hasattr(self.editor_console, 'update_strings'): self.editor_console.update_strings()
+        if hasattr(self.tutor_panel, 'update_strings'): self.tutor_panel.update_strings()
+        
+        # Trigger re-render of current lesson content
+        if self.state.current_lesson_idx is not None:
+            self.on_lesson_select(self.state.current_lesson_idx)
+            
+        self.update_footer()
+
     def setup_callbacks(self):
         self.state.console_controller.on_execution_start = self.on_exec_start
         self.state.console_controller.on_execution_finish = self.on_execution_finish_wrapper
@@ -235,7 +311,14 @@ class PyeducApp:
         idx = self.state.current_lesson_idx
         pct = int(((idx + 1) / total) * 100) if total > 0 else 0
         username = self.state.progress_manager.get_current_username() or "Aluno"
-        self.footer_status_text.value = f"👤 Aluno: {username}  |  Lição {idx + 1} de {total} ({pct}% concluído)"
+        cm = self.state.content_manager
+        
+        lbl_student = cm.get_ui_string("lbl_student", "Aluno")
+        lbl_lesson = cm.get_ui_string("lbl_lesson", "Lição")
+        lbl_of = cm.get_ui_string("lbl_of", "de")
+        lbl_completed = cm.get_ui_string("lbl_completed", "% concluído")
+        
+        self.footer_status_text.value = f"{lbl_student}: {username} | {lbl_lesson} {idx+1} {lbl_of} {total} ({pct}{lbl_completed})"
         self.btn_prev.disabled = (idx == 0)
         self.btn_next.disabled = (idx == total - 1)
         self.page.update()
@@ -264,9 +347,19 @@ class PyeducApp:
         self.page.update()
 
     def on_login(self, e):
+        cm = self.state.content_manager
         u, p = self.tf_username.value.strip(), self.tf_password.value.strip()
         if not u or not p: return self.show_snack("Preencha todos os campos!", "#f59e0b")
         if self.state.progress_manager.login(u, p):
+            # Save the currently selected dropdown language to the database
+            selected_lang = self.lang_dropdown.value
+            self.state.progress_manager.set_user_language(selected_lang)
+            self.state.content_manager.set_language(selected_lang)
+            self.state.all_lessons = self.state.content_manager.get_all_lessons()
+            from rag_module import LessonRAG
+            self.state.lesson_rag = LessonRAG(self.state.all_lessons)
+            self.update_ui_strings()
+            
             self.sidebar.visible = True
             self.footer.visible = True
             self.top_bar.visible = True
@@ -277,19 +370,21 @@ class PyeducApp:
             self.admin_switch.value = is_admin
             self.state.admin_mode_enabled = is_admin
             self.on_lesson_select(self.state.progress_manager.get_current_lesson())
-            self.show_snack(f"Bem-vindo de volta, {u}!")
+            self.show_snack(cm.get_ui_string("msg_welcome_back").replace("{}", u))
         else:
-            self.show_snack("Usuário ou senha incorretos!", "#dc2626")
+            self.show_snack(cm.get_ui_string("msg_invalid_login"), "#dc2626")
 
     def on_register(self, e):
+        cm = self.state.content_manager
         u, p = self.tf_username.value.strip(), self.tf_password.value.strip()
         if not u or not p: return self.show_snack("Preencha todos os campos!", "#f59e0b")
         if self.state.progress_manager.register(u, p):
-            self.show_snack(f"Usuário {u} cadastrado! Faça Login.")
+            self.state.progress_manager.set_user_language(self.lang_dropdown.value)
+            self.show_snack(cm.get_ui_string("msg_user_created"))
             self.tf_password.value = ""
             self.page.update()
         else:
-            self.show_snack("Usuário já existe!", "#dc2626")
+            self.show_snack(cm.get_ui_string("msg_user_exists"), "#dc2626")
 
     def toggle_ai_sidebar(self):
         self.tutor_panel.update_ollama_status()
@@ -350,9 +445,11 @@ class PyeducApp:
         self.editor_console.btn_ask_ai_err.visible = False
         self.editor_console.smart_messages_panel.visible = True
         
+        cm = self.state.content_manager
+        
         self.editor_console.smart_messages_panel.content = ft.Column([
-            ft.Text("Tudo certo por enquanto!", weight="bold", size=14, color="white"),
-            ft.Text("Continue o bom trabalho.", color="#94a3b8", size=13, italic=True)
+            ft.Text(cm.get_ui_string("msg_all_good_title", "Tudo certo por enquanto!"), weight="bold", size=14, color="white"),
+            ft.Text(cm.get_ui_string("msg_all_good_desc", "Continue o bom trabalho."), color="#94a3b8", size=13, italic=True)
         ], spacing=6)
         self.editor_console.smart_messages_panel.bgcolor = "#1e293b"
         
@@ -445,24 +542,24 @@ class PyeducApp:
                     if lid is not None:
                         self.state.progress_manager.mark_lesson_completed(lid)
                         self.state.notify_progress_changed()
-                    self.editor_console.smart_messages_panel.content = ft.Text("🎉 Parabéns! Todos os exercícios desta aula foram concluídos!", color="white", size=13, weight="bold")
+                    self.editor_console.smart_messages_panel.content = ft.Text(cm.get_ui_string("msg_all_exercises_done", "🎉 Parabéns! Todos os exercícios desta aula foram concluídos!"), color="white", size=13, weight="bold")
                     self.editor_console.smart_messages_panel.bgcolor = "#15803d"
                 else:
-                    self.editor_console.smart_messages_panel.content = ft.Text("✅ Muito bem! Exercício concluído com sucesso.", color="white", size=13, weight="bold")
+                    self.editor_console.smart_messages_panel.content = ft.Text(cm.get_ui_string("msg_exercise_done", "✅ Muito bem! Exercício concluído com sucesso."), color="white", size=13, weight="bold")
                     self.editor_console.smart_messages_panel.bgcolor = "#15803d"
             elif any_fuzzy_match:
-                self.editor_console.smart_messages_panel.content = ft.Text("💡 Quase lá!\n\nSeu código imprimiu quase o valor esperado. Verifique se você não colocou um ponto final, espaço a mais, ou errou uma letra maiúscula/minúscula na saída.", color="white", size=13)
+                self.editor_console.smart_messages_panel.content = ft.Text(cm.get_ui_string("msg_almost_there", "💡 Quase lá!\n\nSeu código imprimiu quase o valor esperado. Verifique se você não colocou um ponto final, espaço a mais, ou errou uma letra maiúscula/minúscula na saída."), color="white", size=13)
                 self.editor_console.smart_messages_panel.bgcolor = "#b45309"
             elif pending_exercises:
                 self.editor_console.smart_messages_panel.content = ft.Column([
-                    ft.Text("⚠️ Saída não corresponde ao exercício:", weight="bold", size=14, color="white"),
-                    ft.Text("Seu código imprimiu um resultado, mas a saída não atende ao esperado pelos exercícios pendentes.", size=13, color="white")
+                    ft.Text(cm.get_ui_string("msg_output_mismatch_title", "⚠️ Saída não corresponde ao exercício:"), weight="bold", size=14, color="white"),
+                    ft.Text(cm.get_ui_string("msg_output_mismatch_desc", "Seu código imprimiu um resultado, mas a saída não atende ao esperado pelos exercícios pendentes."), size=13, color="white")
                 ], spacing=6)
                 self.editor_console.smart_messages_panel.bgcolor = "#b45309"
         elif pending_exercises:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("⚠️ Nenhum resultado impresso na tela:", weight="bold", size=14, color="white"),
-                ft.Text("Seu código foi executado sem erros, mas não imprimiu nada. Lembre-se de usar a função print(...) para exibir o resultado.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_no_output_title", "⚠️ Nenhum resultado impresso na tela:"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_no_output_desc", "Seu código foi executado sem erros, mas não imprimiu nada. Lembre-se de usar a função print(...) para exibir o resultado."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#b45309"
 
@@ -475,34 +572,36 @@ class PyeducApp:
         self.editor_console.btn_ask_ai_err.visible = True
         self.editor_console.smart_messages_panel.visible = True
         
+        cm = self.state.content_manager
+        
         if "SyntaxError" in error:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("Erro de Sintaxe (SyntaxError):", weight="bold", size=14, color="white"),
-                ft.Text("Parece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_syntax_error_title", "Erro de Sintaxe (SyntaxError):"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_syntax_error_desc", "Parece que há um erro na escrita do código. Verifique aspas, parênteses ou digitação."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
         elif "NameError" in error:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("Erro de Nome (NameError):", weight="bold", size=14, color="white"),
-                ft.Text("Você tentou usar uma variável ou função inexistente.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_name_error_title", "Erro de Nome (NameError):"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_name_error_desc", "Você tentou usar uma variável ou função inexistente."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
         elif "IndentationError" in error:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("Erro de Indentação (IndentationError):", weight="bold", size=14, color="white"),
-                ft.Text("Verifique os espaços no começo das linhas.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_indentation_error_title", "Erro de Indentação (IndentationError):"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_indentation_error_desc", "Verifique os espaços no começo das linhas."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
         elif "TypeError" in error:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("Erro de Tipo (TypeError):", weight="bold", size=14, color="white"),
-                ft.Text("Você tentou misturar tipos incompatíveis.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_type_error_title", "Erro de Tipo (TypeError):"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_type_error_desc", "Você tentou misturar tipos incompatíveis."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
         else:
             self.editor_console.smart_messages_panel.content = ft.Column([
-                ft.Text("Erro de Execução:", weight="bold", size=14, color="white"),
-                ft.Text("Verifique o erro retornado no console.", size=13, color="white")
+                ft.Text(cm.get_ui_string("msg_execution_error_title", "Erro de Execução:"), weight="bold", size=14, color="white"),
+                ft.Text(cm.get_ui_string("msg_execution_error_desc", "Verifique o erro retornado no console."), size=13, color="white")
             ], spacing=6)
             self.editor_console.smart_messages_panel.bgcolor = "#991b1b"
 

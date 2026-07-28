@@ -25,7 +25,7 @@ class LessonView(ft.Container):
         )
         
         self.btn_copy_example = ft.ElevatedButton(
-            content="Copiar Exemplo",
+            content=self.state.content_manager.get_ui_string("lbl_copy_example", "Copiar Exemplo"),
             icon=ft.Icons.CONTENT_COPY,
             on_click=lambda e: self.on_copy_example(self.example_text.value)
         )
@@ -48,9 +48,12 @@ class LessonView(ft.Container):
         self.theory_options_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         self.theory_feedback = ft.Text("", size=16, weight="bold", text_align=ft.TextAlign.CENTER)
         
+        cm = self.state.content_manager
+        self.lbl_activity = ft.Text(cm.get_ui_string("lbl_activity", "Atividade de Fixação"), size=14, color="#64748b", weight="bold")
+        
         self.activity_container = ft.Container(
             content=ft.Column([
-                ft.Text("Atividade de Fixação", size=14, color="#64748b", weight="bold"),
+                self.lbl_activity,
                 self.theory_question,
                 self.theory_feedback,
                 self.theory_options_col
@@ -149,7 +152,7 @@ class LessonView(ft.Container):
                     bgcolor="#f8fafc", border_color="#e2e8f0"
                 )
                 btn_copy = ft.ElevatedButton(
-                    content="Copiar Exemplo",
+                    content=self.state.content_manager.get_ui_string("lbl_copy_example", "Copiar Exemplo"),
                     icon=ft.Icons.CONTENT_COPY,
                     on_click=lambda e, t=sec["example"]: self.on_copy_example(t)
                 )
@@ -287,7 +290,7 @@ class LessonView(ft.Container):
                     self.theory_options_col.controls.append(btn)
                 
                 btn_confirm = ft.ElevatedButton(
-                    content=ft.Text("Confirmar Respostas", size=sz),
+                    content=ft.Text(self.state.content_manager.get_ui_string("btn_confirm_answers", "Confirmar Respostas"), size=sz),
                     width=400,
                     height=50,
                     bgcolor="#8b5cf6",
@@ -343,3 +346,10 @@ class LessonView(ft.Container):
                         on_click=make_option_click(i)
                     )
                     self.theory_options_col.controls.append(btn)
+
+    def update_strings(self):
+        cm = self.state.content_manager
+        self.btn_copy_example.text = cm.get_ui_string("lbl_copy_example")
+        if hasattr(self, 'lbl_activity'):
+            self.lbl_activity.value = cm.get_ui_string("lbl_activity", "Atividade de Fixação")
+        self.update()
