@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Windows Executable
         run: |
-          flet build windows --exclude .git .github .agents venv .venv data logs tests scripts flatpak "*.txt" "*.bat" "*.sh" "*.md" --project pyeduc
+          flet build windows --exclude .git .github .agents venv .venv data logs tests scripts flatpak docs AGENTS.md ARCHITECTURE.md CHANGELOG.md CONTRIBUTING.md INSTALL.md MANUAL.md README.md LICENSE pyproject.toml requirements.txt run.bat run.sh verify.bat main --cleanup-app --project pyeduc
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Linux Binary
         run: |
-          flet build linux --exclude .git .github .agents venv .venv data logs tests scripts flatpak "*.txt" "*.bat" "*.sh" "*.md" --project pyeduc
+          flet build linux --exclude .git .github .agents venv .venv data logs tests scripts flatpak docs AGENTS.md ARCHITECTURE.md CHANGELOG.md CONTRIBUTING.md INSTALL.md MANUAL.md README.md LICENSE pyproject.toml requirements.txt run.bat run.sh verify.bat main --cleanup-app --project pyeduc
 
       - name: Create DEB Package
         run: |
@@ -110,7 +110,7 @@ jobs:
 
       - name: Build Linux Binary
         run: |
-          flet build linux --exclude .git .github .agents venv .venv data logs tests scripts flatpak "*.txt" "*.bat" "*.sh" "*.md" --project pyeduc
+          flet build linux --exclude .git .github .agents venv .venv data logs tests scripts flatpak docs AGENTS.md ARCHITECTURE.md CHANGELOG.md CONTRIBUTING.md INSTALL.md MANUAL.md README.md LICENSE pyproject.toml requirements.txt run.bat run.sh verify.bat main --cleanup-app --project pyeduc
 
       - name: Build Flatpak
         run: |
