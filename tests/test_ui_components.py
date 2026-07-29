@@ -79,7 +79,8 @@ def test_app_state_notify_lesson_changed(app_state):
 def test_top_bar_initialization(app_state):
     on_export = MagicMock()
     on_import = MagicMock()
-    top_bar = TopBar(app_state, on_export, on_import)
+    on_logout = MagicMock()
+    top_bar = TopBar(app_state, on_export, on_import, on_logout)
     
     assert top_bar.visible is False
     assert len(app_state.on_lesson_changed_callbacks) > 0
@@ -89,7 +90,7 @@ def test_top_bar_initialization(app_state):
     assert top_bar.title_text.value == "Aula 1"
 
 def test_top_bar_change_font_size(app_state):
-    top_bar = TopBar(app_state, MagicMock(), MagicMock())
+    top_bar = TopBar(app_state, MagicMock(), MagicMock(), MagicMock())
     initial_idx = app_state.current_font_idx
     
     # Increase font

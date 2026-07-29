@@ -120,7 +120,7 @@ class Sidebar(ft.Container):
             )
             self.lesson_list.controls.append(btn)
             
-        self.update()
+        # self.update() removido para permitir renderização em lote pelo componente pai (Single Truth Render)
 
     def update_strings(self):
         cm = self.state.content_manager

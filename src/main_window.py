@@ -47,7 +47,7 @@ class PyeducApp:
     def setup_ui(self):
         # Initialize components
         self.sidebar = Sidebar(self.state, self.on_lesson_select, self.toggle_ai_sidebar)
-        self.top_bar = TopBar(self.state, self.do_export_progress, self.do_import_progress)
+        self.top_bar = TopBar(self.state, self.do_export_progress, self.do_import_progress, self.on_logout)
         self.lesson_view = LessonView(self.state, self.on_copy_example)
         self.editor_console = EditorConsole(self.state, self.execute_code, self.ask_ai_error)
         self.tutor_panel = TutorPanel(self.state)
@@ -235,7 +235,7 @@ class PyeducApp:
         self.update_ui_strings()
         self.page.update()
 
-    def update_ui_strings(self):
+    def update_ui_strings(self, skip_lesson_select=False):
         cm = self.state.content_manager
         self.tf_username.label = cm.get_ui_string("lbl_username")
         self.tf_password.label = cm.get_ui_string("lbl_password")
@@ -254,7 +254,7 @@ class PyeducApp:
         if hasattr(self.tutor_panel, 'update_strings'): self.tutor_panel.update_strings()
         
         # Trigger re-render of current lesson content
-        if self.state.current_lesson_idx is not None:
+        if not skip_lesson_select and self.state.current_lesson_idx is not None:
             self.on_lesson_select(self.state.current_lesson_idx)
             
         self.update_footer()
@@ -309,7 +309,10 @@ class PyeducApp:
     def update_footer(self):
         total = len(self.state.all_lessons)
         idx = self.state.current_lesson_idx
-        pct = int(((idx + 1) / total) * 100) if total > 0 else 0
+        pct = 0
+        if idx is not None and total > 0:
+            pct = int(((idx + 1) / total) * 100)
+            
         username = self.state.progress_manager.get_current_username() or "Aluno"
         cm = self.state.content_manager
         
@@ -318,9 +321,10 @@ class PyeducApp:
         lbl_of = cm.get_ui_string("lbl_of", "de")
         lbl_completed = cm.get_ui_string("lbl_completed", "% concluído")
         
-        self.footer_status_text.value = f"{lbl_student}: {username} | {lbl_lesson} {idx+1} {lbl_of} {total} ({pct}{lbl_completed})"
-        self.btn_prev.disabled = (idx == 0)
-        self.btn_next.disabled = (idx == total - 1)
+        idx_display = (idx + 1) if idx is not None else 0
+        self.footer_status_text.value = f"{lbl_student}: {username} | {lbl_lesson} {idx_display} {lbl_of} {total} ({pct}{lbl_completed})"
+        self.btn_prev.disabled = (idx is None or idx == 0)
+        self.btn_next.disabled = (idx is None or idx == total - 1)
         self.page.update()
 
     def on_admin_toggle(self, e):
@@ -358,7 +362,7 @@ class PyeducApp:
             self.state.all_lessons = self.state.content_manager.get_all_lessons()
             from rag_module import LessonRAG
             self.state.lesson_rag = LessonRAG(self.state.all_lessons)
-            self.update_ui_strings()
+            self.update_ui_strings(skip_lesson_select=True)
             
             self.sidebar.visible = True
             self.footer.visible = True
@@ -369,7 +373,8 @@ class PyeducApp:
             self.admin_switch_container.visible = is_admin
             self.admin_switch.value = is_admin
             self.state.admin_mode_enabled = is_admin
-            self.on_lesson_select(self.state.progress_manager.get_current_lesson())
+            lesson_id = self.state.progress_manager.get_current_lesson()
+            self.on_lesson_select(self.state.get_lesson_index_by_id(lesson_id))
             self.show_snack(cm.get_ui_string("msg_welcome_back").replace("{}", u))
         else:
             self.show_snack(cm.get_ui_string("msg_invalid_login"), "#dc2626")
@@ -385,6 +390,32 @@ class PyeducApp:
             self.page.update()
         else:
             self.show_snack(cm.get_ui_string("msg_user_exists"), "#dc2626")
+
+    def on_logout(self, e):
+        cm = self.state.content_manager
+        self.state.progress_manager.logout()
+        
+        self.state.admin_mode_enabled = False
+        self.admin_switch.value = False
+        
+        self.state.current_lesson_idx = None
+        
+        self.top_bar.visible = False
+        self.sidebar.visible = False
+        self.footer.visible = False
+        self.lesson_view.visible = False
+        self.editor_console.visible = False
+        self.ai_sidebar_container.visible = False
+        self.ai_splitter.visible = False
+        self.ai_splitter_container.visible = False
+        self.admin_switch_container.visible = False
+        self.drag_splitter.visible = False
+        self.welcome_container.visible = True
+        
+        self.tf_password.value = ""
+        
+        self.page.update()
+        self.show_snack(cm.get_ui_string("msg_logged_out", "Logout efetuado com sucesso!"))
 
     def toggle_ai_sidebar(self):
         self.tutor_panel.update_ollama_status()
@@ -410,10 +441,12 @@ class PyeducApp:
         async def _import():
             fs = await self.file_picker.pick_files(dialog_title="Importar Progresso", allowed_extensions=["json"])
             if fs:
-                if self.state.progress_manager.import_progress(fs[0].path):
-                    self.show_snack("Progresso importado! 🎉")
-                    self.on_lesson_select(self.state.progress_manager.get_current_lesson())
-                else:
+                try:
+                    if self.state.progress_manager.import_progress(fs[0].path):
+                        self.show_snack(self.state.content_manager.get_ui_string("msg_success", "Sucesso") + "!")
+                        lesson_id = self.state.progress_manager.get_current_lesson()
+                        self.on_lesson_select(self.state.get_lesson_index_by_id(lesson_id))
+                except Exception as ex:
                     self.show_snack("Arquivo inválido! ❌", "#ef4444")
         self.page.run_task(_import)
 
@@ -526,6 +559,15 @@ class PyeducApp:
                 if is_match:
                     row.controls[0].icon = ft.Icons.CHECK_CIRCLE
                     row.controls[0].color = "#10b981"
+                    try:
+                        idx = self.lesson_view.active_exercises_rows.index(row)
+                        self.state.completed_exercises_indices.add(idx)
+                        lesson_id = self.state.current_lesson.get("id")
+                        if lesson_id is not None:
+                            self.state.progress_manager.mark_activity_completed(lesson_id, idx)
+                    except ValueError:
+                        pass
+                    
                     if is_fuzzy:
                         any_fuzzy_match = True
                     else:

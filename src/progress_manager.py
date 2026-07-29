@@ -58,6 +58,12 @@ class ProgressManager:
             columns = [col[1] for col in cursor.fetchall()]
             if 'language' not in columns:
                 cursor.execute("ALTER TABLE user_state ADD COLUMN language TEXT DEFAULT 'pt'")
+                
+            # Migração silenciosa para persistência parcial de atividades
+            cursor.execute("PRAGMA table_info(progress)")
+            progress_columns = [col[1] for col in cursor.fetchall()]
+            if 'completed_activities' not in progress_columns:
+                cursor.execute("ALTER TABLE progress ADD COLUMN completed_activities TEXT DEFAULT '[]'")
             
             conn.commit()
 
@@ -109,12 +115,50 @@ class ProgressManager:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO progress (user_id, lesson_id, completed) 
-                VALUES (?, ?, 1)
+                INSERT INTO progress (user_id, lesson_id, completed, completed_activities) 
+                VALUES (?, ?, 1, '[]')
                 ON CONFLICT(user_id, lesson_id) DO UPDATE SET completed=1
             ''', (self.current_user_id, lesson_id))
             conn.commit()
             logger.info(f"Usuário {self.current_username} concluiu a lição {lesson_id}")
+
+    def mark_activity_completed(self, lesson_id: int, activity_idx: int) -> None:
+        """Marca uma única atividade de uma lição como concluída."""
+        if not self.is_logged_in(): return
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            # Garante que a linha da lição exista (mesmo que incompleta)
+            cursor.execute('''
+                INSERT OR IGNORE INTO progress (user_id, lesson_id, completed, completed_activities) 
+                VALUES (?, ?, 0, '[]')
+            ''', (self.current_user_id, lesson_id))
+            
+            # Pega as atividades já salvas
+            cursor.execute('SELECT completed_activities FROM progress WHERE user_id = ? AND lesson_id = ?', 
+                           (self.current_user_id, lesson_id))
+            row = cursor.fetchone()
+            current_activities = json.loads(row[0]) if row and row[0] else []
+            
+            # Adiciona e salva se for nova
+            if activity_idx not in current_activities:
+                current_activities.append(activity_idx)
+                cursor.execute('''
+                    UPDATE progress SET completed_activities = ? 
+                    WHERE user_id = ? AND lesson_id = ?
+                ''', (json.dumps(current_activities), self.current_user_id, lesson_id))
+            conn.commit()
+
+    def get_completed_activities(self, lesson_id: int) -> List[int]:
+        """Retorna os índices das atividades já finalizadas na lição atual."""
+        if not self.is_logged_in(): return []
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT completed_activities FROM progress WHERE user_id = ? AND lesson_id = ?',
+                           (self.current_user_id, lesson_id))
+            row = cursor.fetchone()
+            if row and row[0]:
+                return json.loads(row[0])
+            return []
 
     def update_user_state(self, lesson_id: int):
         """Atualiza a última lição acessada pelo usuário"""

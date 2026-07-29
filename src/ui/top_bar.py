@@ -3,11 +3,12 @@ from ui.app_state import AppState
 import config
 
 class TopBar(ft.Container):
-    def __init__(self, state: AppState, on_export, on_import):
+    def __init__(self, state: AppState, on_export, on_import, on_logout):
         super().__init__()
         self.state = state
         self.on_export = on_export
         self.on_import = on_import
+        self.on_logout = on_logout
         
         cm = self.state.content_manager
         self.title_text = ft.Text(cm.get_ui_string("top_bar_title", "Aula de Exemplo"), size=20, weight="bold", color="white")
@@ -19,6 +20,7 @@ class TopBar(ft.Container):
         
         self.btn_export = ft.ElevatedButton("Exportar Progresso", icon=ft.Icons.UPLOAD_FILE, on_click=self.on_export, bgcolor="#3b82f6", color="white", scale=0.9)
         self.btn_import = ft.ElevatedButton("Importar Progresso", icon=ft.Icons.DOWNLOAD, on_click=self.on_import, bgcolor="#10b981", color="white", scale=0.9)
+        self.btn_logout = ft.ElevatedButton(cm.get_ui_string("btn_logout", "Sair"), icon=ft.Icons.LOGOUT, on_click=self.on_logout, bgcolor="#ef4444", color="white", scale=0.9)
 
         app_logo_icon = ft.Image(src=config.APP_ICON, width=24, height=24)
         
@@ -29,7 +31,8 @@ class TopBar(ft.Container):
                 ft.Row([self.btn_font_minus, self.btn_font_reset, self.btn_font_plus], spacing=4),
                 ft.Container(width=1, height=22, bgcolor="#475569"),
                 self.btn_export,
-                self.btn_import
+                self.btn_import,
+                self.btn_logout
             ], spacing=10)
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         self.bgcolor = "#1e293b"
@@ -56,6 +59,7 @@ class TopBar(ft.Container):
 
     def update_strings(self):
         cm = self.state.content_manager
-        self.btn_export.content = cm.get_ui_string("btn_export")
-        self.btn_import.content = cm.get_ui_string("btn_import")
+        self.btn_export.text = cm.get_ui_string("btn_export")
+        self.btn_import.text = cm.get_ui_string("btn_import")
+        self.btn_logout.text = cm.get_ui_string("btn_logout", "Sair")
         self.update()

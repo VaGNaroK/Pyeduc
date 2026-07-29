@@ -50,7 +50,7 @@ logs/
 *.7z
 .coverage
 .pytest_cache/
-melhorias.txt
+*.txt
 correções no CI.txt
 ci-cd correction*
 pyeduc_*

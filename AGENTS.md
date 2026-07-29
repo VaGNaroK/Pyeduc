@@ -84,3 +84,11 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 ## 17. Tradução de Arquivos de Lições e Auto-Grader
 - **Sincronia de `expected_output`**: Ao traduzir ou modularizar as lições (como `lessons_pt.json` para `lessons_en.json`), nunca preserve cegamente os campos `expected_output` se as descrições dos exercícios (`description`) sofrerem traduções de strings literais (ex: "Crie a variável com o valor 'Estudante'" -> "Create the variable with the value 'Student'"). O Auto-Grader usa `expected_output` para validar a saída no console do aluno. Se a string na descrição mudar, o `expected_output` DEVE ser ajustado para corresponder exatamente à nova expectativa em inglês, evitando quebras lógicas e falsos positivos no sistema de avaliação.
+
+## 18. Prevenção de Falhas de Índice (Index vs ID)
+- **Separação Estrita entre lesson_id e lesson_idx**: No banco de dados SQLite e no `lessons.json`, as aulas possuem um `"id"` absoluto (ex: 1001, 1011). Já a navegação da GUI (como a função `on_lesson_select(idx)`) requer o **índice** real do array da lista `all_lessons` (ex: 0 a 24).
+- **Nunca injete IDs puros como índices**: Ao recuperar o progresso do usuário via `progress_manager.get_current_lesson()`, SEMPRE utilize a função tradutora `self.state.get_lesson_index_by_id()` antes de repassar o valor para gatilhos de UI. Caso contrário, a aplicação sofrerá `IndexError/AttributeError (NoneType)` tentando acessar posições inexistentes no array.
+
+## 19. Prevenção do kInvalidArguments na Engine do Flutter (Flet)
+- **Evite Renderizações Duplas Síncronas**: O erro crítico `FlutterEngineRemoveView returned 'kInvalidArguments'` ocorre quando o script Python solicita à engine C++ que remova ou altere bruscamente controles aninhados duas vezes seguidas, sem aguardar o ciclo de renderização.
+- **Mudanças em Massa de Layout (Ex: Telas de Login)**: Ao trocar blocos gigantes de containers (`welcome_container.visible = False` vs `sidebar.visible = True`), não engatilhe notificações em cadeia como `notify_lesson_changed` e múltiplas chamadas de `page.update()` dentro do mesmo frame/função. Crie flags como `skip_lesson_select=True` para pular re-renderizações acidentais no meio do processo e consolide a atualização visual apenas no final da rotina (Single Truth Render).

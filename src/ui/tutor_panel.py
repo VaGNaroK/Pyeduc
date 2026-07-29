@@ -65,8 +65,10 @@ class TutorPanel(ft.Container):
         self.state.ai_chat_history.clear()
         self.ai_chat_list.controls.clear()
         self.ai_input_field.value = ""
-        if self.page:
+        try:
             self.update()
+        except RuntimeError:
+            pass
 
     def update_ollama_status(self):
         def _check():
@@ -84,7 +86,10 @@ class TutorPanel(ft.Container):
             else:
                 self.ai_status_icon.color = "#ef4444"
                 self.ai_status_text.color = "#ef4444"
-            self.update()
+            try:
+                self.update()
+            except RuntimeError:
+                pass
         self.state.page.run_thread(_check)
 
     def add_chat_message(self, role: str, text: str):
@@ -215,4 +220,7 @@ class TutorPanel(ft.Container):
             self.btn_concept.content = cm.get_ui_string("btn_concept", "📘 Conceito")
         if hasattr(self, "lbl_quick_help"):
             self.lbl_quick_help.value = cm.get_ui_string("btn_quick_help", "Ajuda Rápida:")
-        self.update()
+        try:
+            self.update()
+        except RuntimeError:
+            pass

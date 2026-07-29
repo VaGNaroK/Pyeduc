@@ -32,11 +32,11 @@ class LessonView(ft.Container):
         
         self.coding_elements = ft.Column([
             ft.Divider(color="#e2e8f0"),
-            ft.Text("Exemplo:", weight="bold", size=14, color="#334155"),
+            ft.Text(f"{self.state.content_manager.get_ui_string('lbl_example', 'Exemplo')}:", weight="bold", size=14, color="#334155"),
             self.example_text,
             self.btn_copy_example,
             ft.Divider(color="#e2e8f0"),
-            ft.Text("Exercício(s):", weight="bold", size=14, color="#334155"),
+            ft.Text(f"{self.state.content_manager.get_ui_string('lbl_exercises', 'Exercícios')}:", weight="bold", size=14, color="#334155"),
             self.exercise_content_md,
             self.exercises_col
         ])
@@ -158,7 +158,7 @@ class LessonView(ft.Container):
                 )
                 coding_controls.extend([
                     ft.Divider(color="#e2e8f0"),
-                    ft.Text("Exemplo:", weight="bold", size=max(13, sz), color="#334155"),
+                    ft.Text(f"{self.state.content_manager.get_ui_string('lbl_example', 'Exemplo')}:", weight="bold", size=max(13, sz), color="#334155"),
                     ex_text, btn_copy
                 ])
                 
@@ -170,7 +170,7 @@ class LessonView(ft.Container):
             if sec.get("exercises") or sec.get("exercise"):
                 coding_controls.extend([
                     ft.Divider(color="#e2e8f0"),
-                    ft.Text("Exercício(s):", weight="bold", size=max(13, sz), color="#334155")
+                    ft.Text(f"{self.state.content_manager.get_ui_string('lbl_exercises', 'Exercícios')}:", weight="bold", size=max(13, sz), color="#334155")
                 ])
                 if sec.get("exercise"):
                     coding_controls.append(
@@ -180,9 +180,17 @@ class LessonView(ft.Container):
                     sec_ex_col = ft.Column(spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
                     for ex in sec["exercises"]:
                         expected_out = ex.get("expected_output", "")
+                        
+                        lesson_id = lesson.get("id")
+                        is_lesson_completed = lesson_id in self.state.progress_manager.get_completed_lessons()
+                        is_completed = is_lesson_completed or (len(self.active_exercises_rows) in self.state.completed_exercises_indices)
+                        
                         if expected_out:
+                            icon_name = ft.Icons.CHECK_CIRCLE if is_completed else ft.Icons.RADIO_BUTTON_UNCHECKED
+                            icon_color = "#10b981" if is_completed else "#94a3b8"
+                            
                             row = ft.Row([
-                                ft.Icon(ft.Icons.RADIO_BUTTON_UNCHECKED, color="#94a3b8", size=max(16, sz + 2)),
+                                ft.Icon(icon_name, color=icon_color, size=max(16, sz + 2)),
                                 ft.Markdown(ex["description"], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, md_style_sheet=md_style, on_tap_link=self.handle_markdown_link, expand=True)
                             ], vertical_alignment=ft.CrossAxisAlignment.START)
                         else:
@@ -213,8 +221,10 @@ class LessonView(ft.Container):
         
         self.render_theory_quiz(lesson, sz)
         self.update()
-        if self.activity_container.page:
+        try:
             self.activity_container.update()
+        except RuntimeError:
+            pass
 
     def render_theory_quiz(self, lesson, sz):
         is_theory = lesson.get("type") == "theory"
@@ -259,8 +269,10 @@ class LessonView(ft.Container):
                         self.theory_feedback.value = "Incorreto. Verifique suas opções!"
                         self.theory_feedback.color = "#dc2626"
                         self.theory_feedback.visible = True
-                    if self.activity_container.page:
+                    try:
                         self.activity_container.update()
+                    except RuntimeError:
+                        pass
 
                 def toggle_option(idx):
                     def on_click(e):
@@ -272,8 +284,10 @@ class LessonView(ft.Container):
                             selected_indices.add(idx)
                             e.control.bgcolor = "#bfdbfe"
                             e.control.color = "#1e3a8a"
-                        if self.activity_container.page:
+                        try:
                             self.activity_container.update()
+                        except RuntimeError:
+                            pass
                     return on_click
 
                 for i, opt in enumerate(lesson["quiz"]["options"]):
@@ -331,8 +345,10 @@ class LessonView(ft.Container):
                         else:
                             e.control.bgcolor = "#ef4444"
                             e.control.color = "white"
-                        if self.activity_container.page:
+                        try:
                             self.activity_container.update()
+                        except RuntimeError:
+                            pass
                     return on_click
                 
                 for i, opt in enumerate(lesson["quiz"]["options"]):

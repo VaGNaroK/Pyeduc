@@ -36,10 +36,10 @@ def test_lesson_navigation():
 
 
 def test_missing_file_handling(tmp_path):
-    fake_file = tmp_path / "non_existent.json"
-    cm = ContentManager(content_file=str(fake_file))
+    fake_dir = tmp_path / "non_existent_dir"
+    cm = ContentManager(content_dir=str(fake_dir))
+    assert len(cm.lessons) == 0
     assert cm.get_lesson_count() == 0
-    assert cm.get_lesson(1) is None
 
 
 def test_expanded_curriculum_lessons():

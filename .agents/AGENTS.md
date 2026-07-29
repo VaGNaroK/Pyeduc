@@ -84,3 +84,6 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 ## 17. Tradução de Arquivos de Lições e Auto-Grader
 - **Sincronia de `expected_output`**: Ao traduzir ou modularizar as lições (como `lessons_pt.json` para `lessons_en.json`), nunca preserve cegamente os campos `expected_output` se as descrições dos exercícios (`description`) sofrerem traduções de strings literais (ex: "Crie a variável com o valor 'Estudante'" -> "Create the variable with the value 'Student'"). O Auto-Grader usa `expected_output` para validar a saída no console do aluno. Se a string na descrição mudar, o `expected_output` DEVE ser ajustado para corresponder exatamente à nova expectativa em inglês, evitando quebras lógicas e falsos positivos no sistema de avaliação.
+
+## 18. Tratamento de Estado Ausente (Sessão Deslogada)
+- **Proteção contra `NoneType`**: Ao manipular variáveis interativas do progresso (como `current_lesson_idx` do `AppState` ou no recálculo em `update_footer`), **SEMPRE** utilize `if idx is not None` antes de engatilhar atualizações ou contas matemáticas da interface. Variáveis de sessão perdem seu valor `0` para se tornarem `None` no processo de Logout. Não injetar essas guardas provocará crashs como "Property has no setter" e "unsupported operand type(s) for +: 'NoneType' and 'int'".

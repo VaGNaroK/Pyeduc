@@ -24,6 +24,8 @@
         "msg_success": "Sucesso",
         "msg_error": "Erro",
         "msg_invalid_login": "Usuário ou senha inválidos.",
+        "btn_logout": "Sair",
+        "msg_logged_out": "Logout efetuado com sucesso!",
         "msg_user_exists": "Nome de usuário já existe.",
         "msg_user_created": "Usuário cadastrado com sucesso! Faça login.",
         "msg_welcome_back": "Bem-vindo de volta, {}!",

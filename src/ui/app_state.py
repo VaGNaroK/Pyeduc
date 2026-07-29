@@ -38,11 +38,20 @@ class AppState:
         self.on_font_size_changed_callbacks = []
         self.on_progress_changed_callbacks = []
         
+        # Transient state for the current lesson
+        self.completed_exercises_indices = set()
+        
     @property
     def current_lesson(self):
-        if 0 <= self.current_lesson_idx < len(self.all_lessons):
+        if self.current_lesson_idx is not None and 0 <= self.current_lesson_idx < len(self.all_lessons):
             return self.all_lessons[self.current_lesson_idx]
         return None
+        
+    def get_lesson_index_by_id(self, lesson_id: int) -> int:
+        for idx, lesson in enumerate(self.all_lessons):
+            if lesson.get("id", idx) == lesson_id:
+                return idx
+        return 0
         
     @property
     def current_font_size(self):
@@ -53,6 +62,10 @@ class AppState:
             self.current_lesson_idx = new_idx
             lesson_id = self.current_lesson.get("id", self.current_lesson_idx)
             self.progress_manager.set_current_lesson(lesson_id)
+            
+            # Carrega do banco de dados o estado parcial desta lição
+            saved_activities = self.progress_manager.get_completed_activities(lesson_id)
+            self.completed_exercises_indices = set(saved_activities)
             
         for cb in self.on_lesson_changed_callbacks:
             cb()
