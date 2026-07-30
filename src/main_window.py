@@ -410,6 +410,7 @@ class PyeducApp:
         self.ai_splitter_container.visible = False
         self.admin_switch_container.visible = False
         self.drag_splitter.visible = False
+        self.lesson_view.activity_container.visible = False
         self.welcome_container.visible = True
         
         self.tf_password.value = ""
