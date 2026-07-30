@@ -325,8 +325,62 @@
         },
         {
             "id": 9,
+            "type": "coding",
+            "title": "Lesson 9: Comments and Documentation",
+            "description": "Learn to annotate your code to explain what it does.",
+            "content": "Comments are annotations you make in the code. Python completely ignores any text that comes after a hashtag (`#`). They are used to explain the code, leave warnings for other programmers, or even to temporarily 'disable' a piece of code you don't want to run.\n\nYou can also use three single (`'''`) or double (`\"\"\"`) quotes to create multi-line comments.",
+            "example": "# Printing a message\nprint('Hello!')  # This is an inline comment",
+            "exercises": [
+                {
+                    "description": "Write a simple comment using # and, on the next line, print 'Starting'.",
+                    "expected_output": "Starting"
+                },
+                {
+                    "description": "Print 'Step 1' and leave a comment next to the code on the same line explaining the step.",
+                    "expected_output": "Step 1"
+                },
+                {
+                    "description": "Create a comment on line 1 and print 'Step 2' on line 2.",
+                    "expected_output": "Step 2"
+                },
+                {
+                    "description": "Print 'Test' and make sure you do not print the word 'Hidden' by placing a # before print('Hidden').",
+                    "expected_output": "Test"
+                },
+                {
+                    "description": "Use the print function to print the number 10 and document it with a '# max value' comment.",
+                    "expected_output": "10"
+                },
+                {
+                    "description": "Print the phrase 'No comments' (ironically).",
+                    "expected_output": "No comments"
+                },
+                {
+                    "description": "Make a print containing '# this is not a comment' (since it is a string inside quotes, Python will print the hashtag).",
+                    "expected_output": "# this is not a comment"
+                },
+                {
+                    "description": "Print 'A', then 'B' in a new print. Put free comments in the code.",
+                    "expected_output": "A\nB"
+                },
+                {
+                    "description": "Write a multi-line comment and then print 'End of block'.",
+                    "expected_output": "End of block"
+                },
+                {
+                    "description": "Write whatever you want in a comment and, on the line below, print 'Lesson completed!'.",
+                    "expected_output": "Lesson completed!"
+                }
+            ],
+            "tips": [
+                "Remember: everything after the # on the same line is ignored. But if the # is inside quotes ' ', it is just normal text!"
+            ],
+            "references": []
+        },
+        {
+            "id": 10,
             "type": "theory",
-            "title": "Lesson 9: Rules for Naming Variables",
+            "title": "Lesson 10: Rules for Naming Variables",
             "description": "Learn the snake_case pattern and how to name your variables correctly.",
             "content": "Before we start creating variables and writing real code, we need to learn the Python baptism rules!\n\nIn programming, there are strict rules about what can and cannot be the name of a variable:\n1. **No spaces**: You can never use spaces. **low price** will generate an error!\n2. **Without accentuation or cedilla**: Forget correct Portuguese. Instead of **Greeting**, write **greeting**. Instead of **price**, use **price**.\n3. **Don't start with numbers**: **1_place** will give an error, but **place_1** is accepted.\n\n### The Snake Case Pattern 🐍\nIn Python, the community has adopted a pattern called **snake_case** (snake case). In it, we use lowercase letters and replace spaces with an _underline_ (**_**).\n\n- ❌ Wrong: **low price**, **Lower Price** or **low price**\n- ✅ Right: **low_price**\n\nAdopting this standard from day one will make your code professional and readable to any programmer in the world!",
             "example": "",
@@ -348,7 +402,7 @@
             }
         },
         {
-            "id": 10,
+            "id": 11,
             "type": "coding",
             "title": "Class 8: Variables and Texts (Strings)",
             "description": "Learn what a variable is and how to store text in it.",
@@ -472,7 +526,7 @@
             ]
         },
         {
-            "id": 11,
+            "id": 12,
             "type": "coding",
             "title": "Class 9: Integers (Int)",
             "description": "See how to deal with exact math and integers.",
@@ -541,7 +595,7 @@
             ]
         },
         {
-            "id": 12,
+            "id": 13,
             "type": "coding",
             "title": "Class 10: Decimal Numbers (Float)",
             "description": "Learn to record weights, heights and coins with broken numbers.",
@@ -610,7 +664,7 @@
             ]
         },
         {
-            "id": 13,
+            "id": 14,
             "type": "coding",
             "title": "Class 11: Boolean Values ​​(Bool)",
             "description": "Discover how the computer makes logical decisions (Yes or No).",
@@ -679,9 +733,9 @@
             ]
         },
         {
-            "id": 14,
+            "id": 15,
             "type": "coding",
-            "title": "Lesson 14: Arithmetic Operators",
+            "title": "Lesson 15: Arithmetic Operators",
             "description": "Basic Mathematical Operations in Python",
             "content": "Just as we use calculators to do math, in programming we use **Arithmetic Operators**! They are the symbols responsible for carrying out all mathematical calculations within Python, from simple bakery bills to spatial equations.\n\nBelow you can see the main operators available in the language:\n\n- **+** (addition): Adds two values.\n- **-** (subtraction): Subtracts one value from another.\n- **\\*** (multiplication): Multiplies the values ​​(we use the asterisk!).\n- **/** (division): Divides and always returns a broken number (decimal).\n- **//** (integer division): Divides but cuts the decimal part, leaving only the integer.\n- **%** (modulo): Takes only the **remainder** of the division (great for knowing if a number is even or odd).\n- **\\*\\*** (exponentiation): Raises one number to the power of another (ex: 2 ** 3 is 8).",
             "example": "years = 10\ndays_in_year = 365\na = 20\nb = 5\n\nprint(\"Addition:\", a + b)\nprint(\"Subtraction:\", a - b)\nprint(\"Multiplication:\", a * b)\nprint(\"Division:\", a / b)\nprint(\"Age in days:\", years * days_in_year)",
@@ -753,9 +807,9 @@
             ]
         },
         {
-            "id": 15,
+            "id": 16,
             "type": "coding",
-            "title": "Lesson 15: Lists and Iteration",
+            "title": "Lesson 16: Lists and Iteration",
             "description": "Work with lists and loops in Python",
             "content": "Think of a list in Python as a box that holds several items at the same time.\n\n**What is it for?**\n- Save several data together in the same variable (like a shopping list: bread, milk, eggs).\n- Access a specific item (the 1st, the 2nd…).\n- Go through all the items one by one to do something (e.g. print each name).\n\n**How it works in practice (very simple)**\nIn Python, you create a list like this:\n```python\nshopping = [\"bread\", \"milk\", \"eggs\"]\n```\nNow `shopping` is the “box” with 3 items.\n\n**How to get an item**\nYou can take it by its “number” (index). **Attention:** in Python the count starts at 0.\n\n- `shopping[0]` is the first item (“bread”)\n- `shopping[1]` is the second (“milk”)\n- `shopping[2]` is the third (“eggs”)\n\nExample:\n```python\nprint(purchases[1]) # will print: milk\n```\n\n**How to exchange an item (Replace)**\nYou can easily exchange what is inside a position by entering the index and a new value.\n```python\nCompras[1] = \"chocolatado\" # The 'milk' was replaced by chocolate!\n```\n\n**How to get around (see all)**\nGenerally you use `for` to do something with each item:\n```python\nfor item in purchases:\n    print(item)\n```\nThis will print bread, then milk, then eggs.\n\n**Want to add or take things away?**\nAdd at the end:\n```python\npurchases.append(\"banana\")\n```\nRemove the last one (the end):\n```python\nshopping.pop()\n```",
             "example": "fruits = [\"apple\", \"banana\", \"orange\"]\n\nprint(\"First fruit:\", fruits[0])\n# len() comes from 'length'. Counts how many items are in the box.\nprint(\"Number of fruits:\", len(fruits))\n\nprint(\"\\nAll fruits:\")\n# for = 'for each'. in = 'inside'. (For each fruit inside fruits:)\nfor fruit in fruits:\n    print(\"-\", fruit)\n\n# You can also easily replace items!\nfruits[0] = \"strawberry\"\nprint(\"\\nWe replaced the apple with a strawberry:\")\nprint(fruits)\n\n# append() means to attach/add at the end.\nfruits.append(\"watermelon\")\nprint(\"\\nAfter adding watermelon:\")\nprint(fruits)",
@@ -823,7 +877,7 @@
             ]
         },
         {
-            "id": 16,
+            "id": 17,
             "type": "coding",
             "title": "Practical Test 1: Calculator Logic",
             "description": "Test your knowledge by solving calculator logic with if/else and loops.",
@@ -859,9 +913,9 @@
             ]
         },
         {
-            "id": 17,
+            "id": 18,
             "type": "theory",
-            "title": "Lesson 17: Opening your Appetite",
+            "title": "Lesson 18: Opening your Appetite",
             "description": "Find out why Python is the perfect tool for automating boring tasks.",
             "content": "You know those repetitive tasks on the computer that make you lazy just thinking about? Python was created precisely to be your automation 'magic wand'! With it, you write small scripts that do the heavy lifting for you.\n\nAnd the best part: Python is an **interpreted language**. This means you don't have to go through boring and time-consuming 'compiling' processes (translating everything into the machine) before testing. You write the code and it runs immediately. Just like that!",
             "example": "",
@@ -888,7 +942,7 @@
             }
         },
         {
-            "id": 18,
+            "id": 19,
             "type": "theory",
             "title": "Class 15: The Interpreter and the Interactive Mode",
             "description": "Learn how to live chat with Python through the terminal.",
@@ -917,7 +971,7 @@
             }
         },
         {
-            "id": 19,
+            "id": 20,
             "type": "theory",
             "title": "Class 16: Passing Arguments",
             "description": "Understand how to send 'extra ingredients' to your program before it runs.",
@@ -946,9 +1000,9 @@
             }
         },
         {
-            "id": 20,
+            "id": 21,
             "type": "theory",
-            "title": "Lesson 20: Coding Source Code Files",
+            "title": "Lesson 21: Coding Source Code Files",
             "description": "Understand how Python reads accents and special characters without bugs.",
             "content": "Have you ever opened a website and seen strange characters like 'Ã§Ã£o' instead of cedillas and accents? This happens when the computer misses the reading 'dictionary'.\n\nTo avoid this, Python defaults to a super dictionary called **UTF-8**. It is capable of understanding characters from practically every language in the world, including emojis! Thanks to UTF-8, you can write variables and comments with accents (ç, ã, é) without fear of breaking the program.",
             "example": "# -*- coding: cp1252 -*-\n# The example above sets the file encoding to Windows-1252",
@@ -975,9 +1029,9 @@
             }
         },
         {
-            "id": 21,
+            "id": 22,
             "type": "coding",
-            "title": "Lesson 21: Using Python as a Calculator - Numbers",
+            "title": "Lesson 22: Using Python as a Calculator - Numbers",
             "description": "Understand how to make contents, divide pizzas and raise numbers to power.",
             "tips": [
                 "Use the equals sign '=' only to store results inside variables.",
@@ -1055,9 +1109,9 @@
             ]
         },
         {
-            "id": 22,
+            "id": 23,
             "type": "coding",
-            "title": "Lesson 22: Advanced Strings - Indexes and Slicing",
+            "title": "Lesson 23: Advanced Strings - Indexes and Slicing",
             "description": "Learn how to slice texts and get just the letters you want.",
             "tips": [
                 "Texts (strings) are immutable. You can't change a single letter of an already created text, you can only create a whole new text.",
@@ -1135,7 +1189,7 @@
             ]
         },
         {
-            "id": 23,
+            "id": 24,
             "type": "coding",
             "title": "Practical Test 2: Nickname and Password Generator",
             "description": "A system that creates nicknames or temporary passwords based on the user's full name.",
@@ -1176,9 +1230,9 @@
             }
         },
         {
-            "id": 24,
+            "id": 25,
             "type": "coding",
-            "title": "Lesson 24: Lists and Slicing",
+            "title": "Lesson 25: Lists and Slicing",
             "description": "Discover lists, which are like grocery bags that you can change.",
             "tips": [
                 "You can empty parts of your list by replacing entire slices with an empty list `[]`.",
@@ -1256,9 +1310,9 @@
             ]
         },
         {
-            "id": 25,
+            "id": 26,
             "type": "coding",
-            "title": "Lesson 25: Multiple Assignment and While Loop",
+            "title": "Lesson 26: Multiple Assignment and While Loop",
             "description": "Learn the power of assigning values ​​to multiple things at once and repeating actions with the while loop.",
             "tips": [
                 "The print() function always skips to the next line at the end. If you want to avoid this, put `end=' '` inside it.",
@@ -1336,9 +1390,9 @@
             ]
         },
         {
-            "id": 26,
+            "id": 27,
             "type": "coding",
-            "title": "Lesson 26: Flow Tools - If, For and Range",
+            "title": "Lesson 27: Flow Tools - If, For and Range",
             "description": "Learn how to make the computer make decisions with if and repeat with for and range.",
             "tips": [
                 "Pay attention to range(3, 6): it will generate numbers 3, 4, and 5, but ALWAYS excludes the last number (6 is left out!).",
@@ -1416,9 +1470,9 @@
             ]
         },
         {
-            "id": 27,
+            "id": 28,
             "type": "coding",
-            "title": "Lesson 27: Break, Continue and Else Clauses in Loops",
+            "title": "Lesson 28: Break, Continue and Else Clauses in Loops",
             "description": "Learn how to eject from a repeating loop or skip your turn.",
             "tips": [
                 "The 'pass' command is just a ghost. It does nothing, it just fills a space when Python forces you to write something.",
@@ -1496,7 +1550,7 @@
             ]
         },
         {
-            "id": 28,
+            "id": 29,
             "type": "coding",
             "title": "Class 24: Match Instruction and Definition of Functions",
             "description": "Discover how to create your own magical tools (functions).",
@@ -1576,7 +1630,7 @@
             ]
         },
         {
-            "id": 29,
+            "id": 30,
             "type": "coding",
             "title": "Class 25: Tuples - Immutable Collections",
             "description": "Learn about tuples in Python, how to create them, unpack them, and why immutability is useful.",
@@ -1614,7 +1668,7 @@
             }
         },
         {
-            "id": 30,
+            "id": 31,
             "type": "coding",
             "title": "Class 26: Dictionaries - Mapping Keys and Values",
             "description": "Master the dictionary structure in Python to associate unique keys with values.",
@@ -1652,7 +1706,7 @@
             }
         },
         {
-            "id": 31,
+            "id": 32,
             "type": "coding",
             "title": "Class 27: Sets - Single Elements",
             "description": "Discover how to use sets in Python to eliminate duplicate elements and perform mathematical operations.",
@@ -1690,7 +1744,7 @@
             }
         },
         {
-            "id": 32,
+            "id": 33,
             "type": "coding",
             "title": "Class 28: Delving deeper into Functions (Parameters, Returns and Scope)",
             "description": "Learn how to create professional functions with return values, default parameters, and scope control.",
@@ -1728,7 +1782,7 @@
             }
         },
         {
-            "id": 33,
+            "id": 34,
             "type": "coding",
             "title": "Class 29: Native Modules and Libraries (math, random, datetime)",
             "description": "Learn how to import and reuse the native modules provided in the Python standard library.",
@@ -1766,9 +1820,9 @@
             }
         },
         {
-            "id": 34,
+            "id": 35,
             "type": "coding",
-            "title": "Lesson 34: Error Handling (try, except, finally)",
+            "title": "Lesson 35: Error Handling (try, except, finally)",
             "description": "Learn how to handle exceptions and errors at runtime to prevent your application from breaking.",
             "content": "### Exception Handling in Python\n\nMistakes happen! For example, when the user tries to divide a number by zero or types text where we expected a number. Instead of allowing the application to break, we use `try-except` blocks.\n\n**Basic Structure:**\n```python\ntry:\n    number = int(\"abc\")\nexcept ValueError:\n    print(\"Error: Invalid entry!\")\nfinally:\n    print(\"Execution completed.\")\n```\n\n**Types of Common Exceptions:**\n- `ValueError`: Incompatible value.\n- `ZeroDivisionError`: Division by zero.\n- `TypeError`: Incorrect data type.",
             "example": "try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print('Division by zero prevented!')\nfinally:\n    print('End')",
@@ -1804,7 +1858,7 @@
             }
         },
         {
-            "id": 35,
+            "id": 36,
             "type": "coding",
             "title": "Class 31: File Manipulation (open, read, write)",
             "description": "Learn how to read and write persistent text files to disk with Python.",
@@ -1842,7 +1896,7 @@
             }
         },
         {
-            "id": 36,
+            "id": 37,
             "type": "coding",
             "title": "Class 32: Introduction to Object Orientation (Classes and Objects)",
             "description": "Understand the fundamentals of the Object Orientation paradigm in Python.",
@@ -1880,7 +1934,7 @@
             }
         },
         {
-            "id": 37,
+            "id": 38,
             "type": "coding",
             "title": "Practical Test 3: Registration System and Task Manager",
             "description": "Integrative challenge: combine Functions, Dictionaries, Error Handling and OOP to build a mini-system.",
