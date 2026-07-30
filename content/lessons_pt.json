@@ -24,7 +24,6 @@
         "msg_success": "Sucesso",
         "msg_error": "Erro",
         "msg_invalid_login": "Usuário ou senha inválidos.",
-        "btn_logout": "Sair",
         "msg_logged_out": "Logout efetuado com sucesso!",
         "msg_user_exists": "Nome de usuário já existe.",
         "msg_user_created": "Usuário cadastrado com sucesso! Faça login.",
@@ -279,7 +278,55 @@
         {
             "id": 7,
             "type": "theory",
-            "title": "Aula 7: Regras para Nomear Variáveis",
+            "title": "Aula 7: Como instalar o Python?",
+            "description": "Aprenda o passo a passo para instalar o Python no Windows e Linux.",
+            "content": "Para começar a programar no seu próprio computador, você precisa instalar o interpretador do Python.\n\n**No Windows:**\n1. Acesse o site oficial: python.org/downloads.\n2. Baixe o instalador mais recente.\n3. **MUITO IMPORTANTE:** Durante a instalação, marque a caixa **'Add Python to PATH'** na primeira tela antes de clicar em 'Install Now'. Isso garante que o terminal reconheça os comandos do Python.\n\n**No Linux (Ubuntu/Debian):**\nO Linux geralmente já vem com o Python instalado! Para instalar as atualizações ou garantir que o tem, abra o terminal e digite:\n`sudo apt update`\n`sudo apt install python3 python3-pip`\n\nPronto! Para verificar se a instalação funcionou, basta abrir o terminal ou prompt de comando e digitar `python --version` (no Windows) ou `python3 --version` (no Linux).",
+            "example": "",
+            "exercise": "",
+            "tips": [
+                "Não esqueça do 'Add Python to PATH' no Windows. Se esquecer, terá que reinstalar ou configurar manualmente.",
+                "O pip (já incluso na instalação) é o gerenciador que permite baixar novas bibliotecas no futuro."
+            ],
+            "references": [],
+            "quiz": {
+                "question": "Qual é o passo mais crítico ao instalar o Python no Windows para garantir que os comandos funcionem no terminal?",
+                "options": [
+                    "Desativar o antivírus",
+                    "Marcar a caixa 'Add Python to PATH'",
+                    "Instalar em um pen drive",
+                    "Baixar a versão do Linux"
+                ],
+                "answer": 1
+            }
+        },
+        {
+            "id": 8,
+            "type": "theory",
+            "title": "Aula 8: O que são IDEs e Editores de Código?",
+            "description": "Descubra as ferramentas que programadores usam para escrever código com eficiência.",
+            "content": "Uma **IDE** (Ambiente de Desenvolvimento Integrado) ou um **Editor de Código** é o programa onde você digita seus scripts. Pense nele como o 'Microsoft Word' dos programadores, mas cheio de ferramentas que colorem o código, ajudam a encontrar erros antes mesmo de executar e auto-completam palavras.\n\nVocê pode escrever código no Bloco de Notas? Sim, mas será muito doloroso!\n\n**Principais Editores e IDEs do Mercado:**\n- **VS Code (Visual Studio Code)**: O editor mais popular do mundo. Muito leve e expansível com extensões.\n- **PyCharm**: Uma IDE extremamente poderosa e robusta criada especificamente para Python, ideal para projetos gigantes.\n- **Jupyter Notebook**: Muito usado na área de Ciência de Dados e Inteligência Artificial, pois permite misturar código, texto e gráficos visuais na mesma tela.\n- **IDLE**: O editor simples que já vem instalado de fábrica junto com o Python.",
+            "example": "",
+            "exercise": "",
+            "tips": [
+                "Para iniciantes, o VS Code é quase sempre a melhor porta de entrada por ser rápido e amigável.",
+                "As IDEs possuem terminais embutidos, o que significa que você pode programar e executar o código na mesma tela, igual a este aplicativo!"
+            ],
+            "references": [],
+            "quiz": {
+                "question": "Qual é a IDE listada acima que foi criada especificamente para a linguagem Python e é focada em projetos robustos?",
+                "options": [
+                    "PyCharm",
+                    "VS Code",
+                    "Bloco de Notas",
+                    "Jupyter Notebook"
+                ],
+                "answer": 0
+            }
+        },
+        {
+            "id": 9,
+            "type": "theory",
+            "title": "Aula 9: Regras para Nomear Variáveis",
             "description": "Aprenda o padrão snake_case e como batizar suas variáveis corretamente.",
             "content": "Antes de começarmos a criar variáveis e escrever códigos reais, precisamos aprender as regras de batismo do Python!\n\nNa programação, existem regras estritas sobre o que pode ou não ser o nome de uma variável:\n1. **Sem espaços**: Você jamais pode usar espaços. **preço baixo** vai gerar um erro!\n2. **Sem acentuação ou cedilha**: Esqueça o português correto. Em vez de **Saudação**, escreva **saudacao**. Em vez de **preço**, use **preco**.\n3. **Não comece com números**: **1_lugar** dará erro, mas **lugar_1** é aceito.\n\n### O Padrão Snake Case 🐍\nNo Python, a comunidade adotou o padrão chamado **snake_case** (case de cobra). Nele, nós usamos letras minúsculas e substituímos os espaços por um _underline_ (**_**).\n\n- ❌ Errado: **preço baixo**, **PrecoBaixo** ou **preçobaixo**\n- ✅ Certo: **preco_baixo**\n\nAdotar esse padrão desde o primeiro dia deixará seu código profissional e legível para qualquer programador do mundo!",
             "example": "",
@@ -301,9 +348,9 @@
             }
         },
         {
-            "id": 8,
+            "id": 10,
             "type": "coding",
-            "title": "Aula 8: Variáveis e Textos (Strings)",
+            "title": "Aula 10: Variáveis e Textos (Strings)",
             "description": "Aprenda lo que é uma variável e como guardar textos nela.",
             "content": "Pense em uma **Variável** como uma caixinha ou etiqueta onde você guarda um dado na memória do computador para usar depois. Para dar um nome a essa caixa, basta escrever o nome e usar o símbolo de igual **=**.\n\nUm dos tipos de dados mais comuns é o **Texto** (chamado na programação de **String**). Para que o Python saiba que você está escrevendo um texto livre e não um comando do sistema, você deve **obrigatoriamente envolver o texto em aspas** (simples ou duplas).\n\nPara mostrar o valor dessa variável na tela, usamos a função mágica **print()**.\n\n**Dissecando o código abaixo:**\n- **=** ➔ Sinal de atribuição (significa \"recebe o valor de\").\n- **nome** ➔ Variável que irá guardar o dado.\n- **\"Alice\"** ➔ Texto (String) que será armazenado. Obrigatoriamente com aspas!\n- **print** ➔ Comando que serve para mostrar algo na tela.\n- **(nome)** ➔ Entregamos a variável ao print para ele mostrar o que tem lá dentro.\n\n### Explorando Strings\nVocê pode usar caracteres de escape para formatar o texto:\n- **\\n**: Cria uma nova linha (quebra de linha).\n- **\\t**: Cria uma tabulação (espaço longo).\n\nSe não quiser que caracteres como \\ sejam interpretados (como em caminhos de arquivo), use **Strings brutas (raw strings)** adicionando um **r** antes das aspas iniciais.\n\nVocê também pode brincar com strings fazendo operações matemáticas! É possível usar **+** para juntar (concatenar) e **\\*** para repetir.\nDuas strings literais lado a lado são unidas automaticamente pelo Python. Isso é ótimo para quebrar strings longas em várias linhas de código usando parênteses.",
             "example": "nome = \"Alice\"\nmensagem = 'Olá, seja bem-vindo!'\n\nprint(nome)\nprint(mensagem)\n\n# Nova linha e Tabulação\nprint('Primeira linha.\\nSegunda linha.')\nprint('Nome:\\tAlice')\n\n# Raw string (ignora os escapes)\nprint(r'C:\\alguma\\pasta')\n\n# Concatenação e Repetição\nprint(3 * 'un' + 'ium')\n\n# Juntando strings literais e quebra de texto longo\ntexto_longo = ('Isso é um texto muito grande ' \n               'que foi quebrado em duas linhas de código.')\nprint('Py' 'thon')\nprint(texto_longo)",
@@ -425,9 +472,9 @@
             ]
         },
         {
-            "id": 9,
+            "id": 11,
             "type": "coding",
-            "title": "Aula 9: Números Inteiros (Int)",
+            "title": "Aula 11: Números Inteiros (Int)",
             "description": "Veja como lidar com matemática exata e números inteiros.",
             "content": "Além de textos, variáveis são incríveis para guardar números! O tipo numérico mais básico é o **Inteiro** (chamado de **int**).\n\nInteiros são números positivos ou negativos que **não possuem casa decimal**. \n\nA regra de ouro aqui é: **Não use aspas para números!** Se você colocar aspas ao redor de um número (ex: **\"10\"**), o Python vai tratá-lo como um texto e não vai conseguir fazer contas matemáticas com ele.\n\n**Dissecando o código abaixo:**\n- **idade** ➔ O nome da nossa variável.\n- **=** ➔ O sinal que guarda a informação na variável.\n- **25** ➔ O número em si, sem usar aspas! É esse valor numérico de verdade que ficará guardado na variável chamada idade.\n- **print(\"Idade:\", idade)** ➔ O print pode mostrar textos (com aspas) misturados com variáveis, basta separá-los por vírgula.",
             "example": "idade = 25\nano_nascimento = 1998\ntemperatura = -5\n\nprint(\"Idade:\", idade)\nprint(\"Ano:\", ano_nascimento)\nprint(\"Frio:\", temperatura)",
@@ -494,9 +541,9 @@
             ]
         },
         {
-            "id": 10,
+            "id": 12,
             "type": "coding",
-            "title": "Aula 10: Números Decimais (Float)",
+            "title": "Aula 12: Números Decimais (Float)",
             "description": "Aprenda a registrar pesos, alturas e moedas com números quebrados.",
             "content": "Para números que não são exatos, como dinheiro, medidas ou peso, usamos o tipo **Decimal**, conhecido na programação como **Ponto Flutuante** (**float**).\n\nAtenção para uma regra crucial: O Python foi criado no padrão americano, então **sempre utilizamos PONTO (.) no lugar da vírgula** para separar as casas decimais!\n\nEscrever **1,75** (com vírgula) vai quebrar o seu código ou criar uma Tupla (veremos isso depois). O correto é sempre usar **1.75**.\n\n**Dissecando o código abaixo:**\n- **altura** ➔ O nome escolhido para a variável.\n- **=** ➔ Comando para atribuir o valor.\n- **1.75** ➔ Número Decimal (Float). Observe o uso do PONTO no lugar da vírgula!\n- **print(\"Altura:\", altura)** ➔ Mostra na tela o texto guia, seguido do número quebrado guardado na memória.",
             "example": "altura = 1.75\npeso = 68.5\nsaldo_bancario = 150.99\n\nprint(\"Altura:\", altura)\nprint(\"Peso:\", peso)\nprint(\"Saldo: R$\", saldo_bancario)",
@@ -563,9 +610,9 @@
             ]
         },
         {
-            "id": 11,
+            "id": 13,
             "type": "coding",
-            "title": "Aula 11: Valores Booleanos (Bool)",
+            "title": "Aula 13: Valores Booleanos (Bool)",
             "description": "Descubra como o computador toma decisões lógicas (Sim ou Não).",
             "content": "No mundo da computação, tudo se resume a falso ou verdadeiro. Usamos o tipo **Booleano** (**bool**) para representar essa dualidade.\n\nUma variável booleana armazena apenas dois valores absolutos:\n- **True** (Verdadeiro)\n- **False** (Falso)\n\n**Aviso:** Começam obrigatoriamente com letra MAIÚSCULA em Python!\n\nAlém de definir esses valores diretamente, o computador pode descobrir a verdade fazendo **comparações**! O resultado de uma comparação sempre será um Booleano (True ou False). Os símbolos mais comuns são:\n- **>** (Maior que)\n- **<** (Menor que)\n- **==** (Igual a. Atenção: usamos dois sinais de igual para testar igualdade, para não confundir com o sinal de criar variáveis!)\n\n**Dissecando o código abaixo:**\n- **jogo_pausado = False** ➔ Criamos a variável já com o valor lógico.\n- **10 > 5** ➔ O computador verifica e devolve **True** (verdade, 10 é maior que 5).\n- **1 == 2** ➔ O computador verifica e devolve **False** (mentira, 1 não é igual a 2).",
             "example": "jogo_pausado = False\nusuario_logado = True\n\nprint(\"Pausado?\", jogo_pausado)\nprint(\"Logado?\", usuario_logado)\n\nprint(\"10 é maior que 5?\", 10 > 5)\nprint(\"1 é igual a 2?\", 1 == 2)",
@@ -632,9 +679,9 @@
             ]
         },
         {
-            "id": 12,
+            "id": 14,
             "type": "coding",
-            "title": "Aula 12: Operadores Aritméticos",
+            "title": "Aula 14: Operadores Aritméticos",
             "description": "Operações matemáticas básicas em Python",
             "content": "Assim como usamos calculadoras para fazer contas, na programação usamos **Operadores Aritméticos**! Eles são os símbolos responsáveis por realizar todos os cálculos matemáticos dentro do Python, desde contas simples de padaria até equações espaciais.\n\nAbaixo você confere os principais operadores disponíveis na linguagem:\n\n- **+** (adição): Soma dois valores.\n- **-** (subtração): Subtrai um valor do outro.\n- **\\*** (multiplicação): Multiplica os valores (usamos o asterisco!).\n- **/** (divisão): Divide e sempre devolve um número quebrado (decimal).\n- **//** (divisão inteira): Divide mas corta a parte decimal, deixando apenas o número inteiro.\n- **%** (módulo): Pega apenas o **resto** da divisão (ótimo para saber se um número é par ou ímpar).\n- **\\*\\*** (exponenciação): Eleva um número à potência do outro (ex: 2 ** 3 é 8).",
             "example": "anos = 10\ndias_no_ano = 365\na = 20\nb = 5\n\nprint(\"Adição:\", a + b)\nprint(\"Subtração:\", a - b)\nprint(\"Multiplicação:\", a * b)\nprint(\"Divisão:\", a / b)\nprint(\"Idade em dias:\", anos * dias_no_ano)",
@@ -706,9 +753,9 @@
             ]
         },
         {
-            "id": 13,
+            "id": 15,
             "type": "coding",
-            "title": "Aula 13: Listas e Iteração",
+            "title": "Aula 15: Listas e Iteração",
             "description": "Trabalhe com listas e loops em Python",
             "content": "Pense numa lista em Python como uma caixa que guarda vários itens ao mesmo tempo.\n\n**Pra que serve?**\n- Guardar vários dados juntos na mesma variável (tipo uma lista de compras: pão, leite, ovos).\n- Acessar um item específico (o 1º, o 2º…).\n- Passar por todos os itens um por um para fazer alguma coisa (ex.: imprimir cada nome).\n\n**Como funciona na prática (bem simples)**\nEm Python, você cria uma lista assim:\n```python\ncompras = [\"pão\", \"leite\", \"ovos\"]\n```\nAgora `compras` é a “caixa” com 3 itens.\n\n**Como pegar um item**\nVocê pode pegar pelo “número” dele (índice). **Atenção:** em Python a contagem começa em 0.\n\n- `compras[0]` é o primeiro item (“pão”)\n- `compras[1]` é o segundo (“leite”)\n- `compras[2]` é o terceiro (“ovos”)\n\nExemplo:\n```python\nprint(compras[1])  # vai imprimir: leite\n```\n\n**Como trocar um item (Substituir)**\nVocê pode facilmente trocar o que está dentro de uma posição informando o índice e um novo valor.\n```python\ncompras[1] = \"achocolatado\" # O 'leite' foi trocado por achocolatado!\n```\n\n**Como percorrer (ver todos)**\nGeralmente você usa `for` para fazer algo com cada item:\n```python\nfor item in compras:\n    print(item)\n```\nIsso vai imprimir pão, depois leite, depois ovos.\n\n**Quer adicionar ou tirar coisas?**\nAdicionar no final:\n```python\ncompras.append(\"banana\")\n```\nRemover o último (o final):\n```python\ncompras.pop()\n```",
             "example": "frutas = [\"maçã\", \"banana\", \"laranja\"]\n\nprint(\"Primeira fruta:\", frutas[0])\n# len() vem de 'length' (tamanho). Conta quantos itens tem na caixa.\nprint(\"Número de frutas:\", len(frutas))\n\nprint(\"\\nTodas as frutas:\")\n# for = 'para cada'. in = 'dentro de'. (Para cada fruta dentro de frutas:)\nfor fruta in frutas:\n    print(\"-\", fruta)\n\n# Você também pode substituir itens facilmente!\nfrutas[0] = \"morango\"\nprint(\"\\nSubstituímos a maçã pelo morango:\")\nprint(frutas)\n\n# append() significa anexar/adicionar no fim.\nfrutas.append(\"melancia\")\nprint(\"\\nApós adicionar melancia:\")\nprint(frutas)",
@@ -776,7 +823,7 @@
             ]
         },
         {
-            "id": 1001,
+            "id": 16,
             "type": "coding",
             "title": "Prova Prática 1: Lógica da Calculadora",
             "description": "Teste seus conhecimentos resolvendo lógicas de uma calculadora com if/else e loops.",
@@ -812,9 +859,9 @@
             ]
         },
         {
-            "id": 14,
+            "id": 17,
             "type": "theory",
-            "title": "Aula 14: Abrindo seu Apetite",
+            "title": "Aula 17: Abrindo seu Apetite",
             "description": "Descubra por que o Python é a ferramenta perfeita para automatizar tarefas chatas.",
             "content": "Sabe aquelas tarefas repetitivas no computador que dão preguiça só de pensar? O Python foi criado justamente para ser a sua 'varinha mágica' da automação! Com ele, você escreve pequenos roteiros (scripts) que fazem o trabalho pesado para você.\n\nE o melhor: o Python é uma **linguagem interpretada**. Isso significa que você não precisa passar por processos chatos e demorados de 'compilação' (traduzir tudo para a máquina) antes de testar. Você escreve o código e ele roda na mesma hora. Simples assim!",
             "example": "",
@@ -841,9 +888,9 @@
             }
         },
         {
-            "id": 15,
+            "id": 18,
             "type": "theory",
-            "title": "Aula 15: O Interpretador e o Modo Interativo",
+            "title": "Aula 18: O Interpretador e o Modo Interativo",
             "description": "Aprenda a bater um papo ao vivo com o Python através do terminal.",
             "content": "Imagine que o **Modo Interativo** é como abrir um chat no WhatsApp diretamente com o cérebro do Python! Quando você abre o terminal e digita `python3`, você entra nessa sala de bate-papo.\n\nLá, o Python fica aguardando suas mensagens mostrando três setinhas: `>>>`. É só digitar um comando matemático ou de texto, apertar Enter, e ele responde na hora! Se você mandar uma mensagem que precisa de mais de uma linha (como uma condição), ele mostra três pontinhos `...` para dizer: 'Pode continuar, estou te ouvindo!'.",
             "example": ">>> o_mundo_e_plano = True\n>>> if o_mundo_e_plano:\n...     print(\"Cuidado para não cair!\")\n...\nCuidado para não cair!",
@@ -870,9 +917,9 @@
             }
         },
         {
-            "id": 16,
+            "id": 19,
             "type": "theory",
-            "title": "Aula 16: Passagem de Argumentos",
+            "title": "Aula 19: Passagem de Argumentos",
             "description": "Entenda como enviar 'ingredientes extras' para o seu programa antes dele rodar.",
             "content": "Às vezes, seu programa precisa de informações externas logo na hora de ser ligado. Imagine que seu script é uma receita de bolo, e você quer dizer o sabor antes de dar o 'Play' (ex: `python3 faz_bolo.py chocolate`).\n\nEsses ingredientes extras são chamados de **Argumentos**. O Python pega tudo que você digitou depois do nome do programa e guarda numa caixinha especial chamada `sys.argv`. O item número zero (`sys.argv[0]`) é sempre o nome do seu arquivo, e o item número um (`sys.argv[1]`) já é a palavra 'chocolate'!",
             "example": "# Se rodarmos no terminal: python3 script.py argumento1\nimport sys\nprint(sys.argv[0])  # Exibe: 'script.py'\nprint(sys.argv[1])  # Exibe: 'argumento1'",
@@ -899,9 +946,9 @@
             }
         },
         {
-            "id": 17,
+            "id": 20,
             "type": "theory",
-            "title": "Aula 17: Codificação de Arquivos de Código-Fonte",
+            "title": "Aula 20: Codificação de Arquivos de Código-Fonte",
             "description": "Entenda como o Python lê acentos e caracteres especiais sem bugar.",
             "content": "Já abriu um site e viu caracteres estranhos tipo 'Ã§Ã£o' no lugar de cedilhas e acentos? Isso acontece quando o computador erra o 'dicionário' de leitura.\n\nPara evitar isso, o Python usa como padrão um super dicionário chamado **UTF-8**. Ele é capaz de entender caracteres de praticamente todos os idiomas do mundo, inclusive emojis! Graças ao UTF-8, você pode escrever variáveis e comentários com acentos (ç, ã, é) sem medo de quebrar o programa.",
             "example": "# -*- coding: cp1252 -*-\n# O exemplo acima define a codificação do arquivo como Windows-1252",
@@ -928,9 +975,9 @@
             }
         },
         {
-            "id": 18,
+            "id": 21,
             "type": "coding",
-            "title": "Aula 18: Usando Python como Calculadora - Números",
+            "title": "Aula 21: Usando Python como Calculadora - Números",
             "description": "Entenda como fazer continhas, dividir pizzas e elevar números à potência.",
             "tips": [
                 "Use o sinal de igual '=' apenas para guardar resultados dentro de variáveis.",
@@ -1008,9 +1055,9 @@
             ]
         },
         {
-            "id": 19,
+            "id": 22,
             "type": "coding",
-            "title": "Aula 19: Strings Avançadas - Índices e Fatiamento",
+            "title": "Aula 22: Strings Avançadas - Índices e Fatiamento",
             "description": "Aprenda a fatiar textos e pegar apenas as letras que você quiser.",
             "tips": [
                 "Textos (strings) são 'engessados' (imutáveis). Você não pode trocar uma letra de um texto que já foi criado, só pode criar um novo texto inteiro.",
@@ -1088,7 +1135,7 @@
             ]
         },
         {
-            "id": 1002,
+            "id": 23,
             "type": "coding",
             "title": "Prova Prática 2: Gerador de Nicknames e Senhas",
             "description": "Um sistema que cria apelidos ou senhas temporárias baseados no nome completo do usuário.",
@@ -1129,9 +1176,9 @@
             }
         },
         {
-            "id": 20,
+            "id": 24,
             "type": "coding",
-            "title": "Aula 20: Listas e Fatiamento",
+            "title": "Aula 24: Listas e Fatiamento",
             "description": "Descubra as listas, que são como sacolas de supermercado que você pode alterar.",
             "tips": [
                 "Você pode esvaziar partes da sua lista trocando fatias inteiras por uma lista vazia `[]`.",
@@ -1209,9 +1256,9 @@
             ]
         },
         {
-            "id": 21,
+            "id": 25,
             "type": "coding",
-            "title": "Aula 21: Atribuição Múltipla e Laço While",
+            "title": "Aula 25: Atribuição Múltipla e Laço While",
             "description": "Aprenda o poder de dar valores a várias coisas de uma vez e a repetir ações com o laço while.",
             "tips": [
                 "A função print() sempre pula de linha no final. Se quiser evitar isso, coloque um `end=' '` dentro dela.",
@@ -1289,9 +1336,9 @@
             ]
         },
         {
-            "id": 22,
+            "id": 26,
             "type": "coding",
-            "title": "Aula 22: Ferramentas de Fluxo - If, For e Range",
+            "title": "Aula 26: Ferramentas de Fluxo - If, For e Range",
             "description": "Aprenda a fazer o computador tomar decisões com if e repetir com for e range.",
             "tips": [
                 "Atenção ao range(3, 6): ele vai gerar os números 3, 4 e 5, mas SEMPRE exclui o último número (o 6 fica de fora!).",
@@ -1369,9 +1416,9 @@
             ]
         },
         {
-            "id": 23,
+            "id": 27,
             "type": "coding",
-            "title": "Aula 23: Cláusulas Break, Continue e Else em Laços",
+            "title": "Aula 27: Cláusulas Break, Continue e Else em Laços",
             "description": "Aprenda a ejetar de um laço de repetição ou pular a sua vez.",
             "tips": [
                 "O comando 'pass' é só um fantasma. Ele não faz nada, só preenche um espaço quando o Python te obriga a escrever algo.",
@@ -1449,9 +1496,9 @@
             ]
         },
         {
-            "id": 24,
+            "id": 28,
             "type": "coding",
-            "title": "Aula 24: Instrução Match e Definição de Funções",
+            "title": "Aula 28: Instrução Match e Definição de Funções",
             "description": "Descubra como criar as suas próprias ferramentas mágicas (funções).",
             "tips": [
                 "Sempre coloque nomes óbvios nas suas funções (ex: calcular_idade). Assim fica fácil lembrar o que elas fazem.",
@@ -1529,9 +1576,9 @@
             ]
         },
         {
-            "id": 1003,
+            "id": 29,
             "type": "coding",
-            "title": "Aula 25: Tuplas - Coleções Imutáveis",
+            "title": "Aula 29: Tuplas - Coleções Imutáveis",
             "description": "Aprenda sobre tuplas em Python, como criá-las, desempacotá-las e por que a imutabilidade é útil.",
             "content": "### O que são Tuplas?\n\nUma **Tupla** é uma sequência ordenada de elementos, muito semelhante a uma Lista, porém com uma diferença fundamental: **tuplas são imutáveis**! Isso significa que após ser criada, você não pode adicionar, remover ou modificar os elementos de uma tupla.\n\n**Sintaxe:**\n```python\nponto = (10, 20)\ncores = ('vermelho', 'verde', 'azul')\n```\n\n**Vantagens das Tuplas:**\n- **Desempenho**: São mais leves e rápidas que listas na memória.\n- **Segurança de dados**: Garante que dados fixos (ex: coordenadas GPS, configurações) não serão alterados por acidente.\n- **Desempacotamento**: É fácil atribuir valores de uma tupla diretamente a variáveis:\n```python\nx, y = ponto\nprint(x)  # 10\n```",
             "example": "# Criando e desempacotando tuplas\nponto = (100, 200)\nx, y = ponto\nprint(f'X={x}, Y={y}')\n\n# Tentativa de alteração gera TypeError:\n# ponto[0] = 50  # Erro!",
@@ -1567,9 +1614,9 @@
             }
         },
         {
-            "id": 1004,
+            "id": 30,
             "type": "coding",
-            "title": "Aula 26: Dicionários - Mapeando Chaves e Valores",
+            "title": "Aula 30: Dicionários - Mapeando Chaves e Valores",
             "description": "Domine a estrutura de dicionários em Python para associar chaves únicas a valores.",
             "content": "### O que são Dicionários?\n\nUm **Dicionário** (`dict`) é uma coleção mutável de pares **chave: valor**. Enquanto listas usam índices numéricos (0, 1, 2...), os dicionários usam chaves de texto ou números para localizar informações instantaneamente.\n\n**Sintaxe:**\n```python\naluno = {\n    'nome': 'Carlos',\n    'idade': 22,\n    'curso': 'Python'\n}\n```\n\n**Operações Principais:**\n- **Acessar valor**: `aluno['nome']` ou `aluno.get('nome')` \n- **Adicionar/Atualizar**: `aluno['nota'] = 9.5` \n- **Iterar**: `.keys()`, `.values()`, `.items()`",
             "example": "aluno = {'nome': 'Beatriz', 'nota': 10}\nprint(aluno['nome'])\n\n# Adicionando nova chave\naluno['curso'] = 'Engenharia'\nprint(aluno['curso'])",
@@ -1605,9 +1652,9 @@
             }
         },
         {
-            "id": 1005,
+            "id": 31,
             "type": "coding",
-            "title": "Aula 27: Conjuntos (Sets) - Elementos Únicos",
+            "title": "Aula 31: Conjuntos (Sets) - Elementos Únicos",
             "description": "Descubra como utilizar conjuntos em Python para eliminar elementos duplicados e realizar operações matemáticas.",
             "content": "### O que são Conjuntos (Sets)?\n\nUm **Set** (conjunto) é uma coleção não ordenada de elementos **únicos**. Ele é perfeito para remover itens duplicados de uma coleção e realizar operações matemáticas como União, Interseção e Diferença.\n\n**Sintaxe:**\n```python\nnumeros = {1, 2, 3, 3, 3}\nprint(numeros)  # Imprime: {1, 2, 3}\n```\n\n**Métodos e Operações:**\n- `add(item)`: Adiciona um elemento.\n- `remove(item)`: Remove um elemento.\n- **União (`|`)**: Combina dois conjuntos.\n- **Interseção (`&`)**: Retorna apenas os elementos presentes em ambos os conjuntos.",
             "example": "# Removendo duplicatas de uma lista\nlista_com_duplicatas = [1, 2, 2, 3, 4, 4, 4]\nset_unico = set(lista_com_duplicatas)\nprint(sorted(list(set_unico)))  # Imprime: [1, 2, 3, 4]",
@@ -1643,9 +1690,9 @@
             }
         },
         {
-            "id": 1006,
+            "id": 32,
             "type": "coding",
-            "title": "Aula 28: Aprofundando em Funções (Parâmetros, Retornos e Escopo)",
+            "title": "Aula 32: Aprofundando em Funções (Parâmetros, Retornos e Escopo)",
             "description": "Aprenda a criar funções profissionais com retorno de valores, parâmetros padrão e controle de escopo.",
             "content": "### Dominando Funções em Python\n\nFunções são os blocos fundamentais para organização de código reutilizável. Nesta aula, avançaremos no estudo de **valores de retorno** com `return`, **parâmetros padrão** e **escopo de variáveis**.\n\n**O comando `return`:**\nUma função que não utiliza `return` devolve `None`. O `return` devolve o resultado para quem chamou a função e encerra sua execução imediatamente.\n\n```python\ndef multiplicar(a, b):\n    return a * b\n\nresultado = multiplicar(3, 4)\nprint(resultado)  # 12\n```\n\n**Parâmetros Padrão:**\n```python\ndef saudar(nome=\"Estudante\"):\n    print(f\"Olá, {nome}!\")\n```",
             "example": "def calcular_media(nota1, nota2=7.0):\n    return (nota1 + nota2) / 2\n\nprint(calcular_media(9.0))  # Usa nota2 padrão (7.0) -> Media 8.0",
@@ -1681,9 +1728,9 @@
             }
         },
         {
-            "id": 1007,
+            "id": 33,
             "type": "coding",
-            "title": "Aula 29: Módulos e Bibliotecas Nativas (math, random, datetime)",
+            "title": "Aula 33: Módulos e Bibliotecas Nativas (math, random, datetime)",
             "description": "Aprenda a importar e reaproveitar os módulos nativos fornecidos na biblioteca padrão do Python.",
             "content": "### O que são Módulos?\n\nUm **Módulo** é um arquivo contendo definições e comandos em Python prontas para uso. O Python já vem com a chamada \"bateria inclusa\" (Standard Library) cheia de módulos úteis!\n\n**Importando Módulos:**\n```python\nimport math\nprint(math.sqrt(16))  # Raiz quadrada -> 4.0\n\nimport random\nnumero_sorteado = random.randint(1, 10)\n```\n\n**Sintaxe de Importação:**\n- `import modulo`: Importa o módulo completo.\n- `from modulo import funcao`: Importa apenas a função específica.",
             "example": "import math\nfrom random import choice\n\nprint(math.ceil(4.2))  # Arredonda para cima -> 5\nfrutas = ['maca', 'banana', 'uva']\nprint(choice(frutas) in frutas)  # Imprime True",
@@ -1719,9 +1766,9 @@
             }
         },
         {
-            "id": 1008,
+            "id": 34,
             "type": "coding",
-            "title": "Aula 30: Tratamento de Erros (try, except, finally)",
+            "title": "Aula 34: Tratamento de Erros (try, except, finally)",
             "description": "Aprenda a tratar exceções e erros em tempo de execução para evitar que seu aplicativo quebre.",
             "content": "### Tratamento de Exceções em Python\n\nErros acontecem! Por exemplo, quando o usuário tenta dividir um número por zero ou digita texto onde esperávamos um número. Em vez de permitir que o aplicativo quebre, usamos blocos `try-except`.\n\n**Estrutura Básica:**\n```python\ntry:\n    numero = int(\"abc\")\nexcept ValueError:\n    print(\"Erro: Entrada inválida!\")\nfinally:\n    print(\"Execução finalizada.\")\n```\n\n**Tipos de Exceções Comuns:**\n- `ValueError`: Valor incompatível.\n- `ZeroDivisionError`: Divisão por zero.\n- `TypeError`: Tipo de dado incorreto.",
             "example": "try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print('Divisao por zero impedida!')\nfinally:\n    print('Fim')",
@@ -1757,9 +1804,9 @@
             }
         },
         {
-            "id": 1009,
+            "id": 35,
             "type": "coding",
-            "title": "Aula 31: Manipulação de Arquivos (open, read, write)",
+            "title": "Aula 35: Manipulação de Arquivos (open, read, write)",
             "description": "Aprenda a ler e escrever arquivos de texto persistentes em disco com Python.",
             "content": "### Manipulando Arquivos em Python\n\nPara salvar dados de forma permanente no disco, utilizamos a função `open()`. A melhor prática em Python é utilizar o gerenciador de contexto `with`, que garante o fechamento automático do arquivo.\n\n**Modos de Abertura:**\n- `'w'`: Escrita (sobreescreve o arquivo).\n- `'a'`: Anexo (adiciona ao final do arquivo).\n- `'r'`: Leitura.\n\n```python\n# Escrevendo em um arquivo\nwith open('nota.txt', 'w', encoding='utf-8') as f:\n    f.write('Olá, arquivo!')\n\n# Lendo do arquivo\nwith open('nota.txt', 'r', encoding='utf-8') as f:\n    conteudo = f.read()\n    print(conteudo)\n```",
             "example": "import tempfile\nimport os\n\n# Criando um arquivo temporário para teste\npath = os.path.join(tempfile.gettempdir(), 'teste.txt')\nwith open(path, 'w', encoding='utf-8') as f:\n    f.write('Linha 1')\n\nwith open(path, 'r', encoding='utf-8') as f:\n    print(f.read())",
@@ -1795,9 +1842,9 @@
             }
         },
         {
-            "id": 1010,
+            "id": 36,
             "type": "coding",
-            "title": "Aula 32: Introdução à Orientação a Objetos (Classes e Objetos)",
+            "title": "Aula 36: Introdução à Orientação a Objetos (Classes e Objetos)",
             "description": "Entenda os fundamentos do paradigma de Orientação a Objetos em Python.",
             "content": "### O que é Orientação a Objetos (POO)?\n\nPOO é um paradigma de programação que organiza o código em torno de **Objetos** (representações do mundo real) criados a partir de **Classes** (moldes ou projetos).\n\n**Conceitos Chave:**\n- **Classe**: O molde (`class Pessoa:`).\n- **Objeto**: A instância criada a partir da classe (`p1 = Pessoa()`).\n- `__init__`: O método construtor invocado na criação do objeto.\n- `self`: Referência à própria instância do objeto.\n\n```python\nclass Pessoa:\n    def __init__(self, nome, idade):\n        self.nome = nome\n        self.idade = idade\n\n    def apresentar(self):\n        return f\"Olá, meu nome é {self.nome}!\"\n```",
             "example": "class Cachorro:\n    def __init__(self, nome):\n        self.nome = nome\n    def latir(self):\n        return f'{self.nome} disse: Au Au!'\n\ndog = Cachorro('Rex')\nprint(dog.latir())",
@@ -1833,7 +1880,7 @@
             }
         },
         {
-            "id": 1011,
+            "id": 37,
             "type": "coding",
             "title": "Prova Prática 3: Sistema de Cadastro e Gerenciador de Tarefas",
             "description": "Desafio integrador: combine Funções, Dicionários, Tratamento de Erros e POO para construir um minissistema.",

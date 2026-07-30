@@ -24,7 +24,6 @@
         "msg_success": "Success",
         "msg_error": "Error",
         "msg_invalid_login": "Invalid username or password.",
-        "btn_logout": "Logout",
         "msg_logged_out": "Logged out successfully!",
         "msg_user_exists": "Username already exists.",
         "msg_user_created": "User successfully registered! Please login.",
@@ -279,7 +278,55 @@
         {
             "id": 7,
             "type": "theory",
-            "title": "Lesson 7: Rules for Naming Variables",
+            "title": "Lesson 7: How to install Python?",
+            "description": "Learn step-by-step how to install Python on Windows and Linux.",
+            "content": "To start programming on your own computer, you need to install the Python interpreter.\n\n**On Windows:**\n1. Go to the official website: python.org/downloads.\n2. Download the latest installer.\n3. **VERY IMPORTANT:** During installation, check the box **'Add Python to PATH'** on the first screen before clicking 'Install Now'. This ensures the terminal recognizes Python commands.\n\n**On Linux (Ubuntu/Debian):**\nLinux usually comes with Python pre-installed! To update it or make sure you have it, open the terminal and type:\n`sudo apt update`\n`sudo apt install python3 python3-pip`\n\nThat's it! To verify if the installation worked, simply open the terminal or command prompt and type `python --version` (on Windows) or `python3 --version` (on Linux).",
+            "example": "",
+            "exercise": "",
+            "tips": [
+                "Don't forget 'Add Python to PATH' on Windows. If you miss it, you'll have to reinstall or configure it manually.",
+                "pip (included in the installation) is the package manager that lets you download new libraries in the future."
+            ],
+            "references": [],
+            "quiz": {
+                "question": "What is the most critical step when installing Python on Windows to ensure commands work in the terminal?",
+                "options": [
+                    "Disable antivirus",
+                    "Check the 'Add Python to PATH' box",
+                    "Install it on a flash drive",
+                    "Download the Linux version"
+                ],
+                "answer": 1
+            }
+        },
+        {
+            "id": 8,
+            "type": "theory",
+            "title": "Lesson 8: What are IDEs and Code Editors?",
+            "description": "Discover the tools programmers use to write code efficiently.",
+            "content": "An **IDE** (Integrated Development Environment) or a **Code Editor** is the program where you type your scripts. Think of it as the 'Microsoft Word' for programmers, but filled with tools that color your code, help find errors before running, and auto-complete words.\n\nCan you write code in Notepad? Yes, but it will be very painful!\n\n**Top Editors and IDEs in the Market:**\n- **VS Code (Visual Studio Code)**: The most popular editor in the world. Very lightweight and expandable with extensions.\n- **PyCharm**: An extremely powerful and robust IDE created specifically for Python, ideal for giant projects.\n- **Jupyter Notebook**: Widely used in Data Science and Artificial Intelligence, as it allows mixing code, text, and visual graphs on the same screen.\n- **IDLE**: The simple editor that comes pre-installed with Python.",
+            "example": "",
+            "exercise": "",
+            "tips": [
+                "For beginners, VS Code is almost always the best starting point as it is fast and friendly.",
+                "IDEs have built-in terminals, meaning you can code and run the code on the same screen, just like this app!"
+            ],
+            "references": [],
+            "quiz": {
+                "question": "Which IDE listed above was created specifically for the Python language and is focused on robust projects?",
+                "options": [
+                    "PyCharm",
+                    "VS Code",
+                    "Notepad",
+                    "Jupyter Notebook"
+                ],
+                "answer": 0
+            }
+        },
+        {
+            "id": 9,
+            "type": "theory",
+            "title": "Lesson 9: Rules for Naming Variables",
             "description": "Learn the snake_case pattern and how to name your variables correctly.",
             "content": "Before we start creating variables and writing real code, we need to learn the Python baptism rules!\n\nIn programming, there are strict rules about what can and cannot be the name of a variable:\n1. **No spaces**: You can never use spaces. **low price** will generate an error!\n2. **Without accentuation or cedilla**: Forget correct Portuguese. Instead of **Greeting**, write **greeting**. Instead of **price**, use **price**.\n3. **Don't start with numbers**: **1_place** will give an error, but **place_1** is accepted.\n\n### The Snake Case Pattern 🐍\nIn Python, the community has adopted a pattern called **snake_case** (snake case). In it, we use lowercase letters and replace spaces with an _underline_ (**_**).\n\n- ❌ Wrong: **low price**, **Lower Price** or **low price**\n- ✅ Right: **low_price**\n\nAdopting this standard from day one will make your code professional and readable to any programmer in the world!",
             "example": "",
@@ -301,7 +348,7 @@
             }
         },
         {
-            "id": 8,
+            "id": 10,
             "type": "coding",
             "title": "Class 8: Variables and Texts (Strings)",
             "description": "Learn what a variable is and how to store text in it.",
@@ -425,7 +472,7 @@
             ]
         },
         {
-            "id": 9,
+            "id": 11,
             "type": "coding",
             "title": "Class 9: Integers (Int)",
             "description": "See how to deal with exact math and integers.",
@@ -494,7 +541,7 @@
             ]
         },
         {
-            "id": 10,
+            "id": 12,
             "type": "coding",
             "title": "Class 10: Decimal Numbers (Float)",
             "description": "Learn to record weights, heights and coins with broken numbers.",
@@ -563,7 +610,7 @@
             ]
         },
         {
-            "id": 11,
+            "id": 13,
             "type": "coding",
             "title": "Class 11: Boolean Values ​​(Bool)",
             "description": "Discover how the computer makes logical decisions (Yes or No).",
@@ -632,9 +679,9 @@
             ]
         },
         {
-            "id": 12,
+            "id": 14,
             "type": "coding",
-            "title": "Lesson 12: Arithmetic Operators",
+            "title": "Lesson 14: Arithmetic Operators",
             "description": "Basic Mathematical Operations in Python",
             "content": "Just as we use calculators to do math, in programming we use **Arithmetic Operators**! They are the symbols responsible for carrying out all mathematical calculations within Python, from simple bakery bills to spatial equations.\n\nBelow you can see the main operators available in the language:\n\n- **+** (addition): Adds two values.\n- **-** (subtraction): Subtracts one value from another.\n- **\\*** (multiplication): Multiplies the values ​​(we use the asterisk!).\n- **/** (division): Divides and always returns a broken number (decimal).\n- **//** (integer division): Divides but cuts the decimal part, leaving only the integer.\n- **%** (modulo): Takes only the **remainder** of the division (great for knowing if a number is even or odd).\n- **\\*\\*** (exponentiation): Raises one number to the power of another (ex: 2 ** 3 is 8).",
             "example": "years = 10\ndays_in_year = 365\na = 20\nb = 5\n\nprint(\"Addition:\", a + b)\nprint(\"Subtraction:\", a - b)\nprint(\"Multiplication:\", a * b)\nprint(\"Division:\", a / b)\nprint(\"Age in days:\", years * days_in_year)",
@@ -706,9 +753,9 @@
             ]
         },
         {
-            "id": 13,
+            "id": 15,
             "type": "coding",
-            "title": "Lesson 13: Lists and Iteration",
+            "title": "Lesson 15: Lists and Iteration",
             "description": "Work with lists and loops in Python",
             "content": "Think of a list in Python as a box that holds several items at the same time.\n\n**What is it for?**\n- Save several data together in the same variable (like a shopping list: bread, milk, eggs).\n- Access a specific item (the 1st, the 2nd…).\n- Go through all the items one by one to do something (e.g. print each name).\n\n**How it works in practice (very simple)**\nIn Python, you create a list like this:\n```python\nshopping = [\"bread\", \"milk\", \"eggs\"]\n```\nNow `shopping` is the “box” with 3 items.\n\n**How to get an item**\nYou can take it by its “number” (index). **Attention:** in Python the count starts at 0.\n\n- `shopping[0]` is the first item (“bread”)\n- `shopping[1]` is the second (“milk”)\n- `shopping[2]` is the third (“eggs”)\n\nExample:\n```python\nprint(purchases[1]) # will print: milk\n```\n\n**How to exchange an item (Replace)**\nYou can easily exchange what is inside a position by entering the index and a new value.\n```python\nCompras[1] = \"chocolatado\" # The 'milk' was replaced by chocolate!\n```\n\n**How to get around (see all)**\nGenerally you use `for` to do something with each item:\n```python\nfor item in purchases:\n    print(item)\n```\nThis will print bread, then milk, then eggs.\n\n**Want to add or take things away?**\nAdd at the end:\n```python\npurchases.append(\"banana\")\n```\nRemove the last one (the end):\n```python\nshopping.pop()\n```",
             "example": "fruits = [\"apple\", \"banana\", \"orange\"]\n\nprint(\"First fruit:\", fruits[0])\n# len() comes from 'length'. Counts how many items are in the box.\nprint(\"Number of fruits:\", len(fruits))\n\nprint(\"\\nAll fruits:\")\n# for = 'for each'. in = 'inside'. (For each fruit inside fruits:)\nfor fruit in fruits:\n    print(\"-\", fruit)\n\n# You can also easily replace items!\nfruits[0] = \"strawberry\"\nprint(\"\\nWe replaced the apple with a strawberry:\")\nprint(fruits)\n\n# append() means to attach/add at the end.\nfruits.append(\"watermelon\")\nprint(\"\\nAfter adding watermelon:\")\nprint(fruits)",
@@ -776,7 +823,7 @@
             ]
         },
         {
-            "id": 1001,
+            "id": 16,
             "type": "coding",
             "title": "Practical Test 1: Calculator Logic",
             "description": "Test your knowledge by solving calculator logic with if/else and loops.",
@@ -812,9 +859,9 @@
             ]
         },
         {
-            "id": 14,
+            "id": 17,
             "type": "theory",
-            "title": "Lesson 14: Opening your Appetite",
+            "title": "Lesson 17: Opening your Appetite",
             "description": "Find out why Python is the perfect tool for automating boring tasks.",
             "content": "You know those repetitive tasks on the computer that make you lazy just thinking about? Python was created precisely to be your automation 'magic wand'! With it, you write small scripts that do the heavy lifting for you.\n\nAnd the best part: Python is an **interpreted language**. This means you don't have to go through boring and time-consuming 'compiling' processes (translating everything into the machine) before testing. You write the code and it runs immediately. Just like that!",
             "example": "",
@@ -841,7 +888,7 @@
             }
         },
         {
-            "id": 15,
+            "id": 18,
             "type": "theory",
             "title": "Class 15: The Interpreter and the Interactive Mode",
             "description": "Learn how to live chat with Python through the terminal.",
@@ -870,7 +917,7 @@
             }
         },
         {
-            "id": 16,
+            "id": 19,
             "type": "theory",
             "title": "Class 16: Passing Arguments",
             "description": "Understand how to send 'extra ingredients' to your program before it runs.",
@@ -899,9 +946,9 @@
             }
         },
         {
-            "id": 17,
+            "id": 20,
             "type": "theory",
-            "title": "Lesson 17: Coding Source Code Files",
+            "title": "Lesson 20: Coding Source Code Files",
             "description": "Understand how Python reads accents and special characters without bugs.",
             "content": "Have you ever opened a website and seen strange characters like 'Ã§Ã£o' instead of cedillas and accents? This happens when the computer misses the reading 'dictionary'.\n\nTo avoid this, Python defaults to a super dictionary called **UTF-8**. It is capable of understanding characters from practically every language in the world, including emojis! Thanks to UTF-8, you can write variables and comments with accents (ç, ã, é) without fear of breaking the program.",
             "example": "# -*- coding: cp1252 -*-\n# The example above sets the file encoding to Windows-1252",
@@ -928,9 +975,9 @@
             }
         },
         {
-            "id": 18,
+            "id": 21,
             "type": "coding",
-            "title": "Lesson 18: Using Python as a Calculator - Numbers",
+            "title": "Lesson 21: Using Python as a Calculator - Numbers",
             "description": "Understand how to make contents, divide pizzas and raise numbers to power.",
             "tips": [
                 "Use the equals sign '=' only to store results inside variables.",
@@ -1008,9 +1055,9 @@
             ]
         },
         {
-            "id": 19,
+            "id": 22,
             "type": "coding",
-            "title": "Lesson 19: Advanced Strings - Indexes and Slicing",
+            "title": "Lesson 22: Advanced Strings - Indexes and Slicing",
             "description": "Learn how to slice texts and get just the letters you want.",
             "tips": [
                 "Texts (strings) are immutable. You can't change a single letter of an already created text, you can only create a whole new text.",
@@ -1088,7 +1135,7 @@
             ]
         },
         {
-            "id": 1002,
+            "id": 23,
             "type": "coding",
             "title": "Practical Test 2: Nickname and Password Generator",
             "description": "A system that creates nicknames or temporary passwords based on the user's full name.",
@@ -1129,9 +1176,9 @@
             }
         },
         {
-            "id": 20,
+            "id": 24,
             "type": "coding",
-            "title": "Lesson 20: Lists and Slicing",
+            "title": "Lesson 24: Lists and Slicing",
             "description": "Discover lists, which are like grocery bags that you can change.",
             "tips": [
                 "You can empty parts of your list by replacing entire slices with an empty list `[]`.",
@@ -1209,9 +1256,9 @@
             ]
         },
         {
-            "id": 21,
+            "id": 25,
             "type": "coding",
-            "title": "Lesson 21: Multiple Assignment and While Loop",
+            "title": "Lesson 25: Multiple Assignment and While Loop",
             "description": "Learn the power of assigning values ​​to multiple things at once and repeating actions with the while loop.",
             "tips": [
                 "The print() function always skips to the next line at the end. If you want to avoid this, put `end=' '` inside it.",
@@ -1289,9 +1336,9 @@
             ]
         },
         {
-            "id": 22,
+            "id": 26,
             "type": "coding",
-            "title": "Lesson 22: Flow Tools - If, For and Range",
+            "title": "Lesson 26: Flow Tools - If, For and Range",
             "description": "Learn how to make the computer make decisions with if and repeat with for and range.",
             "tips": [
                 "Pay attention to range(3, 6): it will generate numbers 3, 4, and 5, but ALWAYS excludes the last number (6 is left out!).",
@@ -1369,9 +1416,9 @@
             ]
         },
         {
-            "id": 23,
+            "id": 27,
             "type": "coding",
-            "title": "Lesson 23: Break, Continue and Else Clauses in Loops",
+            "title": "Lesson 27: Break, Continue and Else Clauses in Loops",
             "description": "Learn how to eject from a repeating loop or skip your turn.",
             "tips": [
                 "The 'pass' command is just a ghost. It does nothing, it just fills a space when Python forces you to write something.",
@@ -1449,7 +1496,7 @@
             ]
         },
         {
-            "id": 24,
+            "id": 28,
             "type": "coding",
             "title": "Class 24: Match Instruction and Definition of Functions",
             "description": "Discover how to create your own magical tools (functions).",
@@ -1529,7 +1576,7 @@
             ]
         },
         {
-            "id": 1003,
+            "id": 29,
             "type": "coding",
             "title": "Class 25: Tuples - Immutable Collections",
             "description": "Learn about tuples in Python, how to create them, unpack them, and why immutability is useful.",
@@ -1567,7 +1614,7 @@
             }
         },
         {
-            "id": 1004,
+            "id": 30,
             "type": "coding",
             "title": "Class 26: Dictionaries - Mapping Keys and Values",
             "description": "Master the dictionary structure in Python to associate unique keys with values.",
@@ -1605,7 +1652,7 @@
             }
         },
         {
-            "id": 1005,
+            "id": 31,
             "type": "coding",
             "title": "Class 27: Sets - Single Elements",
             "description": "Discover how to use sets in Python to eliminate duplicate elements and perform mathematical operations.",
@@ -1643,7 +1690,7 @@
             }
         },
         {
-            "id": 1006,
+            "id": 32,
             "type": "coding",
             "title": "Class 28: Delving deeper into Functions (Parameters, Returns and Scope)",
             "description": "Learn how to create professional functions with return values, default parameters, and scope control.",
@@ -1681,7 +1728,7 @@
             }
         },
         {
-            "id": 1007,
+            "id": 33,
             "type": "coding",
             "title": "Class 29: Native Modules and Libraries (math, random, datetime)",
             "description": "Learn how to import and reuse the native modules provided in the Python standard library.",
@@ -1719,9 +1766,9 @@
             }
         },
         {
-            "id": 1008,
+            "id": 34,
             "type": "coding",
-            "title": "Lesson 30: Error Handling (try, except, finally)",
+            "title": "Lesson 34: Error Handling (try, except, finally)",
             "description": "Learn how to handle exceptions and errors at runtime to prevent your application from breaking.",
             "content": "### Exception Handling in Python\n\nMistakes happen! For example, when the user tries to divide a number by zero or types text where we expected a number. Instead of allowing the application to break, we use `try-except` blocks.\n\n**Basic Structure:**\n```python\ntry:\n    number = int(\"abc\")\nexcept ValueError:\n    print(\"Error: Invalid entry!\")\nfinally:\n    print(\"Execution completed.\")\n```\n\n**Types of Common Exceptions:**\n- `ValueError`: Incompatible value.\n- `ZeroDivisionError`: Division by zero.\n- `TypeError`: Incorrect data type.",
             "example": "try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print('Division by zero prevented!')\nfinally:\n    print('End')",
@@ -1757,7 +1804,7 @@
             }
         },
         {
-            "id": 1009,
+            "id": 35,
             "type": "coding",
             "title": "Class 31: File Manipulation (open, read, write)",
             "description": "Learn how to read and write persistent text files to disk with Python.",
@@ -1795,7 +1842,7 @@
             }
         },
         {
-            "id": 1010,
+            "id": 36,
             "type": "coding",
             "title": "Class 32: Introduction to Object Orientation (Classes and Objects)",
             "description": "Understand the fundamentals of the Object Orientation paradigm in Python.",
@@ -1833,7 +1880,7 @@
             }
         },
         {
-            "id": 1011,
+            "id": 37,
             "type": "coding",
             "title": "Practical Test 3: Registration System and Task Manager",
             "description": "Integrative challenge: combine Functions, Dictionaries, Error Handling and OOP to build a mini-system.",
