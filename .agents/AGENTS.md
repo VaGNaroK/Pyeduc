@@ -90,7 +90,7 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 ## 19. Empacotamento de Produção Flet (CI/CD)
 - **Bloqueio Explícito de Arquivos**: Ao rodar comandos como `flet build windows` em pipelines como GitHub Actions, **NÃO** utilize expressões curinga (*globs* com aspas como `"*.md"` ou `"*.bat"`). O PowerShell as trata de forma literal e vaza os códigos de fonte. Use listagem explícita no argumento `--exclude` (ex: `AGENTS.md ARCHITECTURE.md run.bat pyproject.toml`).
-- **Mapeamento de Mídias (Assets)**: A engine do Flutter requer a declaração explícita da raiz de mídias (como os ícones de UI) durante o *build*. Para imagens da pasta `content` renderizarem nas versões nativas (Desktop), é obrigatório embutir o argumento `--assets-dir content` no comando da linha de comando CI.
+- **Mapeamento de Mídias (Assets)**: A engine do Flutter requer a declaração explícita da raiz de mídias. Desde as versões modernas do Flet (0.80+), o argumento `--assets-dir` por linha de comando é inválido e quebra o CI. Em vez disso, essa configuração já deve estar embutida no `pyproject.toml` (`assets_dir = "content"` sob `[tool.flet]`). Nunca adicione `--assets-dir` no comando do `build.yml`.
 - **Otimização**: Sempre aplique a flag `--cleanup-app` na hora da compilação de _releases_ para garantir a remoção e limpeza total de pacotes lixo sob a árvore binária.
 
 ## 20. Sanduíche e Vazamento Visual (Ghosting de UI)
