@@ -4,9 +4,20 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-## [1.2.3] - 2026-07-28
+## [1.2.4] - 2026-07-29
 
 ### Adicionado
+- **Novas Aulas Iniciais**: Inclusão de três novas lições fundamentais no currículo (`content/lessons_*.json`): "Instalação do Python", "IDEs (Ambientes de Desenvolvimento)" e "Comentários e Documentação", acompanhadas de 10 novos exercícios práticos.
+- **Migração Segura de Progresso (`progress_manager.py`)**: Devido à injeção das novas aulas no meio da grade, os históricos do SQLite (`data/pyeduc.db`) dos usuários existentes foram dinamicamente deslocados (+3 nas IDs de tabelas `progress` e `user_state`) para proteger e manter a sincronia de lições concluídas.
+- **Diretrizes de Agentes (Speckit)**: Novas travas de conhecimento (regras 16 a 20) inseridas no arquivo raiz `AGENTS.md`, abordando prevenção de falso-positivos no auto-grader, tratamento de `kInvalidArguments` do Flet e Ghosting de UI.
+
+### Corrigido
+- **Vazamento do Código-Fonte e Ícones Faltantes (Windows Build)**: A rotina de compilação do Windows foi corrigida (adição de diretivas explícitas `--exclude` e `--assets-dir content`) solucionando o problema crítico onde o código Python inteiro estava sendo empacotado abertamente no app e imagens como `pyeduc.svg` não carregavam.
+- **Ghosting de UI e Painel de Mensagens (`main_window.py`)**: Implementado *State Cleanup* no evento de `on_logout` e `on_lesson_select`. O painel de feedback de exercícios (`smart_messages_panel`) e o terminal console agora são limpos ao invés de apenas ocultados, prevenindo que mensagens antigas em português ("Parabéns!") e rastros de código reaparecessem após a troca de idioma e login.
+- **Tradução Dinâmica da Barra Superior (`top_bar.py`)**: Substituição da propriedade depreciada `.text` pelo uso correto de `.content` nos botões do topo (Sair, Importar, Exportar), fazendo a engine do Flet atualizar os idiomas na hora em que o usuário troca a chave no Dropdown da página inicial.
+- **Dessincronia de Imagens Didáticas (`lesson_view.py`)**: Os mapeamentos de IDs fixos (hardcoded) para injeção de imagens na teoria (ex: infográfico de variáveis) foram atualizados para abraçar o novo desvio de numeração gerado pelas 3 aulas inéditas.
+
+## [1.2.3] - 2026-07-28### Adicionado
 - **Suporte Multi-Idioma Modular (`content/lessons_*.json`)**: O sistema foi reestruturado para não depender mais de um único e gigante arquivo `lessons.json`. A pasta `content/` agora pode abrigar arquivos de idiomas separados (como `lessons_pt.json` e `lessons_en.json`).
 - **Detecção Dinâmica de Idiomas (`src/content_manager.py`)**: O menu dropdown de seleção de idioma na tela de Login não é mais chumbado. Ele escaneia ativamente a pasta `content/` em busca de arquivos que contenham o cabeçalho mágico `_meta` e carrega as opções automaticamente (facilitando a inclusão de futuros idiomas como o Espanhol sem precisar alterar o código Python).
 - **Manual do Usuário Ilustrado (`MANUAL.md`)**: Criado o documento raiz `MANUAL.md` servindo como guia prático de inicialização da plataforma, focado nas funcionalidades essenciais (Navegação, IDE Console e Uso do Tutor IA Socrático). As imagens demonstrativas estão abrigadas no sub-diretório estrutural `docs/images/`.

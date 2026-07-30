@@ -272,6 +272,14 @@ class PyeducApp:
 
     def on_lesson_select(self, idx):
         self.state.notify_lesson_changed(idx)
+        
+        # Clear console and smart messages when changing lessons
+        self.editor_console.smart_messages_panel.content = ft.Text("")
+        self.editor_console.smart_messages_panel.bgcolor = "#1e293b"
+        self.editor_console.smart_messages_panel.visible = False
+        self.editor_console.btn_ask_ai_err.visible = False
+        self.editor_console.console_output.value = ""
+        
         self.update_layout_for_lesson()
         self.update_footer()
 
@@ -404,6 +412,12 @@ class PyeducApp:
         self.sidebar.visible = False
         self.footer.visible = False
         self.lesson_view.visible = False
+        
+        # Clear smart messages panel to prevent previous session messages leaking
+        self.editor_console.smart_messages_panel.content = ft.Text("")
+        self.editor_console.smart_messages_panel.bgcolor = "#1e293b"
+        self.editor_console.smart_messages_panel.visible = False
+        self.editor_console.btn_ask_ai_err.visible = False
         self.editor_console.visible = False
         self.ai_sidebar_container.visible = False
         self.ai_splitter.visible = False

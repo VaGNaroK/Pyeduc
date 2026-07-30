@@ -59,7 +59,7 @@ class TopBar(ft.Container):
 
     def update_strings(self):
         cm = self.state.content_manager
-        self.btn_export.text = cm.get_ui_string("btn_export")
-        self.btn_import.text = cm.get_ui_string("btn_import")
-        self.btn_logout.text = cm.get_ui_string("btn_logout", "Sair")
+        self.btn_export.content = cm.get_ui_string("btn_export")
+        self.btn_import.content = cm.get_ui_string("btn_import")
+        self.btn_logout.content = cm.get_ui_string("btn_logout", "Sair")
         self.update()

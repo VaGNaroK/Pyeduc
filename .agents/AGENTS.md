@@ -87,3 +87,11 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 ## 18. Tratamento de Estado Ausente (Sessão Deslogada)
 - **Proteção contra `NoneType`**: Ao manipular variáveis interativas do progresso (como `current_lesson_idx` do `AppState` ou no recálculo em `update_footer`), **SEMPRE** utilize `if idx is not None` antes de engatilhar atualizações ou contas matemáticas da interface. Variáveis de sessão perdem seu valor `0` para se tornarem `None` no processo de Logout. Não injetar essas guardas provocará crashs como "Property has no setter" e "unsupported operand type(s) for +: 'NoneType' and 'int'".
+
+## 19. Empacotamento de Produção Flet (CI/CD)
+- **Bloqueio Explícito de Arquivos**: Ao rodar comandos como `flet build windows` em pipelines como GitHub Actions, **NÃO** utilize expressões curinga (*globs* com aspas como `"*.md"` ou `"*.bat"`). O PowerShell as trata de forma literal e vaza os códigos de fonte. Use listagem explícita no argumento `--exclude` (ex: `AGENTS.md ARCHITECTURE.md run.bat pyproject.toml`).
+- **Mapeamento de Mídias (Assets)**: A engine do Flutter requer a declaração explícita da raiz de mídias (como os ícones de UI) durante o *build*. Para imagens da pasta `content` renderizarem nas versões nativas (Desktop), é obrigatório embutir o argumento `--assets-dir content` no comando da linha de comando CI.
+- **Otimização**: Sempre aplique a flag `--cleanup-app` na hora da compilação de _releases_ para garantir a remoção e limpeza total de pacotes lixo sob a árvore binária.
+
+## 20. Sanduíche e Vazamento Visual (Ghosting de UI)
+- **Ocultação de Componentes Irmãos**: Quando o Flet troca de layout (como a passagem do "Modo Estudo" para a "Tela de Login" na função `on_logout`), instâncias que dividem as mesmas colunas/linhas na raiz não partilham automaticamente dos efeitos de `.visible = False`. Você deve ser meticuloso em ocultar de forma pontual todos os irmãos injetados individualmente (ex: `self.lesson_view.activity_container.visible = False`, `drag_splitter`, `editor_console`) para prevenir que telas como os quizzes da teoria fiquem "voando" por cima do painel inicial sobrepostos pela Flet Engine.
