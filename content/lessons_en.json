@@ -147,7 +147,7 @@
             "type": "theory",
             "title": "Lesson 2: Why was Python created?",
             "description": "Understand Guido van Rossum's motivations and predecessor language.",
-            "content": "Guido van Rossum worked at CWI (Centrum Wiskunde & Informatica in the Netherlands) on a project involving the **ABC** language.\n\nThe **ABC** language was very easy to teach to beginners but had severe limitations for more complex tasks. On the other hand, languages ​​like C were very hard to read.\n\nGuido's goal in creating Python was to combine the best of both worlds: to create a language that was as **simple and readable as ABC**, but with the **power and features of C** to handle the operating system.",
+            "content": "Guido van Rossum worked at CWI (Centrum Wiskunde & Informatica in the Netherlands) on a project involving the **ABC** language.\n\nThe **ABC** language was very easy to teach to beginners but had severe limitations for more complex tasks. On the other hand, languages ​​like C were very hard to read.\n\nGuido's goal in creating Python was to combine the best of both worlds: to create a language that was as **simple and readable as ABC**, but with the **power and features of C** to handle the operating system.\n\n**The Great Differentiator:**\nPython's number one priority has always been to be **easy to read, easy to learn, and easy to maintain**. Its clean code resembles plain English and gets rid of curly braces and semicolons. This makes reading and team collaboration infinitely faster compared to messy and structurally cluttered languages.",
             "example": "",
             "exercise": "",
             "tips": [
