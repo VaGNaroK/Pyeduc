@@ -1,0 +1,40 @@
+[project]
+name = "pyeduc"
+version = "1.0.0"
+description = "App Educacional Python com Flet"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.flet]
+icon = "content/icons/pyeduc.svg"
+assets_dir = "content"
+product = "Pyeduc"
+org = "org.pyeduc"
+exclude = [
+    ".git",
+    ".github",
+    ".agents",
+    ".pytest_cache",
+    ".coverage",
+    "venv",
+    ".venv",
+    "data",
+    "logs",
+    "__pycache__",
+    "*.pyc",
+    "*.pyo",
+    "tests",
+    "scripts",
+    "flatpak",
+    "ci-cd correction*",
+    "*.txt",
+    "*.bat",
+    "*.sh",
+    "*.md",
+    "*.7z"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+[tool.flet.app]
+module = "main"

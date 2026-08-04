@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dados de usuário
+data/progress.json
+data/pyeduc.db
+
+# Logs
+logs/
+*.log
+
+# Arquivos temporários e de desenvolvimento
+*.tmp
+*.bak
+*.7z
+.coverage
+.pytest_cache/
+*.txt
+correções no CI.txt
+ci-cd correction*
+pyeduc_*
+pyeduc.flatpak
+pyeduc_amd64.deb
+.flatpak-builder/
+build-dir/
+repo/
+

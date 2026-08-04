@@ -1,0 +1,57 @@
+app-id: org.pyeduc.App
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: pyeduc
+finish-args:
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --env=FLET_PLATFORM=linux
+  - --env=FLET_EMBEDDED=true
+modules:
+  - name: pyeduc
+    buildsystem: simple
+    sources:
+      - type: dir
+        path: ..
+    build-commands:
+      - mkdir -p /app/opt/pyeduc
+      - cp -r build/linux/* /app/opt/pyeduc/
+      - mkdir -p /app/opt/pyeduc/content
+      - cp -r content/* /app/opt/pyeduc/content/
+      - mkdir -p /app/opt/pyeduc/app/assets/content/icons
+      - cp content/icons/pyeduc.svg /app/opt/pyeduc/app/assets/content/icons/pyeduc.svg
+      - mkdir -p /app/bin
+      - ln -s /app/opt/pyeduc/pyeduc /app/bin/pyeduc
+      - mkdir -p /app/share/icons/hicolor/scalable/apps
+      - cp content/icons/pyeduc.svg /app/share/icons/hicolor/scalable/apps/org.pyeduc.App.svg
+      - mkdir -p /app/share/applications
+      - |
+        cat << 'EOF' > /app/share/applications/org.pyeduc.App.desktop
+        [Desktop Entry]
+        Name=Pyeduc
+        Exec=pyeduc
+        Icon=org.pyeduc.App
+        Type=Application
+        Categories=Education;Development;
+        EOF
+      - mkdir -p /app/share/metainfo
+      - |
+        cat << 'EOF' > /app/share/metainfo/org.pyeduc.App.metainfo.xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <component type="desktop-application">
+          <id>org.pyeduc.App</id>
+          <metadata_license>CC0-1.0</metadata_license>
+          <project_license>MIT</project_license>
+          <name>Pyeduc</name>
+          <summary>App Educacional Python com Flet</summary>
+          <description>
+            <p>
+              Pyeduc é uma aplicação educacional interativa para aprender programação em Python com Flet e um Tutor IA integrado.
+            </p>
+          </description>
+          <launchable type="desktop-id">org.pyeduc.App.desktop</launchable>
+        </component>
+        EOF
