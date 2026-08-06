@@ -198,13 +198,13 @@ class LessonView(ft.Container):
                 )
                 
                 # Hardcoded image injections from gui.py
-                if lesson.get("id") == 11:
+                if lesson.get("id") == 16:
                     self.content_column.controls.append(ft.Container(content=ft.Image(src="images/variavel_exemple.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
-                elif lesson.get("id") == 14:
+                elif lesson.get("id") == 24:
                     self.content_column.controls.append(ft.Container(content=ft.Image(src="images/boolean.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
-                elif lesson.get("id") == 15:
+                elif lesson.get("id") == 25:
                     self.content_column.controls.append(ft.Container(content=ft.Image(src="images/aritmetics.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
-                elif lesson.get("id") == 16:
+                elif lesson.get("id") == 27:
                     self.content_column.controls.append(ft.Container(content=ft.Image(src="images/list.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
             
             coding_controls = []
@@ -366,9 +366,9 @@ class LessonView(ft.Container):
                         ex_text, btn_copy
                     ])
                 
-                if lesson.get("id") == 23 and "quadrados = " in sec["example"]:
+                if lesson.get("id") == 35 and "quadrados = " in sec["example"]:
                     coding_controls.append(ft.Container(content=ft.Image(src="images/list2.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
-                elif lesson.get("id") == 24 and "# Gerando a sequência de Fibonacci" in sec["example"]:
+                elif lesson.get("id") == 36 and "# Gerando a sequência de Fibonacci" in sec["example"]:
                     coding_controls.append(ft.Container(content=ft.Image(src="images/atribuition.png", width=1200), alignment=ft.Alignment.CENTER, margin=ft.Margin(top=20, bottom=20, left=0, right=0)))
                 
             if sec.get("exercises") or sec.get("exercise"):

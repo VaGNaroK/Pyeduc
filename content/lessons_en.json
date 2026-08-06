@@ -300,9 +300,27 @@
       }
     },
     {
-      "id": 8,
       "type": "theory",
-      "title": "Lesson 8: What are IDEs and Code Editors?",
+      "title": "Lesson 8: What is PIP?",
+      "description": "Understand the package manager of the Python ecosystem.",
+      "content": "**PIP** (Pip Installs Packages) is the standard package manager for the Python ecosystem. Think of it as the 'App Store' or 'Google Play' for developers. When you need functionality that doesn't come standard with Python (like connecting to a cloud database, creating complex charts, or GUI apps), you use PIP in the terminal to download these third-party tools directly from **PyPI** (Python Package Index). It saves thousands of hours of work!",
+      "quiz": {
+        "question": "What is PIP in the Python ecosystem?",
+        "options": [
+          "A package manager",
+          "A code editor (IDE)",
+          "A web browser",
+          "A database"
+        ],
+        "answer": 0
+      },
+      "id": 8,
+      "example": "# Installing a famous library for web requests\npip install requests\n\n# Installing Pandas for data analysis\npip install pandas"
+    },
+    {
+      "id": 9,
+      "type": "theory",
+      "title": "Lesson 9: What are IDEs and Code Editors?",
       "description": "Discover the tools programmers use to write code efficiently.",
       "content": "An **IDE** (Integrated Development Environment) or a **Code Editor** is the program where you type your scripts. Think of it as the 'Microsoft Word' for programmers, but filled with tools that color your code, help find errors before running, and auto-complete words.\n\nCan you write code in Notepad? Yes, but it will be very painful!\n\n**Top Editors and IDEs in the Market:**\n- **VS Code (Visual Studio Code)**: The most popular editor in the world. Very lightweight and expandable with extensions.\n- **PyCharm**: An extremely powerful and robust IDE created specifically for Python, ideal for giant projects.\n- **Jupyter Notebook**: Widely used in Data Science and Artificial Intelligence, as it allows mixing code, text, and visual graphs on the same screen.\n- **IDLE**: The simple editor that comes pre-installed with Python.",
       "example": "",
@@ -324,9 +342,9 @@
       }
     },
     {
-      "id": 9,
+      "id": 10,
       "type": "coding",
-      "title": "Lesson 9: Comments and Documentation",
+      "title": "Lesson 10: Comments and Documentation",
       "description": "Learn to annotate your code to explain what it does.",
       "content": "Comments are annotations you make in the code. Python completely ignores any text that comes after a hashtag (`#`). They are used to explain the code, leave warnings for other programmers, or even to temporarily 'disable' a piece of code you don't want to run.\n\nYou can also use three single (`'''`) or double (`\"\"\"`) quotes to create multi-line comments.",
       "example": "# Printing a message\nprint('Hello!')  # This is an inline comment",
@@ -378,9 +396,81 @@
       "references": []
     },
     {
-      "id": 10,
       "type": "theory",
-      "title": "Lesson 10: Rules for Naming Variables",
+      "title": "Lesson 11: Quiz - Comment Symbol",
+      "description": "Test your knowledge about comments in Python.",
+      "content": "Comments are valuable notes we write in the source code so that other developers (or ourselves in the future) can understand the reasoning behind complex logic. Anything written after the comment symbol will be completely ignored by the Python interpreter, not affecting the speed or final result of the program.",
+      "quiz": {
+        "question": "Which symbol is used to create single-line comments in Python?",
+        "options": [
+          "#",
+          "/*",
+          "//",
+          "--"
+        ],
+        "answer": 0
+      },
+      "id": 11,
+      "example": "# This is a single-line comment in Python.\nprint(\"Hello!\")  # You can also place the comment after a valid command."
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 12: Quiz - The Best Comment",
+      "description": "Learn to write useful and non-redundant comments.",
+      "content": "One of the biggest mistakes beginner programmers make is commenting the obvious. A good comment should explain **why** something was done, the business intent, or warn about a peculiarity. Your code, through good variable names, should already explain **what** is happening. If you have to comment every line, perhaps your code needs to be rewritten to be more readable.",
+      "quiz": {
+        "question": "Which of these is the BEST comment for the code: total = price + tax?",
+        "options": [
+          "# Calculate the final total including tax",
+          "# Math operation",
+          "# Add price and tax",
+          "# total equals price plus tax"
+        ],
+        "answer": 0
+      },
+      "id": 12,
+      "example": "# BAD (Redundant):\n# Adds price and tax and saves in total\ntotal = price + tax\n\n# GOOD (Explains context):\n# The 15% tax is mandatory for interstate sales (Law 123/45)\ntotal = price + tax"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 13: Quiz - When to Comment?",
+      "description": "Reflect on the ideal frequency of comments.",
+      "content": "The golden rule (Clean Code) states that comments should only be used when the code itself cannot express its intent. Code that describes highly complex mathematical rules, integrations with legacy systems, or small technical 'hacks' to bypass bugs in other libraries are excellent candidates for documentation.",
+      "quiz": {
+        "question": "When should you write comments in your code?",
+        "options": [
+          "Never, good code should be self-explanatory.",
+          "Only at the beginning of the file.",
+          "On every line.",
+          "Only when the code is complex or the purpose is not obvious."
+        ],
+        "answer": 3
+      },
+      "id": 13,
+      "example": "# WORKAROUND: We had to wait 2 seconds here because the bank's API always delays the response on the first connection attempt.\nimport time\ntime.sleep(2)\nconnect_db()"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 14: Quiz - Comment Execution",
+      "description": "What does the interpreter think of your comments?",
+      "content": "Unlike string literals (which are loaded into memory), comments starting with `#` are removed from execution before the program even begins to run deeply. This means you can have thousands of lines of comments explaining a complex algorithm with absolutely no performance weight or slowdown in your application.",
+      "quiz": {
+        "question": "What happens to comments when Python executes your program?",
+        "options": [
+          "They are displayed to the user.",
+          "They are converted to print.",
+          "They are ignored by Python.",
+          "They make the program slower."
+        ],
+        "answer": 2
+      },
+      "id": 14,
+      "example": "# You can write an entire paragraph of explanation here.\n# Python won't spend even half a millisecond ignoring all this.\n# Therefore, don't be afraid to document your project!\nprint(\"The code remains fast!\")"
+    },
+    {
+      "id": 15,
+      "type": "theory",
+      "title": "Lesson 15: Rules for Naming Variables",
       "description": "Learn the snake_case pattern and how to name your variables correctly.",
       "content": "Before we start creating variables and writing real code, we need to learn the Python baptism rules!\n\nIn programming, there are strict rules about what can and cannot be the name of a variable:\n1. **No spaces**: You can never use spaces. **low price** will generate an error!\n2. **Without accentuation or cedilla**: Forget correct Portuguese. Instead of **Greeting**, write **greeting**. Instead of **price**, use **price**.\n3. **Don't start with numbers**: **1_place** will give an error, but **place_1** is accepted.\n\n### The Snake Case Pattern 🐍\nIn Python, the community has adopted a pattern called **snake_case** (snake case). In it, we use lowercase letters and replace spaces with an _underline_ (**_**).\n\n- ❌ Wrong: **low price**, **Lower Price** or **low price**\n- ✅ Right: **low_price**\n\nAdopting this standard from day one will make your code professional and readable to any programmer in the world!",
       "example": "",
@@ -402,9 +492,9 @@
       }
     },
     {
-      "id": 11,
+      "id": 16,
       "type": "coding",
-      "title": "Class 8: Variables and Texts (Strings)",
+      "title": "Class 16: Variables and Texts (Strings)",
       "description": "Learn what a variable is and how to store text in it.",
       "content": "Think of a **Variable** as a little box or label where you store data in the computer's memory to use later. To give this box a name, simply write the name and use the equals symbol **=**.\n\nOne of the most common data types is **Text** (called **String** in programming). To let Python know that you are writing free text and not a system command, you must **mandatoryly wrap the text in quotation marks** (single or double).\n\nTo show the value of this variable on the screen, we use the **print()** magic function.\n\n**Dissecting the code below:**\n- **=** ➔ Assignment sign (means \"takes the value of\").\n- **name** ➔ Variable that will store the data.\n- **\"Alice\"** ➔ Text (String) that will be stored. Mandatory with quotation marks!\n- **print** ➔ Command used to show something on the screen.\n- **(name)** ➔ We give the variable to print so it can show what's inside.\n\n### Exploring Strings\nYou can use escape characters to format text:\n- **\\n**: Creates a new line (line break).\n- **\\t**: Creates a tab (long space).\n\nIf you don't want characters like \\ to be interpreted (like in file paths), use **raw strings** by adding an **r** before the opening quotation marks.\n\nYou can also play with strings by doing math operations! You can use **+** to join (concatenate) and **\\*** to repeat.\nTwo side-by-side string literals are automatically joined by Python. This is great for breaking long strings into multiple lines of code using parentheses.",
       "example": "name = \"Alice\"\nmessage = 'Hello, welcome!'\n\nprint(name)\nprint(message)\n\n# New line and Tab\nprint('First line.\\nSecond line.')\nprint('Name:\\tAlice')\n\n# Raw string (ignores escapes)\nprint(r'C:\\some\\folder')\n\n# Concatenation and Repetition\nprint(3 * 'un' + 'ium')\n\n# Joining literal strings and breaking long text\nlong_text = ('This is a very large text ' \n             'that was broken into two lines of code.')\nprint('Py' 'thon')\nprint(long_text)",
@@ -526,9 +616,81 @@
       ]
     },
     {
-      "id": 12,
+      "type": "theory",
+      "title": "Lesson 17: Quiz - Displaying Texts",
+      "description": "Review how to show messages to the user.",
+      "content": "The most fundamental function in programming is data output. In Python, we use the built-in `print()` function to output texts, numbers, and results to standard output (usually the terminal or console). Unlike other languages like C or Java, Python's print automatically adds a line break at the end of execution.",
+      "quiz": {
+        "question": "Which function do you use to display text on the screen in Python?",
+        "options": [
+          "out()",
+          "echo",
+          "print()",
+          "display()"
+        ],
+        "answer": 2
+      },
+      "id": 17,
+      "example": "print(\"This is the first line.\")\nprint(\"This will appear on the bottom line automatically!\")\n\n# We can print multiple values at once separated by commas:\nprint(\"My name is\", \"Alice\", \"and I am\", 25, \"years old.\")"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 18: Quiz - Assigning New Values",
+      "description": "What happens when you reuse a variable?",
+      "content": "The concept of a **Variable** in programming is literal: its value can vary! When you say `x = 10` and lines below say `x = 20`, the value 10 is discarded and 20 takes its place in memory. Python has an automatic 'Garbage Collector' that deletes old data that is no longer being used to save RAM.",
+      "quiz": {
+        "question": "What happens when you assign a new value to an existing variable?",
+        "options": [
+          "Creates a new variable with a different name.",
+          "An error occurs because they cannot be changed.",
+          "The old value is replaced by the new value.",
+          "Both values are stored."
+        ],
+        "answer": 2
+      },
+      "id": 18,
+      "example": "points = 100\nprint(f\"Starting Points: {points}\")  # Prints 100\n\n# The player took damage\npoints = 50\nprint(f\"Current Points: {points}\")  # Prints 50 (100 was forgotten)"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 19: Quiz - F-Strings 1",
+      "description": "Analyzing the structure of f-strings.",
+      "content": "Introduced in Python 3.6, **F-Strings** revolutionized text manipulation. By placing a simple `f` before the quotes of a text, you turn that string into a dynamic template, allowing you to inject mathematical results, functions, or variables directly into the text using curly braces `{}`.",
+      "quiz": {
+        "question": "What does this code do: print(f'Hello, {name}!')?",
+        "options": [
+          "Causes an error",
+          "Creates a new variable",
+          "Prints the literal text",
+          "Prints 'Hello,' followed by the variable value"
+        ],
+        "answer": 3
+      },
+      "id": 19,
+      "example": "hero = \"Link\"\nhearts = 3\n# The f-string evaluates everything inside the braces\nprint(f\"The hero {hero} has {hearts * 2} total health points.\")"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 20: Quiz - F-Strings 2",
+      "description": "Guess the output of the code using f-strings.",
+      "content": "A special warning with F-Strings: you can use both single or double quotes to define them. However, remember that if the variable is not defined before the call, the code will fail immediately.",
+      "quiz": {
+        "question": "What will be the result of this code?\nname = 'Alice'\nage = 25\nprint(f'Hello, {name}! You are {age} years old.')",
+        "options": [
+          "Hello, Alice! You are 25 years old.",
+          "An error will occur.",
+          "Hello, [name]! You are [age] years old.",
+          "Hello, {name}! You are {age} years old."
+        ],
+        "answer": 0
+      },
+      "id": 20,
+      "example": "product = \"Mechanical Keyboard\"\nprice = 250.00\n# Decimal place formatting is also supported!\nprint(f\"Offer: {product} for only $ {price:.2f}\")"
+    },
+    {
+      "id": 21,
       "type": "coding",
-      "title": "Class 9: Integers (Int)",
+      "title": "Class 21: Integers (Int)",
       "description": "See how to deal with exact math and integers.",
       "content": "In addition to texts, variables are incredible for storing numbers! The most basic numeric type is **Integer** (called **int**).\n\nIntegers are positive or negative numbers that **do not have a decimal place**. \n\nThe rule of thumb here is: **Don't use quotation marks for numbers!** If you put quotation marks around a number (e.g. **\"10\"**), Python will treat it as text and will not be able to do mathematical calculations with it.\n\n**Dissecting the code below:**\n- **age** ➔ The name of our variable.\n- **=** ➔ The signal that stores the information in the variable.\n- **25** ➔ The number itself, without using quotes! It is this true numeric value that will be stored in the variable called age.\n- **print(\"Age:\", age)** ➔ The print can show texts (with quotation marks) mixed with variables, just separate them with a comma.",
       "example": "idade = 25\nano_nascimento = 1998\ntemperatura = -5\n\nprint(\"Idade:\", idade)\nprint(\"Ano:\", ano_nascimento)\nprint(\"Frio:\", temperatura)",
@@ -547,17 +709,18 @@
         ],
         "answer": 1
       },
+      "exercise": "Create variables to store the numbers first.",
       "exercises": [
         {
           "description": "1. Create the variable **age** with the value 25 (without quotes!) and print it.",
           "expected_output": "25"
         },
         {
-          "description": "2. **(Tip: Create variables to store the numbers first)** Calculate and print the sum of 10 + 20 using the '+' sign directly in **print()**.",
+          "description": "2. Calculate and print the sum of 10 + 20 using the '+' sign directly in **print()**.",
           "expected_output": "30"
         },
         {
-          "description": "3. **(Tip: Create variables to store the numbers first)** Calculate and print the subtraction of 10 - 5.",
+          "description": "3. Calculate and print the subtraction of 10 - 5.",
           "expected_output": "5"
         },
         {
@@ -565,11 +728,11 @@
           "expected_output": "2024"
         },
         {
-          "description": "5. **(Hint: Create variables to store the numbers first)** Calculate and print the multiplication of 5 * 4 in the console.",
+          "description": "5. Calculate and print the multiplication of 5 * 4 in the console.",
           "expected_output": "20"
         },
         {
-          "description": "6. **(Tip: Create variables to store the numbers first)** Calculate and print the subtraction of 100 - 50 in the console.",
+          "description": "6. Calculate and print the subtraction of 100 - 50 in the console.",
           "expected_output": "50"
         },
         {
@@ -577,7 +740,7 @@
           "expected_output": "100"
         },
         {
-          "description": "8. **(Tip: Create variables to store the numbers first)** Calculate and print the sum of 5 + 5.",
+          "description": "8. Calculate and print the sum of 5 + 5.",
           "expected_output": "10"
         },
         {
@@ -585,19 +748,37 @@
           "expected_output": "3"
         },
         {
-          "description": "10. **(Hint: Create variables to store the numbers first)** Calculate and print the multiplication of 10 * 10.",
+          "description": "10. Calculate and print the multiplication of 10 * 10.",
           "expected_output": "100"
         },
         {
-          "description": "11. **(Hint: Create variables to store the numbers first)** Calculate and print the sum of 200 + 200.",
+          "description": "11. Calculate and print the sum of 200 + 200.",
           "expected_output": "400"
         }
       ]
     },
     {
-      "id": 13,
+      "type": "theory",
+      "title": "Lesson 22: Quiz - Creating a Variable",
+      "description": "How do we declare variables in Python?",
+      "content": "Python is a dynamically typed language. This means the interpreter deduces whether the variable is text (string) or an integer number (int) depending on what is after the equals sign `=`. Because of this, avoid magic names like `a`, `b` and clearly state what it represents.",
+      "quiz": {
+        "question": "What is the correct way to create a variable named 'age' with the value 25?",
+        "options": [
+          "age = 25",
+          "var age = 25",
+          "int age = 25",
+          "age := 25"
+        ],
+        "answer": 0
+      },
+      "id": 22,
+      "example": "# Python automatically discovers the types:\nage = 25          # integer (int)\nname = \"Bob\"      # text (str)\nheight = 1.80     # decimal (float)\n\nprint(type(age))  # <class 'int'>"
+    },
+    {
+      "id": 23,
       "type": "coding",
-      "title": "Class 10: Decimal Numbers (Float)",
+      "title": "Class 23: Decimal Numbers (Float)",
       "description": "Learn to record weights, heights and coins with broken numbers.",
       "content": "For numbers that are not exact, such as money, measurements or weight, we use the **Decimal** type, known in programming as **Float**.\n\nPay attention to a crucial rule: Python was created using the American standard, so **we always use PERIOD (.) instead of a comma** to separate decimal places!\n\nWriting **1.75** (with a comma) will break your code or create a Tuple (we'll see about this later). The correct option is to always use **1.75**.\n\n**Dissecting the code below:**\n- **height** ➔ The name chosen for the variable.\n- **=** ➔ Command to assign the value.\n- **1.75** ➔ Decimal Number (Float). Note the use of the DOT in place of the comma!\n- **print(\"Height:\", height)** ➔ Shows the guide text on the screen, followed by the broken number stored in memory.",
       "example": "altura = 1.75\npeso = 68.5\nsaldo_bancario = 150.99\n\nprint(\"Altura:\", altura)\nprint(\"Peso:\", peso)\nprint(\"Saldo: R$\", saldo_bancario)",
@@ -616,13 +797,14 @@
         ],
         "answer": 2
       },
+      "exercise": "**(Tip: Create variables to store the numbers first)**",
       "exercises": [
         {
           "description": "1. Create the variable **price** worth 19.99 (remember the point!) and print it.",
           "expected_output": "19.99"
         },
         {
-          "description": "2. **(Tip: Create variables to store the numbers first)** Print the result of the sum of 1.5 + 2.5.",
+          "description": "2. Print the result of the sum of 1.5 + 2.5.",
           "expected_output": "4.0"
         },
         {
@@ -634,11 +816,11 @@
           "expected_output": "75.5"
         },
         {
-          "description": "5. **(Tip: Create variables to store the numbers first)** Print the result of the mathematical subtraction of 5.5 - 2.0 (The result should be: 3.5).",
+          "description": "5. Print the result of the mathematical subtraction of 5.5 - 2.0 (The result should be: 3.5).",
           "expected_output": "3.5"
         },
         {
-          "description": "6. **(Tip: Create variables to store the numbers first)** Print the result of dividing 10.0 / 2.0 (The result should be: 5.0).",
+          "description": "6. Print the result of dividing 10.0 / 2.0 (The result should be: 5.0).",
           "expected_output": "5.0"
         },
         {
@@ -646,7 +828,7 @@
           "expected_output": "36.5"
         },
         {
-          "description": "8. **(Hint: Create variables to store the numbers first)** Calculate and print the sum of 10.5 + 10.5.",
+          "description": "8. Calculate and print the sum of 10.5 + 10.5.",
           "expected_output": "21.0"
         },
         {
@@ -654,19 +836,19 @@
           "expected_output": "42.195"
         },
         {
-          "description": "10. **(Hint: Create variables to store the numbers first)** Calculate and print the subtraction of 5.0 - 1.5.",
+          "description": "10. Calculate and print the subtraction of 5.0 - 1.5.",
           "expected_output": "3.5"
         },
         {
-          "description": "11. **(Tip: Create variables to store the numbers first)** Calculate and print the division of 9.0 / 3.0.",
+          "description": "11. Calculate and print the division of 9.0 / 3.0.",
           "expected_output": "3.0"
         }
       ]
     },
     {
-      "id": 14,
+      "id": 24,
       "type": "coding",
-      "title": "Class 11: Boolean Values ​​(Bool)",
+      "title": "Class 24: Boolean Values ​​(Bool)",
       "description": "Discover how the computer makes logical decisions (Yes or No).",
       "content": "In the world of computing, everything boils down to false or true. We use the **Boolean** type (**bool**) to represent this duality.\n\nA Boolean variable stores only two absolute values:\n- **True**\n- **False** (False)\n\n**Warning:** They must begin with a CAPITAL letter in Python!\n\nIn addition to setting these values ​​directly, the computer can discover the truth by making **comparisons**! The result of a comparison will always be a Boolean (True or False). The most common symbols are:\n- **>** (Greater than)\n- **<** (Less than)\n- **==** (Equals. Attention: we use two equals signs to test equality, not to be confused with the sign to create variables!)\n\n**Dissecting the code below:**\n- **jogo_pausado = False** ➔ We created the variable with the logical value.\n- **10 > 5** ➔ The computer checks and returns **True** (true, 10 is greater than 5).\n- **1 == 2** ➔ The computer checks and returns **False** (lie, 1 is not equal to 2).",
       "example": "game_paused = False\nuser_logged_in = True\n\nprint(\"Paused?\", game_paused)\nprint(\"Logged in?\", user_logged_in)\n\nprint(\"Is 10 greater than 5?\", 10 > 5)\nprint(\"Is 1 equal to 2?\", 1 == 2)",
@@ -733,9 +915,9 @@
       ]
     },
     {
-      "id": 15,
+      "id": 25,
       "type": "coding",
-      "title": "Lesson 15: Arithmetic Operators",
+      "title": "Lesson 25: Arithmetic Operators",
       "description": "Basic Mathematical Operations in Python",
       "content": "Just as we use calculators to do math, in programming we use **Arithmetic Operators**! They are the symbols responsible for carrying out all mathematical calculations within Python, from simple bakery bills to spatial equations.\n\nBelow you can see the main operators available in the language:\n\n- **+** (addition): Adds two values.\n- **-** (subtraction): Subtracts one value from another.\n- **\\*** (multiplication): Multiplies the values ​​(we use the asterisk!).\n- **/** (division): Divides and always returns a broken number (decimal).\n- **//** (integer division): Divides but cuts the decimal part, leaving only the integer.\n- **%** (modulo): Takes only the **remainder** of the division (great for knowing if a number is even or odd).\n- **\\*\\*** (exponentiation): Raises one number to the power of another (ex: 2 ** 3 is 8).",
       "example": "years = 10\ndays_in_year = 365\na = 20\nb = 5\n\nprint(\"Addition:\", a + b)\nprint(\"Subtraction:\", a - b)\nprint(\"Multiplication:\", a * b)\nprint(\"Division:\", a / b)\nprint(\"Age in days:\", years * days_in_year)",
@@ -807,9 +989,27 @@
       ]
     },
     {
-      "id": 16,
+      "type": "theory",
+      "title": "Lesson 26: Quiz - Assignment Operators",
+      "description": "Discover how to add and store in a short way.",
+      "content": "Programmers love shortcuts. Instead of writing `coins = coins + 5`, Python allows you to combine the arithmetic operation and assignment in the same step using `+=`. You can also do the same with subtraction (`-=`), multiplication (`*=`), and division (`/=`).",
+      "quiz": {
+        "question": "Which of these is the correct and shorthand way to increase a variable's 'score' by 10 points?",
+        "options": [
+          "10 += score",
+          "score += 10",
+          "score = + 10",
+          "score + 10"
+        ],
+        "answer": 1
+      },
+      "id": 26,
+      "example": "level = 5\nlevel += 1   # Same as: level = level + 1\nprint(level) # Prints 6\n\nhealth = 100\nhealth -= 20   # Same as: health = health - 20\nprint(health)  # Prints 80"
+    },
+    {
+      "id": 27,
       "type": "coding",
-      "title": "Lesson 16: Lists and Basic Operations",
+      "title": "Lesson 27: Lists and Basic Operations",
       "description": "Work with lists and loops in Python",
       "content": "Think of a list in Python as a box that holds several items at the same time.\n\n**What is it for?**\n- Save several data together in the same variable (like a shopping list: bread, milk, eggs).\n- Access a specific item (the 1st, the 2nd…).\n- Go through all the items one by one to do something (e.g. print each name).\n\n**How it works in practice (very simple)**\nIn Python, you create a list like this:\n```python\nshopping = [\"bread\", \"milk\", \"eggs\"]\n```\nNow `shopping` is the “box” with 3 items.\n\n**How to get an item**\nYou can take it by its “number” (index). **Attention:** in Python the count starts at 0.\n\n- `shopping[0]` is the first item (“bread”)\n- `shopping[1]` is the second (“milk”)\n- `shopping[2]` is the third (“eggs”)\n\nExample:\n```python\nprint(purchases[1]) # will print: milk\n```\n\n**How to exchange an item (Replace)**\nYou can easily exchange what is inside a position by entering the index and a new value.\n```python\nCompras[1] = \"chocolatado\" # The 'milk' was replaced by chocolate!\n```\n\n**How to get around (see all)**\nGenerally you use `for` to do something with each item:\n```python\nfor item in purchases:\n    print(item)\n```\nThis will print bread, then milk, then eggs.\n\n**Want to add or take things away?**\nAdd at the end:\n```python\npurchases.append(\"banana\")\n```\nRemove the last one (the end):\n```python\nshopping.pop()\n```",
       "example": "fruits = [\"apple\", \"banana\", \"orange\"]\n\nprint(\"First fruit:\", fruits[0])\n# len() comes from 'length'. Counts how many items are in the box.\nprint(\"Number of fruits:\", len(fruits))\n\nprint(\"\\nAll fruits:\")\n# for = 'for each'. in = 'inside'. (For each fruit inside fruits:)\nfor fruit in fruits:\n    print(\"-\", fruit)\n\n# You can also easily replace items!\nfruits[0] = \"strawberry\"\nprint(\"\\nWe replaced the apple with a strawberry:\")\nprint(fruits)\n\n# append() means to attach/add at the end.\nfruits.append(\"watermelon\")\nprint(\"\\nAfter adding watermelon:\")\nprint(fruits)",
@@ -877,7 +1077,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": 28,
       "type": "coding",
       "title": "Practical Test 1: Calculator Logic",
       "description": "Test your knowledge by solving calculator logic with if/else and loops.",
@@ -913,9 +1113,9 @@
       ]
     },
     {
-      "id": 18,
+      "id": 29,
       "type": "theory",
-      "title": "Lesson 18: Opening your Appetite",
+      "title": "Lesson 29: Opening your Appetite",
       "description": "Find out why Python is the perfect tool for automating boring tasks.",
       "content": "You know those repetitive tasks on the computer that make you lazy just thinking about? Python was created precisely to be your automation 'magic wand'! With it, you write small scripts that do the heavy lifting for you.\n\nAnd the best part: Python is an **interpreted language**. This means you don't have to go through boring and time-consuming 'compiling' processes (translating everything into the machine) before testing. You write the code and it runs immediately. Just like that!",
       "example": "",
@@ -942,9 +1142,9 @@
       }
     },
     {
-      "id": 19,
+      "id": 30,
       "type": "theory",
-      "title": "Class 15: The Interpreter and the Interactive Mode",
+      "title": "Class 30: The Interpreter and the Interactive Mode",
       "description": "Learn how to live chat with Python through the terminal.",
       "content": "Imagine that **Interactive Mode** is like opening a WhatsApp chat directly with your Python brain! When you open the terminal and type `python3` you enter this chat room.\n\nThere, Python waits for your messages showing three arrows: `>>>`. Just type a mathematical or text command, press Enter, and it responds instantly! If you send a message that needs more than one line (like a condition), it shows three dots `...` to say: 'Go ahead, I hear you!'.",
       "example": ">>> the_world_is_flat = True\n>>> if the_world_is_flat:\n...     print(\"Be careful not to fall off!\")\n...\nBe careful not to fall off!",
@@ -971,9 +1171,27 @@
       }
     },
     {
-      "id": 20,
       "type": "theory",
-      "title": "Class 16: Passing Arguments",
+      "title": "Lesson 31: Quiz - User Input",
+      "description": "How to listen to what the user types?",
+      "content": "The `input()` function freezes program execution and waits for the user to type something and press 'Enter'. All the text typed is returned as a String format and can be saved in a variable to make your script truly interactive!",
+      "quiz": {
+        "question": "Which function allows your program to receive user input via keyboard?",
+        "options": [
+          "get()",
+          "read()",
+          "scan()",
+          "input()"
+        ],
+        "answer": 3
+      },
+      "id": 31,
+      "example": "# The text inside parentheses appears on screen asking for action\nname = input(\"What is your name hero? \")\n\nprint(f\"Welcome to the adventure, {name}!\")"
+    },
+    {
+      "id": 32,
+      "type": "theory",
+      "title": "Class 32: Passing Arguments",
       "description": "Understand how to send 'extra ingredients' to your program before it runs.",
       "content": "Sometimes, your program needs external information right when it is turned on. Imagine that your script is a cake recipe, and you want to tell the flavor before 'Play' (ex: `python3 faz_bolo.py chocolate`).\n\nThese extra ingredients are called **Arguments**. Python takes everything you type after the program name and stores it in a special box called `sys.argv`. Item number zero (`sys.argv[0]`) is always the name of your file, and item number one (`sys.argv[1]`) is already the word 'chocolate'!",
       "example": "# If we run in the terminal: python3 script.py argument1\nimport sys\nprint(sys.argv[0])  # Displays: 'script.py'\nprint(sys.argv[1])  # Displays: 'argumento1'",
@@ -1000,9 +1218,9 @@
       }
     },
     {
-      "id": 21,
+      "id": 33,
       "type": "theory",
-      "title": "Lesson 21: Coding Source Code Files",
+      "title": "Lesson 33: Coding Source Code Files",
       "description": "Understand how Python reads accents and special characters without bugs.",
       "content": "Have you ever opened a website and seen strange characters like 'Ã§Ã£o' instead of cedillas and accents? This happens when the computer misses the reading 'dictionary'.\n\nTo avoid this, Python defaults to a super dictionary called **UTF-8**. It is capable of understanding characters from practically every language in the world, including emojis! Thanks to UTF-8, you can write variables and comments with accents (ç, ã, é) without fear of breaking the program.",
       "example": "# -*- coding: cp1252 -*-\n# The example above sets the file encoding to Windows-1252",
@@ -1029,9 +1247,9 @@
       }
     },
     {
-      "id": 22,
+      "id": 34,
       "type": "coding",
-      "title": "Lesson 22: Using Python as a Calculator - Numbers",
+      "title": "Lesson 34: Using Python as a Calculator - Numbers",
       "description": "Understand how to make contents, divide pizzas and raise numbers to power.",
       "tips": [
         "Use the equals sign '=' only to store results inside variables.",
@@ -1109,9 +1327,9 @@
       ]
     },
     {
-      "id": 23,
+      "id": 35,
       "type": "coding",
-      "title": "Lesson 23: Advanced Strings - Indexes and Slicing",
+      "title": "Lesson 35: Advanced Strings - Indexes and Slicing",
       "description": "Learn how to slice texts and get just the letters you want.",
       "tips": [
         "Texts (strings) are immutable. You can't change a single letter of an already created text, you can only create a whole new text.",
@@ -1189,7 +1407,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": 36,
       "type": "coding",
       "title": "Practical Test 2: Nickname and Password Generator",
       "description": "A system that creates nicknames or temporary passwords based on the user's full name.",
@@ -1230,9 +1448,9 @@
       }
     },
     {
-      "id": 25,
+      "id": 37,
       "type": "coding",
-      "title": "Lesson 25: Lists and Slicing",
+      "title": "Lesson 37: Lists and Slicing",
       "description": "Discover lists, which are like grocery bags that you can change.",
       "tips": [
         "You can empty parts of your list by replacing entire slices with an empty list `[]`.",
@@ -1310,9 +1528,9 @@
       ]
     },
     {
-      "id": 26,
+      "id": 38,
       "type": "coding",
-      "title": "Lesson 26: Multiple Assignment and While Loop",
+      "title": "Lesson 38: Multiple Assignment and While Loop",
       "description": "Learn the power of assigning values ​​to multiple things at once and repeating actions with the while loop.",
       "tips": [
         "The print() function always skips to the next line at the end. If you want to avoid this, put `end=' '` inside it.",
@@ -1390,9 +1608,63 @@
       ]
     },
     {
-      "id": 27,
+      "type": "theory",
+      "title": "Lesson 39: Indentation and Code Blocks",
+      "description": "How Python organizes the logical structure of your program.",
+      "content": "Languages like JavaScript and C use curly braces `{}` to mark where an `if` condition or `for` loop begins and ends. In Python, the visual organizer IS the syntax itself. We indent text to the right to indicate that that group of codes belongs to the condition above it.",
+      "quiz": {
+        "question": "How does Python group code into blocks?",
+        "options": [
+          "Using parentheses ( )",
+          "Using brackets [ ]",
+          "Using braces { }",
+          "Using indentation (spaces or tabs)"
+        ],
+        "answer": 3
+      },
+      "id": 39,
+      "example": "boss_defeated = True\n\nif boss_defeated:\n    # The next two lines are 'inside' the if because of the indent\n    print(\"Congratulations, you saved the princess!\")\n    print(\"Reward: +500 XP\")\n\n# This line has no indent, it runs independent of the if\nprint(\"Game Over.\")"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 40: Quiz - Indentation Size",
+      "description": "What is the recommended convention (PEP 8)?",
+      "content": "The official Python Style Guide (PEP 8) is sort of the 'Bible' of code organization. And it is categorical: block indentation must be done using exactly **4 blank spaces**. Most modern IDEs already configure the `Tab` key to insert 4 spaces automatically for you!",
+      "quiz": {
+        "question": "What is the officially recommended indentation size in Python?",
+        "options": [
+          "4 spaces",
+          "Doesn't matter",
+          "8 spaces",
+          "2 spaces"
+        ],
+        "answer": 0
+      },
+      "id": 40,
+      "example": "# A perfect block of code:\ndef start_game():\n    # <- 4 spaces here\n    score = 0\n    lives = 3\n    print(\"Game loaded.\")"
+    },
+    {
+      "type": "theory",
+      "title": "Lesson 41: Quiz - Inconsistent Indentation",
+      "description": "What happens if you mix spaces and Tabs?",
+      "content": "One of the most frustrating errors for beginners is the dreaded `IndentationError`. It is unforgiving! If you use 4 spaces on one line and 5 spaces on the next line within the same block, the interpreter will stop your program immediately.",
+      "quiz": {
+        "question": "What happens if you have inconsistent indentation in Python?",
+        "options": [
+          "Python will fix it automatically",
+          "Python will raise an IndentationError",
+          "The program will run, but with warnings",
+          "Nothing happens, it's just a style preference"
+        ],
+        "answer": 1
+      },
+      "id": 41,
+      "example": "status = \"Active\"\n\nif status == \"Active\":\n    print(\"System online.\")   # Correct: 4 spaces\n    # print(\"Connecting...\")  # If it had 5 spaces it would raise an Indentation error."
+    },
+    {
+      "id": 42,
       "type": "coding",
-      "title": "Lesson 27: Flow Tools - If, For and Range",
+      "title": "Lesson 42: Flow Tools - If, For and Range",
       "description": "Learn how to make the computer make decisions with if and repeat with for and range.",
       "tips": [
         "Pay attention to range(3, 6): it will generate numbers 3, 4, and 5, but ALWAYS excludes the last number (6 is left out!).",
@@ -1470,9 +1742,9 @@
       ]
     },
     {
-      "id": 28,
+      "id": 43,
       "type": "coding",
-      "title": "Lesson 28: Break, Continue and Else Clauses in Loops",
+      "title": "Lesson 43: Break, Continue and Else Clauses in Loops",
       "description": "Learn how to eject from a repeating loop or skip your turn.",
       "tips": [
         "The 'pass' command is just a ghost. It does nothing, it just fills a space when Python forces you to write something.",
@@ -1550,9 +1822,9 @@
       ]
     },
     {
-      "id": 29,
+      "id": 44,
       "type": "coding",
-      "title": "Class 24: Match Instruction and Definition of Functions",
+      "title": "Class 44: Match Instruction and Definition of Functions",
       "description": "Discover how to create your own magical tools (functions).",
       "tips": [
         "Always use obvious names for your functions (e.g., calculate_age). This makes it easy to remember what they do.",
@@ -1630,9 +1902,9 @@
       ]
     },
     {
-      "id": 30,
+      "id": 45,
       "type": "coding",
-      "title": "Class 25: Tuples - Immutable Collections",
+      "title": "Class 45: Tuples - Immutable Collections",
       "description": "Learn about tuples in Python, how to create them, unpack them, and why immutability is useful.",
       "content": "### What are Tuples?\n\nA **Tuple** is an ordered sequence of elements, very similar to a List, but with a fundamental difference: **tuples are immutable**! This means that once it is created, you cannot add, remove, or modify elements of a tuple.\n\n**Syntax:**\n```python\npoint = (10, 20)\ncolors = ('red', 'green', 'blue')\n```\n\n**Advantages of Tuples:**\n- **Performance**: They are lighter and faster than lists in memory.\n- **Data security**: Ensures that fixed data (e.g. GPS coordinates, settings) will not be changed by accident.\n- **Unwrapping**: It's easy to assign values from a tuple directly to variables:\n```python\nx, y = point\nprint(x) # 10\n```",
       "example": "# Creating and unpacking tuples\npoint = (100, 200)\nx, y = point\nprint(f'X={x}, Y={y}')\n\n# Attempting to change raises TypeError:\n# point[0] = 50  # Error!",
@@ -1668,9 +1940,9 @@
       }
     },
     {
-      "id": 31,
+      "id": 46,
       "type": "coding",
-      "title": "Class 26: Dictionaries - Mapping Keys and Values",
+      "title": "Class 46: Dictionaries - Mapping Keys and Values",
       "description": "Master the dictionary structure in Python to associate unique keys with values.",
       "content": "### What are Dictionaries?\n\nA **Dictionary** (`dict`) is a mutable collection of **key:value** pairs. While lists use numeric indexes (0, 1, 2...), dictionaries use text keys or numbers to find information instantly.\n\n**Syntax:**\n```python\nstudent = {\n    'name': 'Carlos',\n    'age': 22,\n    'course': 'Python'\n}\n```\n\n**Main Operations:**\n- **Access value**: `aluno['nome']` or `aluno.get('nome')` \n- **Add/Update**: `aluno['grade'] = 9.5` \n- **Iterate**: `.keys()`, `.values()`, `.items()`",
       "example": "student = {'name': 'Beatriz', 'grade': 10}\nprint(student['name'])\n\n# Adding a new key\nstudent['course'] = 'Engineering'\nprint(student['course'])",
@@ -1706,9 +1978,9 @@
       }
     },
     {
-      "id": 32,
+      "id": 47,
       "type": "coding",
-      "title": "Class 27: Sets - Single Elements",
+      "title": "Class 47: Sets - Single Elements",
       "description": "Discover how to use sets in Python to eliminate duplicate elements and perform mathematical operations.",
       "content": "### What are Sets?\n\nA **Set** is an unordered collection of **unique** elements. It is perfect for removing duplicate items from a collection and performing mathematical operations such as Union, Intersection and Difference.\n\n**Syntax:**\n```python\nnumbers = {1, 2, 3, 3, 3}\nprint(numbers) # Prints: {1, 2, 3}\n```\n\n**Methods and Operations:**\n- `add(item)`: Adds an element.\n- `remove(item)`: Removes an element.\n- **Union (`|`)**: Combines two sets.\n- **Intersection (`&`)**: Returns only the elements present in both sets.",
       "example": "# Removing duplicates from a list\nlist_with_duplicates = [1, 2, 2, 3, 4, 4, 4]\nunique_set = set(list_with_duplicates)\nprint(sorted(list(unique_set)))  # Prints: [1, 2, 3, 4]",
@@ -1744,9 +2016,9 @@
       }
     },
     {
-      "id": 33,
+      "id": 48,
       "type": "coding",
-      "title": "Class 28: Delving deeper into Functions (Parameters, Returns and Scope)",
+      "title": "Class 48: Delving deeper into Functions (Parameters, Returns and Scope)",
       "description": "Learn how to create professional functions with return values, default parameters, and scope control.",
       "content": "### Mastering Functions in Python\n\nFunctions are the fundamental blocks for organizing reusable code. In this class, we will advance in the study of **return values** with `return`, **default parameters** and **scope of variables**.\n\n**The `return` command:**\nA function that does not use `return` returns `None`. `return` returns the result to whoever called the function and ends its execution immediately.\n\n```python\ndef multiply(a, b):\n    return a * b\n\nresult = multiply(3, 4)\nprint(result) # 12\n```\n\n**Standard Parameters:**\n```python\ndef greet(name=\"Student\"):\n    print(f\"Hello, {name}!\")\n```",
       "example": "def calculate_average(grade1, grade2=7.0):\n    return (grade1 + grade2) / 2\n\nprint(calculate_average(9.0))  # Uses default grade2 (7.0) -> Average 8.0",
@@ -1782,9 +2054,9 @@
       }
     },
     {
-      "id": 34,
+      "id": 49,
       "type": "coding",
-      "title": "Class 29: Native Modules and Libraries (math, random, datetime)",
+      "title": "Class 49: Native Modules and Libraries (math, random, datetime)",
       "description": "Learn how to import and reuse the native modules provided in the Python standard library.",
       "content": "### What are Modules?\n\nA **Module** is a file containing ready-to-use Python definitions and commands. Python already comes with the so-called \"included battery\" (Standard Library) full of useful modules!\n\n**Importing Modules:**\n```python\nimport math\nprint(math.sqrt(16)) # Square root -> 4.0\n\nimport random\ndrawn_number = random.randint(1, 10)\n```\n\n**Import Syntax:**\n- `import module`: Imports the complete module.\n- `from modulo import funcao`: Imports only the specific function.",
       "example": "import math\nfrom random import choice\n\nprint(math.ceil(4.2))  # Rounds up -> 5\nfruits = ['apple', 'banana', 'grape']\nprint(choice(fruits) in fruits)  # Prints True",
@@ -1820,9 +2092,9 @@
       }
     },
     {
-      "id": 35,
+      "id": 50,
       "type": "coding",
-      "title": "Lesson 35: Error Handling (try, except, finally)",
+      "title": "Lesson 50: Error Handling (try, except, finally)",
       "description": "Learn how to handle exceptions and errors at runtime to prevent your application from breaking.",
       "content": "### Exception Handling in Python\n\nMistakes happen! For example, when the user tries to divide a number by zero or types text where we expected a number. Instead of allowing the application to break, we use `try-except` blocks.\n\n**Basic Structure:**\n```python\ntry:\n    number = int(\"abc\")\nexcept ValueError:\n    print(\"Error: Invalid entry!\")\nfinally:\n    print(\"Execution completed.\")\n```\n\n**Types of Common Exceptions:**\n- `ValueError`: Incompatible value.\n- `ZeroDivisionError`: Division by zero.\n- `TypeError`: Incorrect data type.",
       "example": "try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print('Division by zero prevented!')\nfinally:\n    print('End')",
@@ -1858,9 +2130,9 @@
       }
     },
     {
-      "id": 36,
+      "id": 51,
       "type": "coding",
-      "title": "Class 31: File Manipulation (open, read, write)",
+      "title": "Class 51: File Manipulation (open, read, write)",
       "description": "Learn how to read and write persistent text files to disk with Python.",
       "content": "### Manipulating Files in Python\n\nTo save data permanently to disk, we use the `open()` function. The best practice in Python is to use the `with` context manager, which guarantees automatic closing of the file.\n\n**Opening Modes:**\n- `'w'`: Writing (overwrites the file).\n- `'a'`: Attachment (adds to the end of the file).\n- `'r'`: Reading.\n\n```python\n# Writing to a file\nwith open('nota.txt', 'w', encoding='utf-8') as f:\n    f.write('Hello, file!')\n\n# Reading from file\nwith open('nota.txt', 'r', encoding='utf-8') as f:\n    content = f.read()\n    print(content)\n```",
       "example": "import tempfile\nimport os\n\n# Creating a temporary file for testing\npath = os.path.join(tempfile.gettempdir(), 'test.txt')\nwith open(path, 'w', encoding='utf-8') as f:\n    f.write('Line 1')\n\nwith open(path, 'r', encoding='utf-8') as f:\n    print(f.read())",
@@ -1896,9 +2168,9 @@
       }
     },
     {
-      "id": 37,
+      "id": 52,
       "type": "coding",
-      "title": "Class 32: Introduction to Object Orientation (Classes and Objects)",
+      "title": "Class 52: Introduction to Object Orientation (Classes and Objects)",
       "description": "Understand the fundamentals of the Object Orientation paradigm in Python.",
       "content": "### What is Object Orientation (OOP)?\n\nOOP is a programming paradigm that organizes code around **Objects** (representations of the real world) created from **Classes** (templates or projects).\n\n**Key Concepts:**\n- **Class**: The template (`class Pessoa:`).\n- **Object**: The instance created from the class (`p1 = Pessoa()`).\n- `__init__`: The constructor method invoked when creating the object.\n- `self`: Reference to the object instance itself.\n\n```python\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n    def present(self):\n        return f\"Hello, my name is {self.name}!\"\n```",
       "example": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return f'{self.name} says: Woof Woof!'\n\ndog = Dog('Rex')\nprint(dog.bark())",
@@ -1934,7 +2206,7 @@
       }
     },
     {
-      "id": 38,
+      "id": 53,
       "type": "coding",
       "title": "Practical Test 3: Registration System and Task Manager",
       "description": "Integrative challenge: combine Functions, Dictionaries, Error Handling and OOP to build a mini-system.",
