@@ -95,3 +95,8 @@ Lessons live in `content/lessons.json`. Each lesson has:
 
 ## 20. Sanduíche e Vazamento Visual (Ghosting de UI)
 - **Ocultação de Componentes Irmãos**: Quando o Flet troca de layout (como a passagem do "Modo Estudo" para a "Tela de Login" na função `on_logout`), instâncias que dividem as mesmas colunas/linhas na raiz não partilham automaticamente dos efeitos de `.visible = False`. Você deve ser meticuloso em ocultar de forma pontual todos os irmãos injetados individualmente (ex: `self.lesson_view.activity_container.visible = False`, `drag_splitter`, `editor_console`) para prevenir que telas como os quizzes da teoria fiquem "voando" por cima do painel inicial sobrepostos pela Flet Engine.
+
+## 21. Cobertura Obrigatória de Testes Unitários (Test-Driven)
+- **Obrigatoriedade Pós-Modificação**: Após qualquer modificação em regras de negócio, lógicas centrais (Backend) ou componentes vitais na camada `src/`, é OBRIGATÓRIO que o Agente IA verifique se os testes existentes ainda passam (`pytest`).
+- **Criação Proativa**: Caso a modificação introduza um novo comportamento, uma nova exceção tratada ou um novo componente lógico, o Agente DEVE criar ou expandir os testes unitários equivalentes no diretório `tests/` utilizando a suíte do Pytest e técnicas apropriadas de Mock (`unittest.mock`) para componentes pesados como Flet, Bancos de Dados ou LLM.
+- **Validação Cruzada**: Nenhuma tarefa estrutural deve ser dada como "Concluída" ou pronta para "Commit" sem antes rodar a suíte inteira e apresentar `100% passed`. O agente deve priorizar quebrar e isolar o código recém criado para garantir que não haja regressão.
